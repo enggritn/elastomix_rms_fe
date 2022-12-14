@@ -1,0 +1,240 @@
+﻿
+@{
+    Layout = null;
+    int i = 1;
+}
+
+@model WMS_FE.Models.MaterialRequestHeaderDTO
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Code</title>
+    <style type="text/css">
+        body {
+            font-family: 'Arial Rounded MT';
+        }
+
+        table{
+            font-size:11px;
+        }
+
+        .tbl_header th, td {
+            padding: 5px;
+        }
+
+        .tableDetail {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            .tableDetail td {
+                word-break: break-word;
+                /*                white-space: pre-wrap;*/
+            }
+
+            .tableDetail, .tableDetail th, .tableDetail td {
+                border: 1px solid black;
+            }
+
+        .footer {
+            position: relative;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: gray;
+            color: white;
+            text-align: center;
+        }
+
+        .header img {
+            width: 80px ;
+        }
+
+        .header span {
+            font-size: 10px;
+        }
+
+       /* .tbl_header td{
+            padding:10px;
+        }*/
+
+/*        #footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+        }*/
+
+        header {
+            position: running(header);
+        }
+
+        footer {
+            position: relative;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        @@page {
+            margin-top: 260px;
+
+            @@top-left {
+                content: element(header);
+            }
+
+            @@bottom-left {
+                content: "@Model.Code";
+            }
+
+            @@bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header">
+            <img src="@ViewBag.Logo" style="display: inline-block;" />
+            <div style="display: inline-block; width: 610px;text-align: right">
+                <span>PT. ELASTOMIX INDONESIA</span>
+                <br />
+                <span>Kawasan Industri Mitrakarawang, Jalan. Mitra Selatan III, Blok H-8</span>
+                <br />
+                <span>Parungmulya, Ciampel, Karawang, Jawa Barat 41361, Indonesia</span>
+            </div>
+
+            @*<h2 style="float:right;font-size:12px;">
+                <b>@Model.Code</b>
+            </h2>*@
+        </div>
+        <h2 style="text-align:center;margin-bottom:25px;">
+            <b>@ViewBag.Title</b>
+        </h2>
+        <table class="tbl_header" style="width: 50%; display: inline-block;">
+            <tbody>
+                <tr>
+                    <td>From</td>
+                    <td>:</td>
+                    <td>@Model.SourceCode - @Model.SourceName</td>
+                </tr>
+                <tr>
+                    <td>To</td>
+                    <td>:</td>
+                    <td>@Model.DestinationCode - @Model.DestinationName</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="tbl_header" style="width: 50%; display: inline-block; ">
+            <tbody>
+                <tr>
+                    <td>No. DO</td>
+                    <td>:</td>
+                    <td>@Model.RefNumber</td>
+                </tr>
+                <tr>
+                    <td>Delivery Date</td>
+                    <td>:</td>
+                    <td>@Model.DeliveryDate</td>
+                </tr>
+                <tr>
+                    <td>Truck Type</td>
+                    <td>:</td>
+                    <td>@Model.TruckType MT</td>
+                </tr>
+            </tbody>
+        </table>
+    </header>
+
+    <b style="margin-top:10px;font-size:12px;">Items :</b>
+    <table class="tableDetail">
+        <thead>
+            <tr>
+                <th width="5%"><b>NO.</b></th>
+                <th width="15%"><b>ITEM</b></th>
+                <th width="35%"><b>DESCRIPTION</b></th>
+                <th colspan="2" width="15%"><b>QTY</b></th>
+                <th width="15%"><b>PACKAGING</b></th>
+                <th><b>REMARKS</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            @*Dynamic view*@
+            @{
+                int pallets = 0;
+                Double sum = 0;
+            }
+            @foreach (var item in Model.Details)
+            {
+                <tr>
+                    <td align="center">@i</td>
+                    <td>@item.MaterialCode</td>
+                    <td>@item.MaterialName</td>
+                    <td style="border-right:none;" align="right">@item.Qty</td>
+                    <td style="border-left:none;">@item.UoM</td>
+                    <td align="center">@string.Format("{0} Pallet{1}", item.Packaging, Convert.ToInt32(item.Packaging) > 1 ? "s" : "") </td>
+                    <td></td>
+                </tr>
+                pallets += Convert.ToInt32(item.Packaging);
+                i++;
+
+                sum = sum + Convert.ToDouble(item.Qty);
+            }
+            @*@for (int z = 0; z <= 50; z++)
+                {
+                <tr>
+
+                    @if (z < Model.Details.Count())
+                    {
+                        var item = Model.Details[z];
+                        pallets += Convert.ToInt32(item.Packaging);
+                        <td align="center">@i</td>
+                        <td>@item.MaterialCode</td>
+                        <td>@item.MaterialName</td>
+                        <td style="border-right:none;" align="right">@item.Qty</td>
+                        <td style="border-left:none;">@item.UoM</td>
+                        <td align="center">@item.Packaging Pallet(s)</td>
+                    }
+                    else
+                    {
+                        <td align="center">@i</td>
+                        <td></td>
+                        <td></td>
+                        <td style="border-right:none;" align="right"></td>
+                        <td style="border-left:none;"></td>
+                        <td align="center"></td>
+                    }
+                    <td></td>
+                </tr>
+
+                i++;
+            }*@
+        </tbody>
+        <tfoot>
+            <tr>
+                <td align="center">Total</td>
+                <td colspan="2" align="center">@Model.Details.Count() ITEMS</td>
+                <td colspan="2" align="center">@string.Format("{0} KG ", sum)</td>
+                <td align="center">@string.Format("{0} Pallet{1}", pallets, pallets > 1 ? "s" : "")</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+   
+    <div style="margin-bottom: 40px;">&nbsp;</div>
+    <footer>
+        <b style="padding:5px;font-size:14px;float:right">Karawang, @Model.CreatedOn</b><br />
+        <table width='100%' style="margin-top:20px; border-collapse: collapse;" id="tableApproval">
+        </table>
+    </footer>
+</body>
+
+
+</html>
+
+<script>
+    
+</script>

@@ -1,0 +1,658 @@
+﻿@{
+    ViewBag.Title = "Production Request Form";
+    ViewBag.Create = String.Concat(ViewBag.Title.Replace(" ", ""), "/Create");
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Sales</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedNumber" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedDate" class="form-control datepicker" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="width: 100%;" id="btnAdd"><i class="ik ik-plus"></i>Add Detail</a>
+                        <br /><br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Order No.</th>
+                                    <th>Product Name</th>
+                                    <th>Customer</th>
+                                    <th>Qty</th>
+                                    <th>ETA</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "PRF")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+<div class="modal" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Add Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Order No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailOrderNo" id="detailOrderNo" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Finish Good</label>
+                    <div class="col-sm-8">
+                        <u><a href="#" id="btnSelectFG"><i class="ik ik-eye"></i>&nbsp; Select Finish Good</a></u>
+                        <br />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div id="finishGoodForm">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Item Number</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailItemNumber" id="detailItemNumber" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Stock Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailStockName" id="detailStockName" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <input type="hidden" name="detailFGIDHidden" id="detailFGIDHidden" />
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Customer</label>
+                    <div class="col-sm-8">
+                        <u><a href="#" id="btnSelectCustomer"><i class="ik ik-eye"></i>&nbsp; Select Customer</a></u>
+                        <br />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div id="customerForm">
+                    <input type="hidden" id="detailCustomerID" />
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Customer Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailCustomerName" id="detailCustomerName" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="detailQty" id="detailQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">UOM</label>
+                        <div class="col-sm-8">
+                            <select class="form-control">
+                                <option>KG</option>
+                            </select>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">ETA</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control datepicker" name="detailETA" id="detailETA" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">ATA</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailATA" id="detailATA" value="10-Jul-2020" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Remarks</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailRemarks" id="detailRemarks" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddDetail"><i class="ik ik-plus"></i>Add Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formFGModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Finish Good</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="finishGoodDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>CODE</th>
+                                <th>ITEM NUMBER</th>
+                                <th>STOCK NAME</th>
+                                <th>SPECIFICATIONS</th>
+                                <th>STOCK CODE</th>
+                                <th>CATEGORY CODE</th>
+                                <th>CATEGORY NAME</th>
+                                <th>INPUT TAX RATE</th>
+                                <th>OUTPUT TAX RATE</th>
+                                <th>ENABLED DATE</th>
+                                <th>ABLIAN</th>
+                                <th>FACTOR</th>
+                                <th>WEIGHT/BAG</th>
+                                <th>SPECIFIC GRAVITY</th>
+                                <th>WEIGHT/PALLET</th>
+                                <th>UOM</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="customerDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>CUS CODE</th>
+                                <th>CUSTOMER NAME</th>
+                                <th>ABBREVIATION</th>
+                                <th>CLASSIFICATION</th>
+                                <th>ADDRESS</th>
+                                <th>DEVELOPMENT DATE</th>
+                                <th>TELEPHONE</th>
+                                <th>CONTACT</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': false });
+
+        $('#finishGoodForm').hide();
+        $('#customerForm').hide();
+
+        var table = $('#data_table').DataTable({
+            scrollX: true,
+            autoWidth: true
+        });
+
+        $('#btnAdd').click(function () {
+            $('#detailOrderNo').val('');
+            $('#detailFGIDHidden').val('');
+            $('#detailQty').val('');
+            $('#detailCustomerID').val('');
+            $('#detailETA').val('');
+            $('#detailRemarks').val('');
+            $('#finishGoodForm').hide();
+            $('#customerForm').hide();
+            $('#formModal').modal('show');
+        });
+
+        $('#btnAddDetail').click(function () {
+            clearFormDetail();
+            var valid = true;
+            if ($('#detailOrderNo').val().length == 0) {
+                $('#detailOrderNo').addClass('is-invalid');
+                $('#detailOrderNo').next().html('This field is Required');
+                valid = false;
+            }
+            if ($('#detailFGIDHidden').val().length == 0) {
+                $('#btnSelectFG').parent().next().next().html('This field is Required');
+                valid = false;
+            }
+            if ($('#detailQty').val() == 0 || $('#detailQty').val() == '') {
+                $('#detailQty').addClass('is-invalid');
+                $('#detailQty').next().html('This field is Required');
+                valid = false;
+            }
+            if ($('#detailCustomerID').val().length == 0) {
+                $('#btnSelectCustomer').parent().next().next().html('This field is Required');
+                valid = false;
+            }
+            if ($('#detailETA').val().length == 0) {
+                $('#detailETA').addClass('is-invalid');
+                $('#detailETA').next().html('This field is Required');
+                valid = false;
+            }
+            //if ($('#detailRemarks').val().length == 0) {
+            //    $('#detailRemarks').addClass('is-invalid');
+            //    $('#detailRemarks').next().html('This field is Required');
+            //    valid = false;
+            //}
+
+            var numItems = $('.OrderNo').length;
+            if (numItems == 0) {
+                $('#detailTable tbody').empty();
+            } else {
+                $('.OrderNo').each(function () {
+                    if ($(this).val() == $('#detailOrderNo').val()) {
+                        $('#detailOrderNo').addClass('is-invalid');
+                        $('#detailOrderNo').next().html('Order Number already exist.');
+                        valid = false;
+                        return;
+                    }
+                });
+            }
+
+            if (valid) {
+                var OrderNo = $('#detailOrderNo').val();
+            var FG = $('#detailFGIDHidden').val();
+            var Qty = $('#detailQty').val();
+            var Customer = $('#detailCustomerID').val();
+            var ETA = $('#detailETA').val();
+            //var ATA = $('#detailATA').val();
+            var Remarks = $('#detailRemarks').val();
+            var html = '<tr>';
+            html += '<td>' + OrderNo + '<input type="hidden" class="OrderNo" value="' + OrderNo + '"></td>';
+            html += '<td>' + $('#detailStockName').val() + '<input type="hidden" class="FG" value="' + FG + '"></td>';
+            html += '<td>' + $('#detailCustomerName').val() + '<input type="hidden" class="Customer" value="' + Customer + '"></td>';
+            html += '<td>' + Qty + '<input type="hidden" class="Qty" value="' + Qty + '"></td>';
+            html += '<td>' + ETA + '<input type="hidden" class="ETA" value="' + ETA + '"></td>';
+            //html += '<td>' + ATA + '<input type="hidden" class="ATA" value="' + ATA + '"></td>';
+            html += '<td>' + Remarks + '<input type="hidden" class="Remarks" value="' + Remarks + '"></td>';
+            html += '<td><a href="#" class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</a></td>';
+            html += '</tr>';
+            $('#detailTable tbody').append(html);
+            $('#formModal').modal('hide');
+            }
+        });
+
+        function clearFormDetail() {
+            $('#detailOrderNo').removeClass('is-invalid');
+            $('#detailOrderNo').next().html('');
+            $('#detailQty').removeClass('is-invalid');
+            $('#detailQty').next().html('');
+            $('#detailETA').removeClass('is-invalid');
+            $('#detailETA').next().html('');
+            $('#detailRemarks').removeClass('is-invalid');
+            $('#detailRemarks').next().html('');
+            $('#btnSelectFG').parent().next().next().html('');
+            $('#btnSelectCustomer').parent().next().next().html('');
+        };
+
+        $(document).on('click', '.deleteDetail', function () {
+            console.log('delete clicked');
+            var target = $(this).parent().parent().closest('tr');
+            $(target).remove();
+        });
+
+        $("#btnSave").click(function () {
+            isValid = true;
+            //clearForm();
+            //if ($('#Code').val().length == 0) {
+            //    $('#Code').addClass('is-invalid');
+            //    $('#Code').next().html('This field is Required');
+            //    isValid = false;
+            //}
+            //if ($('#Name').val().length == 0) {
+            //    $('#Name').addClass('is-invalid');
+            //    $('#Name').next().html('This field is Required');
+            //    isValid = false;
+            //}
+            //if ($('#ProductNumber').val().length == 0) {
+            //    $('#ProductNumber').addClass('is-invalid');
+            //    $('#ProductNumber').next().html('This field is Required');
+            //    isValid = false;
+            //}
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        $('#btnYes').click(function () {
+            let i = 0;
+            let jsonObj = new Array();
+            $('.OrderNo').each(function () {
+                item = {}
+                item['OrderNumber'] = $('.OrderNo').eq(i).val();
+                item['FGID'] = $('.FG').eq(i).val();
+                item['CustomerID'] = $('.Customer').eq(i).val();
+                item['Qty'] = $('.Qty').eq(i).val().replace(/\,/g, '');
+                var eta = moment($('.ETA').eq(i).val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                item['ETA'] = eta;
+                item['Remarks'] = $('.Remarks').eq(i).val();
+
+                jsonObj.push(item);
+                i++;
+            });
+
+            var issuedDate = moment($('#IssuedDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/ProductionRequest/Create',
+                    data: {
+                        IssuedNumber: $('#IssuedNumber').val(),
+                        IssuedDate: issuedDate,
+                        Details: jsonObj
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            toastr.error(response.message);
+                            dissmissDialog();
+                        } else {
+                            clearValue();
+                            //clearForm();
+                            dissmissDialog();
+                            showFlash();
+                            $('#prfModal').modal('hide');
+                            //orderTable.draw();
+                        }
+                    }
+                });
+        });
+
+        function clearValue() {
+            $('#IssuedNumber').val('');
+            $('#IssuedDate').val('');
+            $('#detailTable tbody').empty();
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        $('#prfModal').on('shown.bs.modal', function () {
+            $('.datepicker').datepicker({
+                format: "dd/mm/yyyy",
+                todayBtn: "linked",
+                todayHighlight: true,
+                orientation: "left",
+                autoclose: true,
+                startDate: '+0d',
+                container: '#prfModal modal-body'
+            });
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d'
+        });
+
+        var finishGoodDataTable = $('#finishGoodDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/FinishGood/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "ItemNumber", "name": "ItemNumber", "autoWidth": true },
+                { "data": "StockName", "name": "StockName", "autoWidth": true },
+                { "data": "Specifications", "name": "Specifications", "autoWidth": true },
+                { "data": "StockCode", "name": "StockCode", "autoWidth": true },
+                { "data": "StockCategoryCode", "name": "StockCategoryCode", "autoWidth": true },
+                { "data": "StockCategoryName", "name": "StockCategoryName", "autoWidth": true },
+                { "data": "InputTaxRate", "name": "InputTaxRate", "autoWidth": true },
+                { "data": "OutputTaxRate", "name": "OutputTaxRate", "autoWidth": true },
+                { "data": "EnabledDate", "name": "EnabledDate", "autoWidth": true },
+                { "data": "ABLIAN", "name": "ABLIAN", "autoWidth": true },
+                { "data": "Factor", "name": "Factor", "autoWidth": true },
+                { "data": "WeightPerBag", "name": "WeightPerBag", "autoWidth": true },
+                { "data": "SpecificGravity", "name": "SpecificGravity", "autoWidth": true },
+                { "data": "PerPalletWeight", "name": "PerPalletWeight", "autoWidth": true },
+                { "data": "UoM", "name": "UoM", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#btnSelectFG').click(function () {
+            $('#formFGModal').modal('show');
+            finishGoodDataTable.columns.adjust();
+        });
+
+        $('#finishGoodDataTable tbody').on('click', 'tr', function () {
+            var data = finishGoodDataTable.row(this).data();
+            $('#detailFGIDHidden').val(data.ID);
+            $('#detailItemNumber').val(data.ItemNumber);
+            $('#detailStockName').val(data.StockName);
+            $('#finishGoodForm').show();
+            $('#formFGModal').modal('hide');
+
+            $("#finishGoodDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+        });
+
+        var customerDataTable = $('#customerDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Customer/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Abbreviation", "name": "Abbreviation", "autoWidth": true },
+                { "data": "ClassificationName", "name": "ClassificationName", "autoWidth": true },
+                { "data": "Address", "name": "Address", "autoWidth": true },
+                { "data": "DevelopmentDate", "name": "DevelopmentDate", "autoWidth": true },
+                { "data": "Telephone", "name": "Telephone", "autoWidth": true },
+                { "data": "Contact", "name": "Contact", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#btnSelectCustomer').click(function () {
+            $('#formCustomerModal').modal('show');
+            customerDataTable.columns.adjust();
+        });
+
+        $('#customerDataTable tbody').on('click', 'tr', function () {
+            var data = customerDataTable.row(this).data();
+            $('#detailCustomerName').val(data.Name);
+            $('#detailCustomerID').val(data.ID);
+            $('#customerForm').show();
+            $('#formCustomerModal').modal('hide');
+
+            $("#customerDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+        });
+
+    </script>
+}

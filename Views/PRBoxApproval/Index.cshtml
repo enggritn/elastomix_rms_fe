@@ -1,0 +1,340 @@
+﻿
+@{
+    ViewBag.Title = "PR Box Approval";
+    ViewBag.Module = "PRBoxApproval";
+}
+
+
+
+@section custom_css {
+    @Scripts.Render("~/Content/plugins/vue.min.js")
+    @Scripts.Render("~/Content/plugins/axios.min.js")
+
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <style>
+        #prbox-list tbody tr td {
+            padding: 0 !important;
+        }
+
+            #prbox-list tbody tr td input {
+                border-radius: 0;
+                -webkit-border-radius: 0;
+                -moz-border-radius: 0;
+            }
+    </style>
+}
+
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Form Input List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master Data</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div id="vapp">
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    LIST PR BOX APPROVAL
+                </div>
+
+                <div class="card-body" style="padding : 10px;">
+
+                    <table class="table table-bordered table-striped nowrap table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Code</th>
+                                <th style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in dataList">
+                                <td>
+                                    {{ item.PRBoxGroupCode }} <br />
+                                    {{ item.PRBoxGroupDescription }}
+                                </td>
+                                <td style="width: 50px;"><button v-on:click="open(item.PRBoxGroupCode)" class="btn btn-xs btn-warning"><i class="fa fa-pencil-alt"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="card-footer">
+                    <button v-on:click="newBox" class="btn btn-primary"><i class="fa fa-file"></i> Add New PRBox Approval</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8" v-show="form.is_open">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3 style="margin: 0; font-weight: bold;">Form Input PR Box Approval</h3>
+                </div>
+
+                <div class="card-body" style="padding-bottom: 10px;">
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-3">PRBox Approval Code</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" v-model="form.PRBoxGroupCode" :disabled="is_can_delete" name="PRBoxGroupCode" id="PRBoxGroupCode" class="form-control" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-3">PRBox Description</label>
+                        <div class="col-sm-9">
+                            <input type="text" autocomplete="off" v-model="form.PRBoxGroupDescription" name="PRBoxGroupCode" id="PRBoxGroupDescription" class="form-control" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <table id="prbox-list" class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" style="margin-bottom: 0;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">No</th>
+                                    <th>Name</th>
+                                    <th>Title</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in form.Details">
+                                    <td><input type="number" class="form-control input-no" v-model="item.SequenceNo" min="1" style="padding: 5px; text-align: right;" /></td>
+                                    <td><input type="text" v-model="item.PRBoxName" class="form-control input-prboxname" /></td>
+                                    <td><input type="text" v-model="item.PRBoxTitle" class="form-control input-prboxtitle" /></td>
+                                    <td style="width: 50px;" class="table-action"><button v-on:click="remove(item.SequenceNo)" class="btn btn-xs" data-row="0"><i class="fa fa-trash text-danger"></i></button></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="3"><button type="button" v-on:click="add" id="btn-add-item-prbox" class="btn btn-xs btn-info"><i class="fa fa-plus"></i> Add New Row</button></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    <button type="button" v-show="is_can_delete" v-on:click="deletePRBox()" class="btn btn-outline-danger float-left"><i class="ik ik-trash"></i>Delete</button>
+
+                    <button type="button" v-on:click="save" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Save</button>
+                    <button type="button" v-on:click="close" class="btn btn-outline-secondary float-right mr-10">Close</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+@section custom_js
+{
+
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/sweetalert.min.js")
+
+
+    <script>
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let token = '@Session["token"].ToString()';
+
+        var preloader = $('#preloader');
+
+
+        var app = new Vue({
+
+            el: '#vapp',
+            data: {
+                message: 'Hello Vue!',
+                dataList : [],
+                form: {
+                    is_open : false,
+                    PRBoxGroupCode : '',
+                    PRBoxGroupDescription : '',
+                    Details : []
+                },
+                formDetail : {
+                    SequenceNo : 0,
+                    PRBoxName : '',
+                    PRBoxTitle : ''
+                },
+                is_can_delete : false
+            },
+            mounted: function () {
+                this.form.Details.push(
+                    {
+                        SequenceNo: 1,
+                        PRBoxName: '',
+                        PRBoxTitle: ''
+                    }
+                );
+                preloader.show();
+                axios.get(URL_API + "api/pr-box-approval")
+                    .then(response => { this.dataList = response.data; preloader.hide(); });
+            },
+            methods: {
+                refresh: function () {
+                    axios.get(URL_API + "api/pr-box-approval")
+                        .then(response => {
+                            this.dataList = response.data;
+                            this.is_can_delete = false;
+                            this.form = {};
+                            preloader.hide();
+                        });
+                },
+                newBox: function () {
+
+                    this.form = {
+                        is_open: true,
+                        PRBoxGroupCode: '',
+                        PRBoxGroupDescription: '',
+                        Details: []
+                    };
+
+                    this.is_can_delete = false;
+                },
+                close: function () {
+
+                    this.form = {
+                        is_open: false,
+                        PRBoxGroupCode: '',
+                        PRBoxGroupDescription: '',
+                        Details: []
+                    };
+
+                    this.is_can_delete = false;
+                },
+                add: function() {
+
+                    this.form.Details.push(
+                        {
+                            SequenceNo: this.form.Details.length + 1,
+                            PRBoxName : '',
+                            PRBoxTitle : ''
+                        }
+                    );
+
+                },
+                open: function (code) {
+                    axios.get(URL_API + "api/pr-box-approval/" + code)
+                        .then(response => {
+                            this.form = response.data;
+                            this.form.is_open = true;
+                            this.is_can_delete = true;
+                        });
+                },
+                remove: function (no) {
+                    var newNo = 1;
+                    var details = [];
+                    for (var i = 0; i < this.form.Details.length; i++) {
+                        var item = this.form.Details[i];
+                        if (no !== item.SequenceNo) {
+                            item.SequenceNo = newNo;
+                            details.push(item);
+                            newNo++;
+                        }
+                    }
+                    this.form.Details = details;
+                },
+
+
+                populate: function(){
+                    console.log(this.form);
+                },
+
+                save: function () {
+
+                    const headers = {
+                        "Token": TOKEN_USER
+                    };
+                    preloader.show();
+                    axios.post(URL_API + 'api/pr-box-approval', this.form, { headers })
+                        .then(response => {
+                            swal("Success Save!", response.data, "success");
+                            this.refresh();
+                        })
+                        .catch(error => {
+                            let message = error.message;
+                            if (error.response !== null && error.response.data != null && error.response.data.Message != null) {
+                                message = error.response.data.Message;
+                            }
+
+                            swal("Failed Save!", message, "error");
+                            preloader.hide();
+                        });
+
+                },
+                deletePRBox: function () {
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this PR Box Approval!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                axios.delete(URL_API + "api/pr-box-approval?PRBoxGroupCode=" + this.form.PRBoxGroupCode)
+                                    .then(response => {
+                                        swal("Poof! Your PR Box Approval has been deleted!", {
+                                            icon: "success",
+                                        });
+                                        this.refresh();
+                                    });
+                            }
+                        });
+
+
+                },
+            }
+        });
+
+
+    </script>
+}

@@ -1,0 +1,301 @@
+﻿
+@{
+    ViewBag.Title = "Production Plan";
+
+    DateTime currentDate = DateTime.Now;
+    var startYear = 2020;
+    List<int> yearList = new List<int>();
+
+    for (int i = startYear; i <= currentDate.Year; i++)
+    {
+        yearList.Add(i);
+    }
+
+    string[] months = { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" };
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Schedule</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC Data</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">Month</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" id="selectCalendarFilterMonth">
+                                @for(int i = 0; i < 12; i++)
+                                {
+                                    <option value="@i" @(i == (currentDate.Month) ? "selected" : "")>@months[i]</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-2 col-form-label">Year</label>
+                        <div class="col-sm-3">
+                            <select class="form-control" id="selectCalendarFilterYear">
+                                @foreach (int year in yearList)
+                                {
+                                    <option value="@year" @(year == (currentDate.Year) ? "selected" : "")>@year</option>
+                                }
+                                </select>
+                        </div>
+                    </div>
+                </div>
+                <div id='calendar'></div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/fullcalendar/lib/main.css")
+
+    <style>
+        #calendar {
+            margin: 20px;
+/*            max-height: 700px;*/
+/*            height: auto;*/
+        }
+
+        .fc-view {
+            overflow-x: scroll;
+        }
+
+        .fc-view > table {
+            min-width: 350%;
+            width: 350%;
+        }
+
+        .fc-time-grid .fc-slats {
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .fc-scroller.fc-time-grid-container {
+            overflow: scroll !important;
+        }
+
+        .fc-axis {
+            position: sticky;
+            left: 0;
+            background: white;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/fullcalendar/lib/main.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let baseUrl = '@ViewBag.BaseUrl';
+        var calendar = null;
+        let currentMoment = moment();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCalendar(0);
+        });
+
+      $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "ProductionPlan")')
+        });
+
+        $(document).on('change', '#selectCalendarFilterMonth', function (e) {
+            e.preventDefault();
+            updateCurrentMomentBasedOnFilter();
+            renderCalendar(0);
+        });
+
+        $(document).on('change', '#selectCalendarFilterYear', function (e) {
+            e.preventDefault();
+            updateCurrentMomentBasedOnFilter();
+            renderCalendar(0);
+        });
+
+        function updateCurrentMomentBasedOnFilter() {
+            var selectCalendarFilterMonthEl = $('#selectCalendarFilterMonth');
+            var selectCalendarFilterMonthYear = $('#selectCalendarFilterYear');
+
+            currentMoment = moment($(selectCalendarFilterMonthYear).val() + '-' + $(selectCalendarFilterMonthEl).val(), 'YYYY-MM');
+        }
+
+        function renderCalendar(addValue) {
+
+            let year = 2020;
+            let month = 11;
+
+
+            var calendarEl = document.getElementById('calendar');
+            currentMoment.add(addValue, 'M')
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGrid',
+                duration: { days: currentMoment.daysInMonth() },
+                initialDate: currentMoment.startOf('month').format('YYYY-MM-DD'),
+                allDaySlot: false,
+                slotDuration: '00:05:00',
+                scrollTime: '07:15:00',
+                slotMinTime: '00:00:00',
+                slotLabelInterval: '01:00:00',
+                dayHeaderFormat: { weekday: 'short', day: 'numeric', omitCommas: true },
+                slotLabelFormat: { hour: 'numeric', minute: '2-digit', hour12: false },
+                dayHeaderContent: (args) => {
+                    //console.log(args);
+                    //return moment(args.date).format('ddd Do')
+                    return moment(args.date).format('ddd') + " / " + args.date.getDate();
+                },
+                 slotLaneContent: function (arg) {
+                    console.log(arg);
+                },
+                //events: {
+                //    //url: 'http://mawait.mawadrata.com/events/events.php', // Taruh link API di sini. Formatnya ikuti yang bawah (Data Sampel ada di Tanggal 14 Oktober 2020, Jam 1 Siang.)
+                //    //failure: function () {
+                //    //    toastr.error("Cannot Load Data.");
+                //    //}
+                //},
+                //events: [
+                //    {
+                //        "title": "IZ-038M (10) 9/6  1.25 t I- 19 - 08 - 0621_1)", "description" : "abc", "start": "2020-11-12T13:00:00", "end": "2020-11-12T14:00:00", "allDay": false, 'backgroundColor': '#ff0000', 'borderColor': '#000000', 'textColor': '#ffffff' },
+                //    { "title": "IZ-038M (10) 9/6  1.25 t I- 19 - 08 - 0621_1)", "description": "abc", "start": "2020-11-12T10:00:00", "end": "2020-11-12T13:00:00", "allDay": false, 'backgroundColor': '#00ff00', 'borderColor': '#000000', 'textColor': '#000000' }
+                //],
+                events: [
+                    {
+                        "title": "BREAK",
+                        "start": "2020-11-23T11:30:00",
+                        "end": "2020-11-23T12:30:00",
+                        "allDay": false,
+                        "backgroundColor": "#4f4f4f",
+                        "textColor": "#fff"}
+                ],
+                eventColor: '#FFFF99',
+                eventTextColor: '#000',//,
+                //header: {
+                //    left: '',
+                //    center: '',
+                //    right: 'today'
+                //}
+                //aspectRatio: 2,
+                eventSources: [
+                    {
+                        url: server + 'Api/ProductionPlan/GetSchedule?year=' + year + '&month=' + month,
+                        type: 'GET',
+                        cache: false,
+                    }
+                ],
+                eventContent: function (arg) {
+                    //console.log(arg);
+                    return {
+
+                        html: '<b>' + arg.timeText + '<br/><br/>' + arg.event.title + '</b>'
+                    }
+                },
+                stickyHeaderDates: true,
+                stickyFooterScrollbar: true,
+                contentHeight: 500,
+                //slotLabelContent: function (arg) {
+                //    console.log(arg);
+                //}
+            });
+            //calendar.addEvent(event[{
+            //    "title": "BREAK",
+            //    "start": "2020-11-23T11:30:00",
+            //    "end": "2020-11-23T12:30:00",
+            //    "allDay": false,
+            //    "backgroundColor": "#4f4f4f",
+            //    "textColor": "#000"
+            //}]);
+            calendar.render();
+
+
+            $('.fc-today-button').hide();
+            $('.fc-prev-button').hide();
+            $('.fc-next-button').hide();
+
+            // $.ajax({
+            //        type: 'GET',
+            //        dataType: "json",
+            //        beforeSend: function (request) {
+            //            request.setRequestHeader('Token', token);
+            //        },
+            //        url: server + 'Api/ProductionPlan/GetSchedule?year=' + year + '&month=' + month ,
+            //        success: function (response) {
+            //            isValid = response.status;
+            //            if (isValid) {
+            //                let data = response.data;
+            //                console.log(data);
+            //                calendar.addEvent(data);
+            //            }
+            //        }
+            //});
+
+        }
+</script>
+}

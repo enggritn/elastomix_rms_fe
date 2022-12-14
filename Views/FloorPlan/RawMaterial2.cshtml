@@ -1,0 +1,447 @@
+﻿@{
+    Layout = null;
+    string[] Alphabet = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J","K","L" };
+}
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Layout Floor Plan - Raw Material</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sticky-footer-navbar/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    <!-- Custom styles for this template -->
+    <style>
+    /* Sticky footer styles
+    -------------------------------------------------- */
+    html {
+        position: relative;
+        min-height: 100%;
+    }
+
+    body {
+        /* Margin bottom by footer height */
+        margin-bottom: 60px;
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        line-height: 60px; /* Vertically center the text there */
+        background-color: #f5f5f5;
+    }
+
+
+    /* Custom page CSS
+    -------------------------------------------------- */
+    /* Not required for template or sticky footer method. */
+
+    body > .container-fluid {
+        padding: 100px 50px 0 50px;
+    }
+
+    .footer > .container {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    code {
+        font-size: 80%;
+    }
+
+    body {
+        padding-top: 2rem;
+        padding-bottom: 0;
+    }
+
+    h3 {
+        margin-top: 2rem;
+    }
+
+    .row {
+        margin-bottom: 1rem;
+    }
+
+        .row .row {
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+
+    hr {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .table-bordered.table-rak td {
+        border: 1px solid #000;
+    }
+
+    .table-bordered.table-rak tbody tr td {
+        border: 1px solid #e1e1e1;
+    }
+
+    .rak-temp {
+        width: 80%;
+        right: 0;
+        position: absolute;
+        bottom: 0;
+        height: 60px;
+        border: 2px solid #096b72;
+        background: repeating-linear-gradient(to right, transparent, #ed7d31 6px, rgba(9, 107, 114, 0.5) 6px, rgba(9, 107, 114, 0.5) 8px), repeating-linear-gradient(to bottom, transparent, #ed7d31 6px, rgba(9, 107, 114, 0.5) 6px, rgba(9, 107, 114, 0.5) 8px);
+    }
+
+
+
+    #rak-18,
+    #rak-14,
+    #rak-15,
+    #rak-16 {
+        background: #0070c0;
+    }
+
+    #rak-13 {
+        background: #ed7d31;
+    }
+
+    #rak-17 {
+        background: #ffff00;
+    }
+
+
+    .space-blank-purple {
+        position: absolute;
+        height: 70%;
+        background: #cc66ff;
+        width: 70%;
+        right: 5px;
+        top: 20px;
+    }
+
+    .space-blank-brown {
+        position: absolute;
+        height: 100px;
+        background: #ed7d31;
+        width: 70%;
+        right: 5px;
+        bottom: 5px;
+    }
+
+    .label-info {
+        background: #fff;
+        border: 0;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+
+    #rak-11 tbody tr td {
+        height: 70px;
+    }
+
+    #rm-area,
+    #rm-area tbody tr td {
+        background: #ffcccc;
+        border-color: #ffcccc;
+    }
+
+    #rm-area tbody tr td {
+        height: 70px;
+    }
+
+    .rak-lookup tbody tr td:hover {
+        box-shadow : 2px 2px;
+    }
+
+    .border-area {
+        padding: 10px;
+        border: 5px solid #ffc000;
+    }
+
+    tbody tr.row-label td,
+    tbody tr td.col-label {
+        border: 1px solid #fff !important;
+        font-weight: bold;
+        font-size: 10px;
+        background: #fff;
+        padding: 0;
+    }
+    </style>
+
+    <script>
+        var URL_API = '@System.Configuration.ConfigurationManager.AppSettings["server"].ToString()';
+        var TOKEN_USER = '@(Session != null && @Session["token"] != null ? @Session["token"].ToString() : "")';
+    </script>
+</head>
+
+<body>
+
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">LAYOUT RAW MATERIAL - 2</a>
+        </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="container-fluid">
+        <div class="border-area">
+            <div class="row">
+
+                <div class="col-1">
+                    <label class="form-control label-info">RAK - 17</label>
+                    <table id="rak-17" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                            <tr class="row-label">
+                                <td>3</td>
+                                <td>2</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1">
+                    <label class="form-control label-info">RAK - 16</label>
+                    <table id="rak-16" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <tr>
+                                    <td class="col-label">@Alphabet[9-i]</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                                <tr class="row-label">
+                                    <td></td>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1">
+                    <label class="form-control label-info">RAK - 15</label>
+                    <table id="rak-15" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                            <tr class="row-label">                                
+                                <td>3</td>
+                                <td>2</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1">
+                    <div class="rak-lookup space-blank-purple"></div>
+                </div>
+                <div class="col-1">
+                    <label class="form-control label-info">RAK - 14</label>
+                    <table id="rak-15" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                            <tr class="row-label">
+                                <td>3</td>
+                                <td>2</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-1">
+                    <label class="form-control label-info">RAK - 13</label>
+                    <table id="rak-13" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            @for (int i = 0; i < 10; i++)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                            <tr class="row-label">
+                                <td>3</td>
+                                <td>2</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-1"></div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-control label-info">RAK - 18</label>
+                    <table id="rak-18" class="rak-lookup table table-bordered table-rak">
+                        <tbody>
+                            <tr class="row-label">
+                                <td>H</td>
+                                <td>G</td>
+                                <td>F</td>
+                                <td>E</td>
+                                <td>D</td>
+                                <td>C</td>
+                                <td>B</td>
+                                <td>A</td>
+                                <td></td>
+                            </tr>
+                            @for (int i = 0; i < 3; i++)
+                            {
+                        <tr>
+                            <td style="background: #ffff00;"></td>
+                            <td style="background: #ffff00;"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="col-label">@(i+1)</td>
+                        </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2">
+                    <div class="rak-lookup space-blank-brown">
+                        <label class="form-control label-info">AREA 1</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <span class="text-muted">Information Layout.</span>
+        </div>
+    </footer>
+
+
+    <div class="modal fade bd-example-modal-lg" id="form-lookup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalTitle">BinRack Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table id="item-list" class="table table-sm table-bordered table-striped nowrap" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>AREA</th>
+                                <th>RACK</th>
+                                <th>QTY</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ik ik-x-circle"></i>Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    @Scripts.Render("~/Content/plugins/jquery/jquery.min.js")
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+
+
+
+    <script>
+        //$('#form-lookup').modal();
+
+
+        function ShowReceiveForm() {
+
+            $('#form-lookup').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        };
+
+        console.log(URL_API + "api/transfer/stock");
+
+        var table = $('#item-list').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: URL_API + "api/transfer/stock",
+            },
+            columns: [
+                { "data": "Barcode", "name": "Barcode", "autoWidth": false },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": false },
+                { "data": "BinRackArea", "name": "BinRackArea", "autoWidth": false },
+                { "data": "BinRack", "name": "BinRack", "autoWidth": false },
+                { "data": "Quantity", "name": "Quantity", "autoWidth": false }
+            ]
+        });
+
+
+        $('.rak-lookup').click(function () {
+            $('#form-lookup').modal('show');
+            table.ajax.url(URL_API + "api/transfer/stock").load();
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Recipe Detail Semi Finish Good";
+    ViewBag.Module = "SemiFinishGood";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Semi Finish Good</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Recipe Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="RecipeNumber" class="form-control" readonly />
+                                <input type="hidden" id="ID" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Raw Material Code</th>
+                                    <th>Raw Material Name</th>
+                                    <th>Qty</th>
+                                    <th>Full Bag</th>
+                                    <th>Remainder Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@ViewBag.BaseUrl/SemiFinishGoods/Edit?id=@ViewBag.param2" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                @*<button id="btnDelete" type="button" class="btn btn-danger float-right"><i class="ik ik-trash"></i>Delete</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Delete Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        initData();
+
+        function initData() {
+            $('#detailTable tbody').empty();
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/FinishGood/GetRecipeById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#RecipeNumber').val(data.RecipeNumber);
+
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.MaterialCode + '</td>';
+                            html += '<td>' + value.MaterialName + '</td>';
+                            html += '<td>' + value.Qty + '</td>';
+                            html += '<td>' + value.Fullbag + '</td>';
+                            html += '<td>' + value.RemainderQty + '</td>';
+                            html += '</tr>';
+                        });
+                        html += '<tr><td colspan="2" align="right"><b>TOTAL</b></td>' +
+                            '<th>' + response.totalQty + '</th>' +
+                            '<td colspan="2"></td>' +
+                            '</tr>';
+                        $('#detailTable tbody').append(html);
+                    }
+                }
+            });
+        };
+
+        $('#btnDelete').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/FinishGood/DeleteRecipe?id=@ViewBag.param',
+                data: {
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        toastr.success(response.message);
+                        window.location.replace('@ViewBag.BaseUrl/SemiFinishGoods/Edit?id=@ViewBag.param2');
+                    }
+                }
+            });
+        });
+    </script>
+}

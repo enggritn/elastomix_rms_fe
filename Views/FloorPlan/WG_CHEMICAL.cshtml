@@ -1,0 +1,86 @@
+﻿
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    int colWC3 = 0;
+}
+
+<table class="table-layout-info table table-sm table-borderless" style="margin-bottom: 0; margin-left: 360px; width: 500px;">
+    <tr>
+        <td style="vertical-align: top; width : 100px;">Note :</td>
+        <td style="width: 30px;"><button class="btn btn-xs btn-primary btn-block" style="width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>RACK CH01</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-info btn-block" style="width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>RACK CH02</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-block btn-warning" style="width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>RACK CH03</td>
+    </tr>
+</table>
+
+
+<table id="table-rm-tent" class="table-floor table table-bordered table-sm">
+    <tbody>
+        @for (int iRow = 1; iRow < 16; iRow++)
+        {
+        <tr>
+            @for (int iCol = 1; iCol < 26; iCol++)
+            {
+                // RAK CH01
+                if (iRow >= 1 && iRow <= 9 && iCol >= 8 && iCol <= 11)
+                {
+                    <td style="">
+                        <button class="btn btn-xs btn-primary btn-block text-center small text-black btn-info-rak" id="AR008CH01-@((iRow + ((iCol-8)*9)).ToString("00"))" data-area="AR008" data-rak="CH01-@((iRow + ((iCol-8)*9)).ToString("00"))">
+                            @((iRow + ((iCol-8)*9)).ToString("00"))
+                        </button>
+                    </td>
+                }
+
+                // RAK CH02
+                else if (iRow >= 1 && iRow <= 9 && iCol >= 15 && iCol <= 18)
+                {
+                    <td style="">
+                        <button class="btn btn-xs btn-info btn-block text-center small text-black btn-info-rak" id="AR008CH02-@((37-(iRow + ((iCol-15)*9))).ToString("00"))" data-area="AR008" data-rak="CH02-@((37-(iRow + ((iCol-15)*9))).ToString("00"))">
+                            @((37-(iRow + ((iCol-15)*9))).ToString("00"))
+                        </button>
+                    </td>
+                }
+
+                // RAK CH03
+                @*else if (iRow >= 12 && iRow <= 15 && iCol >= 8 && iCol <= 16)
+            {
+                <td style="">
+                    <button class="btn btn-xs btn-block btn-warning text-center small text-black btn-info-rak" id="AR008CH03-@((colWC3++).ToString("00"))" data-area="AR008" data-rak="">
+                        @((colWC3++).ToString("00"))
+                    </button>
+                </td>
+            }*@
+                else if (iRow >= 12 && iRow <= 15 && iCol >= 8 && iCol <= 16)
+                {
+                    <td style="">
+                        <button class="btn btn-xs btn-block btn-warning text-center small text-black btn-info-rak" id="AR008CH03-@((++colWC3).ToString("00"))" data-area="AR008" data-rak="CH03-@((colWC3).ToString("00"))">
+                            @((colWC3).ToString("00"))
+                        </button>
+                    </td>
+                }
+
+
+                else
+                {
+                    <td><button type="button" class="btn btn-xs btn-block text-center small bg-white text-white" disabled>@iRow:@iCol</button></td>
+                }
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+

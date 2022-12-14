@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "Raw Material";
+    ViewBag.Module = "RawMaterial";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>View</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">View @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Rawmate Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Rawmate Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Name" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Qty</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Qty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">UoM</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="UoM" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ShelfLife</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="ShelfLife" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Ordered Qty</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="OrderedQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Transporting Mode</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="TransportingMode" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Min Purchase Qty</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="MinPurchaseQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Place Of Origin</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Origin" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Maker Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Maker" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Supplier Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Vendor" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">MSDS</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Msds" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Specification</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Specification" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PO Rate</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="PoRate" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Spec Gravity</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="SpecGravity" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Factor</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Factor" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Online</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Online" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Hygroscopic</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Hygroscopic" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Start Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="StartDate" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Update Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="UpdateDate" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">SupplierCode</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="SupplierCode" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Type</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Type" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Aman</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Aman" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">SafetyStock</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="SafetyStock" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ArrivalDays</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="ArrivalDays" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-4 col-sm-8">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="IsActive" id="IsActive" disabled>
+                                    <label class="custom-control-label" for="IsActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "RawMaterial")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js
+{
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+        initData();
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#Name').val(data.Name);
+                        $('#Code').val(data.Code);
+                        $('#Qty').val(data.Qty);
+                        $('#UoM').val(data.UoM);
+                        $('#ShelfLife').val(data.ShelfLife);
+                        $('#OrderedQty').val(data.OrderedQty);
+                        $('#TransportingMode').val(data.TransportingMode);
+                        $('#MinPurchaseQty').val(data.MinPurchaseQty);
+                        $('#Origin').val(data.Origin);
+                        $('#Maker').val(data.Maker);
+                        $('#Vendor').val(data.Vendor);
+                        $('#Msds').val(data.Msds);
+                        $('#Specification').val(data.Specification);
+                        $('#PoRate').val(data.PoRate);
+                        $('#SpecGravity').val(data.SpecGravity);
+                        $('#Factor').val(data.Factor);
+                        $('#Online').val(data.Online);
+                        $('#Hygroscopic').val(data.Hygroscopic);
+                        $('#StartDate').val(data.StartDate);
+                        $('#UpdateDate').val(data.UpdateDate);
+                        $('#SupplierCode').val(data.SupplierCode);
+                        $('#Type').val(data.Type);
+                        $('#Aman').val(data.Aman);
+                        $('#SafetyStock').val(data.SafetyStock);
+                        $('#ArrivalDays').val(data.ArrivalDays);
+                        $('#IsActive').prop('checked', data.IsActive);
+                    }
+                }
+            });
+        }
+    </script>
+}

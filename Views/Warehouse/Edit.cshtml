@@ -1,0 +1,605 @@
+﻿@{
+    ViewBag.Title = "Warehouse";
+    ViewBag.Module = "Warehouse";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <input type="hidden" id="ID" class="form-control" />
+                                <input type="hidden" id="CodeHidden" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Name" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="WarehouseType">
+                                    <option value="EMIX">EMIX</option>
+                                    <option value="OUTSOURCE">OUTSOURCE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-4 col-sm-8">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="IsActive" id="IsActive">
+                                    <label class="custom-control-label" for="IsActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <b>Bin Rack Area</b>
+                                @*<a href="@ViewBag.BaseUrl/BinRackArea/Create?wid=@ViewBag.Param" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Create Area</a>*@
+                                <button type="button" class="btn btn-primary float-right" id="btnCreate"><i class="ik ik-plus"></i>Create Area</button>
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <div class="col-md-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" id="BinRackAreaDatatable" width="100%" cellspacing="0">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>AREA CODE</th>
+                                                <th>AREA NAME</th>
+                                                <th>AREA TYPE</th>
+                                                <th>STATUS</th>
+                                                <th>CREATED BY</th>
+                                                <th>CREATED ON</th>
+                                                <th>MODIFIED BY</th>
+                                                <th>MODIFIED ON</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal" id="modifyModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifyTitle">Add Area</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row" id="areaId" style="display:none">
+                    <label class="col-form-label col-sm-4">Area Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" id="AreaCode" class="form-control" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" id="AreaName" class="form-control" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Type</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" id="AreaType">
+                        </select>
+                    </div>
+                </div>
+                 <div class="form-group row" id="areaActive" style="display: none;">
+                    <div class="offset-4 col-sm-8">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="AreaStatus">
+                            <label class="custom-control-label" for="AreaStatus">Is Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnSubmit"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+    initData();
+
+    let WarehouseCode = "";
+
+         $('#btnBack').click(function () {
+                window.location.replace('@Url.Action("Index", "Warehouse")')
+        });
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+
+                        var data = response.data;
+                        $('#Name').val(data.Name);
+                        //$('#ID').val(data.ID);
+                        $('#Remarks').val(data.Remarks);
+                        $('#Code').val(data.Code);
+                        $('#CodeHidden').val(data.Code);
+
+                        $('#IsActive').prop('checked', data.IsActive);
+
+                        let warehouse_type = response.warehouse_type;
+                        let body = '';
+                        $('#WarehouseType').empty();
+                        $.each(warehouse_type, function (index, value) {
+                            body += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#WarehouseType').append(body);
+
+                        $('#WarehouseType').val(data.Type);
+                        WarehouseCode = data.Code;
+
+                    }
+                }
+            });
+        }
+
+        $('#btnSave').click(function () {
+            isValid = true;
+            clearForm();
+            if ($('#Name').val().length == 0) {
+                $('#Name').addClass('is-invalid');
+                $('#Name').next().html('This field is Required');
+                isValid = false;
+            }
+
+            if ($('#Code').val().length == 0) {
+                $('#Code').addClass('is-invalid');
+                $('#Code').next().html('This field is Required');
+                isValid = false;
+            }
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        function clearForm() {
+            $('#Code').removeClass('is-invalid');
+            $('#Code').next().html('');
+            $('#Name').removeClass('is-invalid');
+            $('#Name').next().html('');
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+    $('#btnYes').click(function () {
+        $('#btnYes').prop('disabled', true);
+            let isActive = 'false';
+            if ($('#IsActive').prop('checked')) {
+                isActive = 'true';
+            };
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/@ViewBag.Module/Update',
+                    data: {
+                        ID: $('#ID').val(),
+                        Name: $('#Name').val(),
+                        Type: $('#WarehouseType').val(),
+                        Code: $('#CodeHidden').val(),
+                        IsActive: isActive
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            toastr.error(response.message);
+                            dissmissDialog();
+                        } else {
+                            clearForm();
+                            dissmissDialog();
+                            showFlash();
+                        }
+                },
+                complete: function () {
+                    $('#btnYes').prop('disabled', false);
+                }
+                });
+        });
+
+        var BinRackAreaDatatable = $('#BinRackAreaDatatable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[0, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRackArea/Datatable?WarehouseID=@ViewBag.Param"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Type", "name": "Type", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        button += '<button class="btn btn-info" onclick= "EditRow(this)"><i class="ik ik-edit"></i>Edit</button>';
+                        button += ' <button class="btn btn-outline-info" onclick= "DetailRow(this)"><i class="ik ik-eye"></i>Detail</button>';
+                        //button += ' <button class="btn btn-danger" onclick= "DeleteRow(this)"><i class="ik ik-trash"></i>Delete</button>';
+                        return button;
+                    }
+                },
+            ]
+        });
+
+    initType();
+            function initType() {
+                    $.ajax({
+                        type: 'GET',
+                        async: false,
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            request.setRequestHeader('Token', token);
+                        },
+                        url: server + 'Api/BinRackArea/GetAreaType',
+                        success: function (response) {
+                            isValid = response.status;
+                            if (isValid) {
+                                let data = response.area_type;
+                                let body = '';
+                                $('#AreaType').empty();
+                                $.each(data, function (index, value) {
+                                    body += '<option value="' + value + '">' + value + '</option>';
+                                });
+                                $('#AreaType').append(body);
+
+
+                            }
+                        }
+                    });
+                };
+
+
+    let AreaId = "";
+    let Action = "";
+
+    $('#btnCreate').click(function () {
+        Action = "Create";
+            AreaId = "";
+            $('#areaId').hide();
+            $('#areaActive').hide();
+
+            $('#AreaCode').prop('readonly', false);
+            $('#AreaName').prop('readonly', false);
+            $("#AreaType").prop('readonly', false);
+
+
+            $('#AreaCode').val("");
+            $('#AreaName').val("");
+            $("#AreaType").prop('selectedIndex', 0);
+
+        $('#AreaCode').removeClass('is-invalid');
+        $('#AreaCode').next().html('');
+
+        $('#AreaName').removeClass('is-invalid');
+        $('#AreaName').next().html('');
+
+        $('#AreaType').removeClass('is-invalid');
+        $('#AreaType').next().html('');
+
+            $('#modifyTitle').text("Add Area"); 
+
+
+            $('#modifyModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        });
+
+
+    function EditRow(row) {
+        Action = "Edit";
+        var elementRow = $(row).closest('tr');
+        var data = BinRackAreaDatatable.row($(elementRow)).data();
+        AreaId = data.ID;
+        if (AreaId != "") {
+            $('#areaId').show();
+            $('#areaActive').show();
+            $('#AreaCode').prop('readonly', true);
+            $('#AreaName').prop('readonly', false);
+            $("#AreaType").prop('readonly', false);
+
+
+            $('#AreaCode').val(data.Code);
+            $('#AreaName').val(data.Name);
+            $("#AreaType").val(data.Type);
+            $("#AreaStatus").prop('checked', data.IsActive);
+
+            $('#AreaCode').removeClass('is-invalid');
+            $('#AreaCode').next().html('');
+
+            $('#AreaName').removeClass('is-invalid');
+            $('#AreaName').next().html('');
+
+            $('#AreaType').removeClass('is-invalid');
+            $('#AreaType').next().html('');
+
+            $('#modifyTitle').text("Edit Area"); 
+        }
+        $('#modifyModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    //function DeleteRow(row) {
+    //    Action = "Delete";
+    //    var elementRow = $(row).closest('tr');
+    //    var data = BinRackAreaDatatable.row($(elementRow)).data();
+    //    AreaId = data.ID;
+    //    if (AreaId != "") {
+    //        $('#areaId').show();
+    //         $('#AreaCode').prop('readonly', true);
+    //        $('#AreaName').prop('readonly', true);
+    //        $("#AreaType").prop('disabled', true);
+
+    //        $('#AreaCode').val(data.Code);
+    //        $('#AreaName').val(data.Name);
+    //        $("#AreaType").val(data.Type);
+
+    //    }
+    //    $('#modifyModal').modal({
+    //        backdrop: 'static',
+    //        keyboard: false
+    //    });
+    //}
+
+$('#btnSubmit').click(function () {
+            switch (Action) {
+                case "Create":
+                    Create();
+                    break;
+                case "Edit":
+                    Update();
+                    break;
+                //case "Delete":
+                //    Delete();
+                //    break;
+            }
+        });
+
+
+    function Create() {
+         $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/BinRackArea/Create',
+                 data: {
+                     WarehouseCode: WarehouseCode,
+                        AreaName: $('#AreaName').val(),
+                        Type: $('#AreaType').val()
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+
+                            notify("Warning", "warning", response.message);
+
+                        } else {
+                            notify("Success", "success", response.message);
+                            $('#modifyModal').modal('hide');
+                            BinRackAreaDatatable.ajax.reload();
+                        }
+                    }
+                });
+    }
+
+
+    function Update() {
+         $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/BinRackArea/Update',
+            data: {
+                WarehouseCode: WarehouseCode,
+                ID: AreaId,
+                AreaName: $('#AreaName').val(),
+                Type: $('#AreaType').val(),
+                IsActive : $('#AreaStatus').prop('checked')
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (!isValid) {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+
+                    notify("Warning", "warning", response.message);
+
+                } else {
+                    notify("Success", "success", response.message);
+                    BinRackAreaDatatable.ajax.reload();
+                    $('#modifyModal').modal('hide');
+                }
+            }
+        });
+    }
+
+    //function Delete() {
+    //    $.ajax({
+    //        type: 'POST',
+    //        dataType: "json",
+    //        beforeSend: function (request) {
+    //            request.setRequestHeader('Token', token);
+    //        },
+    //        url: server + 'Api/BinRackArea/Delete',
+    //        data: {
+    //            id: AreaId
+    //        },
+    //        success: function (response) {
+    //            isValid = response.status;
+    //            if (!isValid) {
+
+    //                notify("Warning", "warning", response.message);
+
+    //            } else {
+    //                notify("Success", "success", response.message);
+    //                BinRackAreaDatatable.ajax.reload();
+    //            }
+    //        }
+    //    });
+    //}
+
+
+    function DetailRow(row) {
+        var elementRow = $(row).closest('tr');
+        var data = BinRackAreaDatatable.row($(elementRow)).data();
+        AreaId = data.ID;
+        window.location.replace('@Url.Action("Detail", "BinRackArea")?id=' + AreaId);
+    }
+
+
+</script>
+}

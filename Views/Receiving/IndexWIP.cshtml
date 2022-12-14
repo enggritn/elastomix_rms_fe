@@ -1,0 +1,1767 @@
+﻿
+@{
+    ViewBag.Title = "Receiving WIP";
+    ViewBag.Module = "ReceivingSFG";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Warehouse</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@*<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-1">Import Data</label>
+                    <div class="col-sm-3">
+                        <div class="custom-file">
+                            @Html.TextBox("file_upload", "", new { @type = "file", @class = "custom-file-input", @id = "file_upload", @accept = "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span class="text-muted text-sm"><i>Allowed file type : .xls/ .xlsx</i></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-warning" onclick="resetUpload()"><i class="ik ik-delete"></i>Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadData()"><i class="ik ik-upload"></i>Import Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-tab1" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Receiving </a>
+                @*<a class="nav-item nav-link" id="nav-tab2" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Judgement</a>*@
+            </div>
+        </nav>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="card" style="padding : 20px;">
+            <div class="card-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="">
+                        <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                            <thead class="thead-dark">
+                                <tr>
+                                    @*<th>PRINT</th>*@
+                                    <th>WAREHOUSE CODE</th>
+                                    <th>WAREHOUSE NAME</th>
+                                    <th>DOCUMENT CODE</th>
+                                    <th>MATERIAL CODE</th>
+                                    <th>MATERIAL NAME</th>
+                                    <th>LOT NO.</th>
+                                    <th>IN DATE</th>
+                                    <th>EXP DATE</th>
+                                    <th>UOM</th>
+                                    <th>QTY/BAG</th>
+                                    <th>TOTAL ORDER</th>
+                                    <th>AVAILABLE RECEIVE</th>
+                                    <th>TOTAL RECEIVE</th>
+                                    <th>ACTION</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- FORM RECEIVE  START -->
+<div class="modal" id="formReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Receive Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveRawMateCode" id="ReceiveRawMateCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveRawMateName" id="ReceiveRawMateName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="InDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp Date</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="ExpDate" readonly />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Receive Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Order</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveRequestQtyTotalOrder" id="ReceiveRequestQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Receive</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="ReceiveAvailableReceive" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Receive</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveTotalReceive" id="ReceiveTotalReceive" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveRequestQtyUOM" id="ReceiveRequestQtyUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveRequestQtyPerBag" id="ReceiveRequestQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-8"><strong>Good / OK</strong></label>
+                    <div class="col-sm-4">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Input QTY</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ReceiveOKQty" id="ReceiveOKQty" />
+                        <span class="help-block text-danger" id="error_ReceiveQTY"></span>
+                    </div><label class="col-form-label col-sm-1">Kg</label>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag QTY</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ReceiveQtyRakAvail" id="ReceiveQtyRakAvail" readonly="" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Remainder Qty</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control number" name="RemainderQty" id="RemainderQty" readonly="" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+
+                @*<input type="hidden" id="receiveExpDate" />*@
+                @*<input type="hidden" id="innDate" />*@
+                <input type="hidden" id="receiveLotNo" />
+                <input type="hidden" id="receiveID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveReceive"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM RECEIVE  END -->
+<!-- FORM JUDGEMENT  START -->
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Judgement Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementRawMateCode" id="JudgementRawMateCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementRawMateName" id="JudgementRawMateName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>NG QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyTotal" id="JudgementActualQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyUOM" id="JudgementActualQtyUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyPerBag" id="JudgementActualQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">Qty Bag</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyBag" id="JudgementActualQtyBag" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-8"><strong>Lot Information</strong></label>
+                    <div class="col-sm-4">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementLotNo" id="JudgementLotNo" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>OK / NG</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">Bag QTY</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="JudgementNotGoodQTY" id="JudgementNotGoodQTY" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Input QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="JudgementQTY" id="JudgementQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="JudgementQtyRakAvail" id="JudgementQtyRakAvail" readonly="" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Remainder Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="JudgementRemainderQty" id="JudgementRemainderQty" readonly="" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" id="judgementID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-danger" id="btnSaveDispose"><i class="ik ik-trash"></i>Perform Disposal</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Perform Judgement</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM JUDGEMENT  END -->
+<!-- FORM PUTAWAY  START -->
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Put Away</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*<input type="hidden" id="BinRackID" />
+                    <input type="hidden" id="putawayID" />
+                    <input type="hidden" id="barcodeValue" />*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tablebarcode">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>UOM</th>
+                                        <th>QTY/BAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Available Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="AvailablePutawayQTY" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Available QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PutAwayActualQtyTotal" id="PutAwayActualQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Put Away</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area</label>
+                    <div class="col-sm-8">
+                        <select id="AreaList" class="form-control">
+                            <option value="" selected>Select Area</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_area"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/Rack</label>
+                    <div class="col-sm-8">
+                        <select id="BinRackID" class="form-control">
+                            <option value="" selected>Select Bin/Rack</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_binrack"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Putaway Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PutawayQTY" />
+                        <span class="help-block text-danger" id="error_PutawayQTY"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePutaway"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM PUTAWAY  END -->
+
+
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="printBarcodeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Barcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Barcode</label>
+                    <div class="col-sm-8">
+                        @*<input type="hidden" id="barcodeJSON" />*@
+                        <select id="BarcodeListPrint" class="form-control">
+                            <option value="" selected>Select Barcode</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_BarcodeListPrint"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PrintRawMateCode" id="PrintRawMateCode" readonly />
+                        <span class="help-block text-danger" id="error_MaterialCode"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PrintRawMateName" id="PrintRawMateName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PrintLotNo" id="PrintLotNo" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PrintInDate" id="PrintInDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp. Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PrintExpDate" id="PrintExpDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Series Barcode</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="LastSeriesBarcode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Use Series</label>
+                    <div class="col-sm-8">
+                        <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                            <input type="checkbox" class="custom-control-input checkbox" id="PrintSeries" checked />
+                            <label class="custom-control-label" for="PrintSeries">&nbsp;</label>
+                        </div>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Print Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PrintQty" />
+                        <span class="help-block text-danger" id="error_Qty"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Printer</label>
+                    <div class="col-sm-8">
+                        <select id="PrinterList" class="form-control">
+                            <option value="" selected>Select Printer</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_Printer"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="ik ik-x-circle"></i>No
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSaveDetail" onclick="PrintBarcode()"><i class="ik ik-plus"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="formPrintBarcode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Barcode Printing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Stock Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control Barcode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">DO. No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control DoNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control LotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control InDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Expired Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control ExpDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="table_barcode">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>TYPE</th>
+                                    <th>BAG QTY</th>
+                                    <th>QTY/BAG</th>
+                                    <th>TOTAL QTY</th>
+                                    <th>SERIES NO.</th>
+                                    <th>DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Print Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PrintQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Use Series</label>
+                    <div class="col-sm-8">
+                        <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                            <input type="checkbox" class="custom-control-input checkbox" id="PrintSeries" checked />
+                            <label class="custom-control-label" for="PrintSeries">&nbsp;</label>
+                        </div>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">List Printer</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ListPrinter">
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPrint"><i class="ik ik-printer"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formEditReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Edit Receiving</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="EditMatCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="EditMatName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Order</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="ReceiveRequestQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="LotNo" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateReceive"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        .DTFC_LeftHeadWrapper, .DTFC_LeftBodyWrapper {
+            left: -19px !important;
+        }
+
+        span.select2 {
+            width: 100% !important;
+        }
+
+        .selected {
+            background-color: red;
+        }
+
+        table {
+            padding: 0px;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: 1px #DDD solid;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: brown;
+            color: #FFF;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+
+
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+
+
+        $('#ReceiveOKQty').on('input', function () {
+
+            var ReceiveQtyRakAvail = 0;
+            var RemainderQty = 0;
+
+            var ReceiveRequestQtyTotal = parseInt($('#ReceiveRequestQtyTotal').val());
+            var ReceiveRequestQtyPerBag = parseFloat($('#ReceiveRequestQtyPerBag').val());
+            var ReceiveOKQty = parseFloat(this.value.replace(',', ''));
+
+            ReceiveQtyRakAvail = ReceiveOKQty / ReceiveRequestQtyPerBag;
+            RemainderQty = ReceiveOKQty - (parseInt(ReceiveQtyRakAvail) * ReceiveRequestQtyPerBag);
+
+            $('#ReceiveQtyRakAvail').val(ReceiveQtyRakAvail);
+            $('#RemainderQty').val(RemainderQty);
+        });
+
+        $('#JudgementQTY').on('input', function () {
+
+            var ReceiveQtyRakAvail = 0;
+            var RemainderQty = 0;
+
+            var ReceiveRequestQtyTotal = parseInt($('#JudgementActualQtyTotal').val());
+            var ReceiveRequestQtyPerBag = parseFloat($('#JudgementActualQtyPerBag').val());
+            var ReceiveOKQty = parseFloat(this.value.replace(',', ''));
+
+
+            if ((ReceiveRequestQtyTotal !== undefined && ReceiveRequestQtyTotal !== null && ReceiveRequestQtyTotal > 0) && (ReceiveOKQty !== undefined && ReceiveOKQty !== null && ReceiveOKQty > 0)) {
+
+                if (ReceiveOKQty > ReceiveRequestQtyTotal) {
+                    ReceiveOKQty = ReceiveRequestQtyTotal;
+                    $(this).val(ReceiveOKQty);
+                }
+
+                ReceiveQtyRakAvail = Math.floor(ReceiveOKQty / ReceiveRequestQtyPerBag);
+                RemainderQty = ReceiveOKQty - (parseInt(ReceiveQtyRakAvail) * ReceiveRequestQtyPerBag);
+            }
+
+            $('#JudgementQtyRakAvail').val(ReceiveQtyRakAvail);
+            $('#JudgementRemainderQty').val(RemainderQty);
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        function hideJudgement() {
+            $('#nav-profile').removeClass('show');
+            $('#nav-profile').removeClass('active');
+        }
+
+        function hideReceive() {
+            $('#nav-home').removeClass('show');
+            $('#nav-home').removeClass('active');
+        }
+
+        function showTabs() {
+            $('#nav-home').addClass('show');
+            $('#nav-home').addClass('active');
+            $('#nav-profile').addClass('show');
+            $('#nav-profile').addClass('active');
+        }
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '150%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/DatatableReceivingGroup",
+            },
+            initComplete: function (settings, json) {
+                $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+                $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 },
+                { orderable: false, targets: -1 },
+            ],
+            columns: [
+
+                { "data": "WarehouseCode", "name": "WarehouseCode", "autoWidth": false },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": false },
+                { "data": "MaterialRequestCode", "name": "MaterialRequestCode", "autoWidth": false },
+                { "data": "ProductCode", "name": "ProductCode", "autoWidth": false },
+                { "data": "ProductName", "name": "ProductName", "autoWidth": false },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": false },
+                { "data": "InDate", "name": "InDate", "autoWidth": false },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": false },
+                { "data": "UoM", "name": "UoM", "autoWidth": false },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": false },
+                { "data": "TotalOrder", "name": "TotalOrder", "autoWidth": false },
+                { "data": "AvailableReceive", "name": "AvailableReceive", "autoWidth": false },
+                { "data": "TotalReceive", "name": "TotalReceive", "autoWidth": false },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        //console.log(data.TransactionStatus);
+                        let button = '';
+
+                        if (data.EditReceiveAction) {
+                            button += '<button class="btn btn-info" onclick = "ShowEditReceiveForm(this)" > <i class="ik ik-check-circle"></i>Edit</button> ';
+                        } else {
+                            if (data.ReceiveAction) {
+                                button += '<button class="btn btn-success" onclick = "ShowReceiveForm(this)" > <i class="ik ik-check-circle"></i>Receive</button> ';
+                            }
+                            if (data.PrintBarcodeAction) {
+                                button += '<button type="button" class="btn btn-primary" value ="press" onclick="return ShowPrintBarcodeForm(this)"><i class="ik ik-inbox"></i>Print Barcode</button> ';
+                            }
+                            if (data.PutawayAction) {
+                                button += '<button class="btn btn-primary" onclick="ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+
+                            }
+                        }
+
+                      
+
+                        return button;
+                    }
+                },
+            ]
+        });
+
+        var all_tr = $('tr');
+        $('td input[type="button"]').on('click', function () {
+            all_tr.removeClass('selected');
+            $(this).closest('tr').addClass('selected');
+        });
+
+        function ShowPrintBarcodeForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+            $('#PrintRawMateCode').val(dataTableRow.ProductCode);
+            $('#PrintRawMateName').val(dataTableRow.ProductName);
+            $('#PrintLotNo').val(dataTableRow.LotNo);
+            $('#PrintInDate').val(dataTableRow.InDate);
+            $('#PrintExpDate').val(dataTableRow.ExpDate);
+            $('#PrintQty').val('0');
+
+            $('#printBarcodeModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+            GetBarcodeListPrint();
+        }
+
+        setPrinterList();
+
+        function setPrinterList() {
+            $('#PrinterList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Control/ListPrinter',
+                success: function (response) {
+
+                    $('#PrinterList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Printer</option>';
+                    $.each(response.printers, function (index, value) {
+                        html += '<option value="' + value.PrinterIP + '">' + value.PrinterName + '</option>';
+                    });
+                    $('#PrinterList').append(html);
+                    $('#PrinterList').select2({ width: '100%' });
+                }
+            });
+        }
+
+        function setAreaList() {
+            $('#AreaList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/AreaList',
+                success: function (response) {
+
+                    $('#AreaList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Area</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#AreaList').append(html);
+                    //$('#AreaList').select2({ width: '100%' });
+                }
+            });
+        }
+
+        function GetBarcodeListPutAway() {
+            $.ajax({
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/ListBarcodeSFGPutaway',
+                data: {
+                    ExpDate: xExpDate,
+                    InDate: xInDate,
+                    LotNo: xLotNo,
+                    ProductCode: xProductCode,
+                },
+
+                success: function (response) {
+                    $('#tablebarcode tbody').empty();
+                    if (response.status) {
+                        list_fifo = response.data;
+                        var html = "";
+
+                        if (list_fifo.length > 0) {
+                            $.each(list_fifo, function (index, value) {
+                                html += '<tr>';
+                                html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+
+                                //html += '<td>' + value.StockCode + '</td>';
+                                html += '<td>' + value.ProductCode + '</td>';
+                                html += '<td>' + value.ProductName + '</td>';
+                                html += '<td>' + value.LotNo + '</td>';
+                                html += '<td>' + value.InDate + '</td>';
+                                html += '<td>' + value.ExpDate + '</td>';
+                                html += '<td>' + value.UoM + '</td>';
+                                html += '<td>' + value.QtyPerBag + '</td>';
+                                html += '</tr>';
+                            });
+                        } else {
+                            html += '<tr><td colspan="13">No Data</td></tr>';
+                        }
+
+
+                        $('#tablebarcode tbody').append(html);
+
+                        $('#formPutawayModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        }
+
+        let xStockCode = "";
+        function chooseStock(index) {
+            data_fifo = list_fifo[index];
+            xStockCode = data_fifo.StockCode;
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/GetBarcode?StockCode=' + data_fifo.StockCode,
+                success: function (response) {
+                    $('#AvailablePutawayQTY').val(response.QtyBagAvailable);
+                    $('#PutAwayActualQtyTotal').val(response.QtyActualAvailable);
+                }
+            });
+        }
+
+        function GetBarcodeListPrint() {
+            $.ajax({
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/ListBarcodeSFGPrint',
+                data: {
+                    ExpDate: $('#PrintExpDate').val(),
+                    InDate: $('#PrintInDate').val(),
+                    LotNo: $('#PrintLotNo').val(),
+                    ProductCode: $('#PrintRawMateCode').val(),
+                },
+                success: function (response) {
+                    $('#BarcodeListPrint').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Barcode</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.StockCode + '">' + value.StockCode + '</option>';
+                    });
+                    $('#BarcodeListPrint').append(html);
+                    $('#BarcodeListPrint').select2();
+                    //$('#BarcodeList').select2({ width: '100%' });
+                }
+            });
+        }
+        setAreaList();
+
+        $('#AreaList').change(function () {
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRack/AreaRack?id=' + this.value,
+                success: function (response) {
+
+                    $('#BinRackID').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Bin/Rack</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#BinRackID').append(html);
+                    //$('#BinRackID').select2({ width: '100%' });
+                    $('#BinRackID').select2();
+                }
+            });
+        });
+
+        $('#BarcodeListPrint').change(function () {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/GetBarcodePrint?StockCode=' + this.value,
+                success: function (response) {
+                    $('#LastSeriesBarcode').val(response.LastSeriesBarcode);
+                }
+            });
+        });
+
+        var BinRackDataTable = $('#BinRackDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/Datatable?binRackAreaId="
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#BinRackDataTable tbody').on('click', 'tr', function () {
+            var data = BinRackDataTable.row(this).data();
+            $('#BinRackID').val(data.ID);
+            $('#BinRackCode').val(data.Code);
+            $('#BinRackName').val(data.Name);
+
+            $('#BinRackDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        var BinRackDataTableInspection = $('#BinRackInspectionDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/Datatable?binRackAreaId="
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#BinRackInspectionDataTable tbody').on('click', 'tr', function () {
+            var data = BinRackDataTableInspection.row(this).data();
+            $('#InspectionBinRackCode').val(data.Code);
+            $('#InspectionBinRackName').val(data.Name);
+
+            $('#BinRackInspectionDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        var areaDataTable = $('#areaDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRackArea/Datatable?warehouseId="
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#areaDataTable tbody').on('click', 'tr', function () {
+            var data = areaDataTable.row(this).data();
+
+            $("#areaDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+            BinRackDataTableInspection.ajax.url(server + 'Api/BinRack/Datatable?binRackAreaId=' + data.ID).load();
+            BinRackDataTable.ajax.url(server + 'Api/BinRack/Datatable?binRackAreaId=' + data.ID).load();
+
+            $('#inspectionAreaField').show();
+            $('#InspectionAreaCode').val(data.Code);
+            $('#InspectionAreaName').val(data.Name);
+
+            $('#putAwayAreaField').show();
+            $('#PutAwayAreaCode').val(data.Code);
+            $('#PutAwayAreaName').val(data.Name);
+
+            $('#formAreaModal').modal('hide');
+        });
+
+        let dataReceiving = "";
+        function ShowReceiveForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+
+            dataReceiving = dataTableRow;
+
+            $('#ExpDate').val(dataTableRow.ExpDate);
+            $('#InDate').val(dataTableRow.InDate);
+            $('#receiveLotNo').val(dataTableRow.LotNo);
+            $('#ReceiveRawMateCode').val(dataTableRow.ProductCode);
+            $('#ReceiveRawMateName').val(dataTableRow.ProductName);
+
+            $('#ReceiveRequestQtyTotal').val(dataTableRow.TotalOrder);
+            $('#ReceiveAvailableReceive').val(dataTableRow.AvailableReceive);
+            $('#ReceiveTotalReceive').val(dataTableRow.TotalReceive);
+            $('#ReceiveRequestQtyUOM').val(dataTableRow.UoM);
+            $('#ReceiveRequestQtyPerBag').val(dataTableRow.QtyPerBag);
+            $('#ReceiveRequestQtyBag').val(dataTableRow.BagQty);
+
+            $('#ReceiveQtyRakAvail').val(0);
+            $('#RemainderQty').val(0);
+
+            $('#ReceiveActualQty').val(dataTableRow.OKQty);
+            $('#ReceiveOKQty').val(0);
+            $('#formReceiveModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+    };
+
+
+    function ShowEditReceiveForm(row) {
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = table.row($(elementRow)).data();
+
+        dataReceiving = dataTableRow;
+
+        $('#EditMatCode').val(dataTableRow.ProductCode);
+        $('#EditMatName').val(dataTableRow.ProductName);
+
+        $('#LotNo').val(dataTableRow.DefaultLotNo);
+
+
+        $('#LotNo').next().html('');
+        $('#LotNo').removeClass('is-invalid');
+
+        $('#formEditReceiveModal #ReceiveRequestQtyTotal').val(dataTableRow.TotalOrder);
+
+        $('#formEditReceiveModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    };
+
+        function ShowJudgementForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table_judgement.row($(elementRow)).data();
+            $('#judgementID').val(dataTableRow.ID);
+
+            $('#JudgementRawMateCode').val(dataTableRow.ProductCode);
+            $('#JudgementRawMateName').val(dataTableRow.ProductName);
+
+            $('#JudgementActualQtyTotal').val(dataTableRow.NGQty);
+            $('#JudgementActualQtyUOM').val(dataTableRow.UoM);
+            $('#JudgementActualQtyPerBag').val(dataTableRow.QtyPerBag);
+            $('#JudgementActualQtyBag').val(dataTableRow.BagQty);
+
+
+            $('#JudgementDoNo').val(dataTableRow.DONo);
+            $('#JudgementLotNo').val(dataTableRow.LotNo);
+            $('#JudgementActualQty').val(dataTableRow.ActualQty);
+
+            $('#JudgementNotGoodQTY').val(dataTableRow.NGBagQty ? dataTableRow.NGBagQty : 0);
+            $('#JudgementQTY').val(0);
+
+
+            $('#formJudgementModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        };
+
+        let dataSummary = {};
+        let xProductCode = "";
+        let xLotNo = "";
+        let xInDate = "";
+        let xExpDate = "";
+        function ShowPutawayForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+
+            dataSummary = dataTableRow;
+            xProductCode = dataSummary.ProductCode;
+            xLotNo = dataSummary.LotNo;
+            xInDate = dataSummary.InDate;
+            xExpDate = dataSummary.ExpDate;
+
+            $('#AvailablePutawayQTY').val('0');
+            $('#PutAwayActualQtyTotal').val('0');
+            $('#PutawayQTY').val('0');
+            setAreaList();
+
+            GetBarcodeListPutAway();
+        };
+
+        function ShowReturnForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+            $('#returnID').val(dataTableRow.ID);
+            $('#ReturnRawMateCode').val(dataTableRow.RawMaterialCode);
+            $('#ReturnRawMateName').val(dataTableRow.RawMaterialName);
+
+            $('#ReturnActualQtyTotal').val(dataTableRow.ActualQty ? dataTableRow.ActualQty : 0);
+            $('#ReturnActualQtyUOM').val(dataTableRow.UoM);
+            $('#ReturnActualQtyPerBag').val(dataTableRow.QtyPerBag ? dataTableRow.QtyPerBag : 0);
+            $('#ReturnActualQtyBag').val(dataTableRow.ActualBagQty ? dataTableRow.ActualBagQty : 0);
+
+            $('#ReturnRequestQtyTotal').val(dataTableRow.Qty ? dataTableRow.Qty : 0);
+            $('#ReturnRequestQtyUOM').val(dataTableRow.RequestUoM);
+            $('#ReturnRequestQtyPerBag').val(dataTableRow.QtyPerBag ? dataTableRow.QtyPerBag : 0);
+            $('#ReturnRequestQtyBag').val(dataTableRow.BagQty ? dataTableRow.BagQty : 0);
+
+            $('#ReturnQty').val(0);
+
+            $('#formReturnModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+    };
+
+    $('#btnUpdateReceive').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/ReceivingSFG/UpdateReceiving',
+            data: {
+                PurchaseRequestID: dataReceiving.PurchaseRequestDetailID,
+                LotNo: $('#formEditReceiveModal #LotNo').val()
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    table.ajax.reload();
+                    $('#formEditReceiveModal').modal('hide');
+                    notify("Success", "success", response.message);
+                } else {
+
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+                table.columns.adjust();
+            }
+        });
+    });
+
+        $('#btnSaveReceive').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/Receive',
+                data: {
+                    //ExpDate: $('#ExpDate').val(),
+                    //InDate: $('#InDate').val(),
+                    //LotNo: $('#receiveLotNo').val(),
+                    //ProductCode: $('#ReceiveRawMateCode').val(),
+                    //xAvailableReceive: $('#ReceiveAvailableReceive').val().replace(/\,/g, ''),
+                    //OKQty: $('#ReceiveOKQty').val().replace(/\,/g, ''),
+                    ExpDate: dataReceiving.ExpDate,
+                    InDate: dataReceiving.InDate,
+                    LotNo: dataReceiving.LotNo,
+                    ProductCode: dataReceiving.ProductCode,
+                    OKQty: $('#ReceiveOKQty').val().replace(/\,/g, ''),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        showTabs();
+                        table.ajax.reload();
+                        $('#formReceiveModal').modal('hide');
+                        notify("Success", "success", response.message);
+                    } else {
+
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == "ReceiveOKQty") {
+                                $('#error_ReceiveQTY').html(value.ErrorMessage);
+                                $('#error_ReceiveQTY').addClass('is-invalid');
+                            } else {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+
+                        });
+                        notify("Warning", "warning", response.message);
+                    }
+                    table.columns.adjust();
+                }
+            });
+        });
+
+    $('#btnSavePutaway').on('click', function () {
+        $("#error_PutawayQTY").html("");
+        $("#error_binrack").html("");
+        $("#error_area").html("");
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/Putaway',
+                data: {
+                    ExpDate: xExpDate,
+                    InDate: xInDate,
+                    LotNo: xLotNo,
+                    ProductCode: xProductCode,
+                    StockCode: xStockCode,
+                    TotalAvailableQty: $('#PutAwayActualQtyTotal').val() != "" ? $('#PutAwayActualQtyTotal').val().replace(/\,/g, '') : 0,
+                    PutAwayQty: $('#PutawayQTY').val() != "" ? $('#PutawayQTY').val().replace(/\,/g, '') : 0,
+                    AreaList: $('#AreaList').val(),
+                    BinRackID: $('#BinRackID').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#AvailablePutawayQTY').val(response.availableBagQty);
+                        $('#PutawayQTY').val(0);
+
+                        $('#PutawayQTY').next().html('');
+                        $('#PutawayQTY').removeClass('is-invalid');
+
+                        notify("Success", "success", response.message);
+                        table.ajax.reload();
+                        $('#formPutawayModal').modal('hide');
+                    } else {
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == "BinRackID") {
+                                $('#error_binrack').html(value.ErrorMessage);
+                                $('#errir_binrack').addClass('is-invalid');
+                            } else if (value.FieldName == "AreaList") {
+                                $('#error_area').html(value.ErrorMessage);
+                                $('#error_area').addClass('is-invalid');
+                            } else if (value.FieldName == "PutawayQTY") {
+                                $('#error_PutawayQTY').html(value.ErrorMessage);
+                                $('#error_PutawayQTY').addClass('is-invalid');
+                            }else
+                            {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+                        });
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnSaveReturn').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/Return',
+                data: {
+                    ID: $('#returnID').val(),
+                    ReturnQty: $('#ReturnQty').val().replace(/\,/g, ''),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        //dissmissDialog();
+                        showTabs();
+                        table.ajax.reload();
+                        //table_judgement.ajax.reload(hideJudgement, false);
+                        $('#formReturnModal').modal('hide');
+                        toastr.success(response.message);
+                    } else {
+                        //dissmissDialog();
+                        //$('#formReceiveModal').modal('hide');
+                        toastr.error(response.message + (response.error_validation[0] ? ' - ' + response.error_validation[0].ErrorMessage : ''));
+                    }
+                    table.columns.adjust();
+                    //table_judgement.columns.adjust();
+                }
+            });
+        });
+
+        $('#btnSelectInspectionArea').click(function () {
+            $('#formAreaModal').modal('show');
+            areaDataTable.columns.adjust();
+        });
+
+        $('#btnSelectPutAwayArea').click(function () {
+            $('#formAreaModal').modal('show');
+            areaDataTable.columns.adjust();
+        });
+
+        $('#btnRefreshDataTable').click(function () {
+            table.ajax.reload();
+            //table_judgement.ajax.reload();
+        })
+
+        @*function PrintBarcode(id) {
+             window.open('@Url.Action("GenerateLabel", "Receiving")' + '?id=' + id, "_blank");
+        }*@
+
+    function PrintBarcode() {
+            $("#error_BarcodeListPrint").html("");
+            $("#error_MaterialCode").html("");
+            $("#error_Printer").html("");
+            $("#error_Qty").html("");
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ReceivingSFG/Print',
+                data: {
+                    LastSeriesBarcode: $('#LastSeriesBarcode').val(),
+                    StockCode: $('#BarcodeListPrint').val(),
+                    PrintQty: $('#PrintQty').val() != "" ? $('#PrintQty').val().replace(/\,/g, '') : 0,
+                    UseSeries: $('#PrintSeries').prop('checked'),
+                    Printer: $('#PrinterList').find(":selected").val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == "PrintRawMateCode") {
+                                $('#error_MaterialCode').html(value.ErrorMessage);
+                                $('#error_MaterialCode').addClass('is-invalid');
+                            } else if (value.FieldName == "PrinterList") {
+                                $('#error_Printer').html(value.ErrorMessage);
+                                $('#error_Printer').addClass('is-invalid');
+                            } else if (value.FieldName == "BarcodeListPrint") {
+                                $('#error_BarcodeListPrint').html(value.ErrorMessage);
+                                $('#error_BarcodeListPrint').addClass('is-invalid');
+                            } else if (value.FieldName == "PrintQty") {
+                                $('#error_Qty').html(value.ErrorMessage);
+                                $('#error_Qty').addClass('is-invalid');
+                            } else {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+                        });
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload() }, 1000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#saveModal').modal('hide');
+                    $('#btnSave').prop('disabled', false);
+                }
+
+            });
+        }
+
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            if (fileName)
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            else
+                resetUpload();
+        });
+
+        function resetUpload() {
+            $('#file_upload').val('');
+            $('.custom-file-label').html('Choose file');
+        }
+
+        function uploadData() {
+
+            let fv = $("#file_upload").val();
+            if (fv == undefined || fv == '') {
+                notify("Info", "info", "Please choose file.");
+                return false;
+            }
+
+            $('#uploadModal').modal('show');
+        }
+
+
+
+        $('#btnUploadSave').click(function () {
+            doUpload();
+        });
+
+        function doUpload() {
+            var formData = new FormData();
+            var file = document.getElementById("file_upload").files[0];
+            formData.append("file_upload", file);
+
+            $('#btnUploadSave').prop('disabled', true);
+            $('#btnUploadSave').text("Please Wait ...");
+            //loading animation here
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/Upload',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status) {
+                        $('#uploadModal').modal('hide');
+                        notify("Success", "success", response.message);
+                        reloadTable();
+                        resetUpload();
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#btnUploadSave').prop('disabled', false);
+                    $('#btnUploadSave').text("Yes");
+                }
+            });
+        }
+
+        function reloadTable() {
+            table.ajax.reload();
+            //table_judgement.ajax.reload();
+    }
+
+        $('#nav-tab1').on('shown.bs.tab', function (e) {
+            table.ajax.reload();
+            table.columns.adjust();
+        });
+
+</script>
+}

@@ -1,0 +1,303 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    int rak17Row = 9;
+    int rak17Col = 3;
+
+
+    int rak16Col = 1;
+    int rak15Col = 3;
+}
+
+<table class="table-layout-info table table-sm table-borderless" style="margin-bottom: 0;">
+    <tr>
+        <td style="vertical-align: top; width : 100px;">Note :</td>
+        <td style="width: 30px;"><button class="btn btn-xs btn-primary btn-block" style="width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>CARBON</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-block" style="width: 25px; height: 25px; background: #ed7d31;">&nbsp;</button></td>
+        <td>OIL</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-warning btn-block" style="background:#ffff00; width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>CUSTOMER SUPPLIES</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-block" style="background:#cc66ff; width: 25px; height: 25px;">&nbsp;</button></td>
+        <td>PREPARE/ TEMPORARY AREA RM SUPPLY</td>
+    </tr>
+</table>
+
+
+<table id="table-rm-tent" class="table-floor table table-bordered table-sm">
+    <tbody>
+        @for (int iRow = 1; iRow < 17; iRow++)
+        {
+            <tr>
+                @for (int iCol = 1; iCol < 26; iCol++)
+                {
+                    // RAK 17
+                    if (iRow >= 1 && iRow <= 10 && iCol >= 1 && iCol <= 3)
+                    {
+                        bool isGrid = false;
+                        bool isGridTop = false;
+
+                        if (iCol == 1) { isGrid = true; }
+                        if (iRow == 1) { isGridTop = true; }
+                        <td style="@(isGrid ? "border-left: 10px solid #fff;":"")@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-warning btn-block text-center small text-black btn-info-rak" style="background-color: #ffff00;" id="AR00217@(alpha[rak17Row])@rak17Col" data-area="AR002" data-rak="17@(alpha[rak17Row])@rak17Col">
+                                17<br />@(alpha[rak17Row])@rak17Col
+                            </button>
+                        </td>
+                        if (iCol == 3) { rak17Col = 3; } else { rak17Col--; }
+                    }
+
+                    // RAK 16
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 7 && iCol <= 9)
+                    {
+                        bool isGridTop = false;
+                        if (iRow == 1) { isGridTop = true; }
+                        <td style="@(isGridTop ? "border-top: 10px solid #fff;":"")@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" id="AR00216@(alpha[rak17Row])@rak16Col" data-area="AR002" data-rak="16@(alpha[rak17Row])@rak16Col">
+                                16<br />@(alpha[rak17Row])@rak16Col
+                            </button>
+                        </td>
+                        if (iCol == 9) { rak16Col = 1; } else { rak16Col++; }
+                    }
+
+                    // GRID BROWN
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 10 && iCol <= 10)
+                    {
+                        bool isGridTop = false;
+                        if (iRow == 1) { isGridTop = true; }
+
+                        <td style="border-bottom: 1px solid #ffc000;@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-block text-center small text-white btn-info-rak" style="background: #fff; width: 10px !important; border-radius: 0;"></button>
+                        </td>
+                    }
+
+                    // GRID BLANK
+                    else if ((new int[] { 11, 12, 16 }).Contains(iRow) && iCol >= 10 && iCol <= 10)
+                    {
+                        <td></td>
+                    }
+
+                    // RAK 15
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 11 && iCol <= 13)
+                    {
+                        bool isGridTop = false;
+                        if (iRow == 1) { isGridTop = true; }
+                        <td style="@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" id="AR00215@(alpha[rak17Row])@rak15Col" data-area="AR002" data-rak="15@(alpha[rak17Row])@rak15Col">
+                                15<br />@(alpha[rak17Row])@rak15Col
+                            </button>
+                        </td>
+                        if (iCol == 13) { rak15Col = 3; } else { rak15Col--; }
+                    }
+
+                    // RAK 14
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 17 && iCol <= 19)
+                    {
+                        bool isGridTop = false;
+                        if (iRow == 1) { isGridTop = true; }
+                        <td style="@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" id="AR00214@(alpha[rak17Row])@rak16Col" data-area="AR002" data-rak="14@(alpha[rak17Row])@rak16Col">
+                                14<br />@(alpha[rak17Row])@rak16Col
+                            </button>
+                        </td>
+
+                        if (iCol == 19) { rak16Col = 1; } else { rak16Col++; }
+                    }
+
+                    // RAK 13
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 23 && iCol <= 25)
+                    {
+                        bool isGrid = false;
+                        bool isGridTop = false;
+                        if (iCol == 25) { isGrid = true; }
+                        if (iRow == 1) { isGridTop = true; }
+                        <td style="@(isGrid ? "border-right: 10px solid #fff;":"")@(isGridTop ? "border-top: 10px solid #fff;":"")">
+                            <button class="btn btn-xs btn-block text-center small text-white btn-info-rak" style="background: #ed7d31;" id="AR00213@(alpha[rak17Row])@rak16Col" data-area="AR002" data-rak="13@(alpha[rak17Row])@rak16Col">
+                                13<br />@(alpha[rak17Row])@rak16Col
+                            </button>
+                        </td>
+                        if (iCol == 25) { rak16Col = 1; } else { rak16Col++; }
+                    }
+
+
+                    // BLANK PURPLE SAMPING RAK 17
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 4 && iCol <= 6)
+                    {
+                        if (iRow == 1 && iCol == 4)
+                        {
+                            <td class="p-1" rowspan="10" colspan="3" style="border-top: 10px solid #fff;">
+                                <button id="AR002AREA1" data-area="AR002" data-rak="AREA1" class="btn-info-rak" style="">
+                                    AREA1
+                                </button>
+                            </td>
+                        }
+                    }
+
+
+                    // BLANK PURPLE SAMPING RAK 15
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 14 && iCol <= 16)
+                    {
+                        if (iRow == 1 && iCol == 14)
+                        {
+                            <td class="p-1" rowspan="10" colspan="3" style="border-top: 10px solid #fff;">
+                                <button id="AR002AREA2" data-area="AR002" data-rak="AREA2" class="btn-info-rak" style="">
+                                    AREA2
+                                </button>
+                            </td>
+                        }
+                    }
+
+                    // BLANK PURPLE SAMPING RAK 14
+                    else if (iRow >= 1 && iRow <= 10 && iCol >= 20 && iCol <= 22)
+                    {
+                        if (iRow == 1 && iCol == 20)
+                        {
+                            <td class="p-1" rowspan="10" colspan="3" style="border-top: 10px solid #fff;">
+                                <button id="AR002AREA3" data-area="AR002" data-rak="AREA3" class="btn-info-rak" style="">
+                                    AREA3
+                                </button>
+                            </td>
+                        }
+                    }
+
+
+
+                    // RAK TEMP
+                    else if (iRow >= 11 && iRow <= 12 && iCol >= 1 && iCol <= 6)
+                    {
+                        if (iRow == 11 && iCol == 1)
+                        {
+                            <td class="" rowspan="2" colspan="1" style="border-left: 10px solid #fff;">
+                                <table class="table-floor">
+                                    <tr>
+                                        <td>
+                                            <details data-popover="down">
+                                                <summary class="btn btn-xs btn-block vertical-text" style="">TEMPORARY RACK</summary>
+                                                <table id="table-rak-temp-new" style="">
+                                                    @for (int iRowRakTemp = 4; iRowRakTemp > 0; iRowRakTemp--)
+                                                    {
+                                                        <tr>
+                                                            @for (int iColRakTemp = 8; iColRakTemp > 0; iColRakTemp--)
+                                                            {
+                                                                <td>
+                                                                    <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background: #ed7d31;" id="AR00501@(alpha[iColRakTemp-1])@(iRowRakTemp)" data-area="AR005" data-rak="@(alpha[iColRakTemp-1])@(iRowRakTemp)">@(alpha[iColRakTemp-1])@(iRowRakTemp)</button>
+                                                                </td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </details>
+
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        }
+
+                        else if (iRow == 11 && iCol == 2)
+                        {
+                            <td class="p-1" rowspan="2" colspan="5">
+                                <button id="AR002AREA4" data-area="AR002" data-rak="AREA4" class="btn-info-rak" style="">
+                                    AREA4
+                                </button>
+                            </td>
+                        }
+                    }
+
+                    // RAK 18
+                    else if (iRow >= 13 && iRow <= 15 && iCol >= 1 && iCol <= 12)
+                    {
+                        if (iRow == 13 && iCol == 1)
+                        {
+                            int irow_total_18 = 4;
+                            int icol_total_18 = 8;
+                            <td class="" rowspan="3" colspan="12" style="border-left: 10px solid #fff; border-bottom: 10px solid #fff;">
+                                <table id="table-rak-18" class="table-floor">
+                                    @for (int i = 1; i < irow_total_18; i++)
+                                    {
+                                        <tr>
+                                            @for (int ii = 0; ii < icol_total_18; ii++)
+                                            {
+                                                if (i >= 0 && i <= 3 && ii >= 0 && ii <= 1)
+                                                {
+                                                    <td>
+                                                        <button class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" style="background: #ffff00;" id="AR002" data-area="AR00218@(alpha[7 - ii])@i" data-rak="18@(alpha[7 - ii])@i">18<br />@(alpha[7 - ii])@i</button>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" id="AR00218@(alpha[7 - ii])@i" data-area="AR002" data-rak="18@(alpha[7 - ii])@i">18<br />@(alpha[7 - ii])@i</button>
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        }
+                    }
+
+
+                    // BLANK PURPLE SAMPING RAK 18
+                    else if (iRow >= 13 && iRow <= 15 && iCol >= 13 && iCol <= 14)
+                    {
+                        if (iRow == 13 && iCol == 13)
+                        {
+                            <td class="p-1" rowspan="3" colspan="2" style="border-bottom: 10px solid #fff;">
+                                <button id="AR002AREA5" data-area="AR002" data-rak="AREA5" class="btn-info-rak" style="">
+                                    AREA5
+                                </button>
+                            </td>
+                        }
+                    }
+
+
+                    // AREA 1
+                    else if (iRow >= 12 && iRow <= 15 && iCol >= 22 && iCol <= 25)
+                    {
+                        if (iRow == 12 && iCol == 22)
+                        {
+                            <td rowspan="4" colspan="4" style="border-right: 10px solid #fff; border-bottom: 10px solid #fff;">
+                                <button id="AR002AREA6" data-area="AR002" data-rak="AREA6" class="border-warning btn-info-rak" style="">
+                                    <h4 class="text-center m-auto">AREA6</h4>
+                                </button>
+                            </td>
+                        }
+                    }
+
+                    else if (iRow >= 11 && iRow <= 15 && iCol >= 25 && iCol <= 25)
+                    {
+                        bool isGrid = false;
+                        if (iCol == 25) { isGrid = true; }
+                        <td style="@(isGrid ? "border-right: 10px solid #fff;":"")"></td>
+                    }
+
+                    else if (iRow >= 15 && iRow <= 15 && iCol >= 15 && iCol <= 21)
+                    {
+                        <td class="shadow" style="border-bottom: 3px solid #fff;"></td>
+                    }
+
+
+                    else
+                    {
+                        <td><button type="button" class="btn btn-xs btn-block text-center small bg-white text-white" disabled>@iRow:@iCol</button></td>
+                    }
+                }
+            </tr>
+            rak17Row--;
+        }
+    </tbody>
+</table>
+
+
+
+

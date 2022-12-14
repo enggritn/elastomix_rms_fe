@@ -1,0 +1,375 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+
+
+    int Rak5Row = 7;
+    int Rak6Row = 11;
+    int Rak7Row = 16;
+    int Rak11Row = 0;
+    int Rak12Row = 5;
+
+    var iColRCR = 5;
+    var iColRAC = 5;
+    var iColRP1 = 3;
+    var iColRP2 = 0;
+    var iColRPL = 3;
+
+
+
+    var iColOR = 0;
+    var iColRPRD1 = 1;
+    var iColRPRD2 = 3;
+    var iRowRPRD1 = 0;
+    var iRowRPRD2 = 8;
+
+    var iColRPRD3 = 1;
+    var iColRPRD4 = 3;
+    var iRowRPRD3 = 0;
+    var iRowRPRD4 = 8;
+
+    var iColRPRD5 = 1;
+    var iRowRPRD5 = 0;
+}
+
+<table class="table-layout-info table table-sm table-borderless ml-10">
+    <tr>
+        <td style="vertical-align: top; width : 100px;">Note :</td>
+        <td style="width: 30px;"><button class="btn btn-xs btn-primary btn-block" style="background: #4B77BE !important; width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>RACK Cleaning Rubber & NR</td>
+
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-warning btn-block" style="background: #2C3E50 !important; width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Rack A-Compound Velasto</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-warning btn-block" style="background: #26a69a !important; width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Rack Plastik02</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-block" style="background: #95dcd5 !important; width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Rack Plastik01</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-warning btn-block" style="background: #8775a7 !important; width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Rack Balance</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-primary btn-block" style="width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Other Rack</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-danger btn-block" style="width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>Rack NG</td>
+
+        <td style="width: 30px;"><button class="btn btn-xs btn-warning btn-block" style="width: 10px; height: 20px;">&nbsp;</button></td>
+        <td>RACK PRD</td>
+
+    </tr>
+</table>
+
+<table id="table-wip-1" class="table-floor table table-bordered table-sm table-wip-1">
+    <tbody>
+        @for (int iRow = 2; iRow < 17; iRow++)
+        {
+
+        <tr>
+            @for (int iCol = 1; iCol < 28; iCol++)
+            {
+                if (iRow >= 2 && iRow <= 5 && iCol >= 1 && iCol <= 6)
+                {
+
+                    <td>
+                        <button style="background: #4B77BE;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="AR015" data-rak="PRD08-@(alpha[iColRCR])@(6-iRow)">@(alpha[iColRCR])@(6 - iRow)</button>
+                    </td>
+
+                    if (iCol == 6) { iColRCR = 5; } else { iColRCR--; }
+                }
+
+                else if (iRow >= 3 && iRow <= 5 && iCol >= 8 && iCol <= 13)
+                {
+
+                    <td>
+                        <button style="background: #2C3E50;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iColRAC])@(6-iRow)">@(alpha[iColRAC])@(6 - iRow)</button>
+                    </td>
+
+                    if (iCol == 13) { iColRAC = 5; } else { iColRAC--; }
+                }
+
+                else if (iRow >= 3 && iRow <= 5 && iCol >= 15 && iCol <= 18)
+                {
+
+                    <td>
+                        <button style="background: #26a69a;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iColRP1])@(6-iRow)">@(alpha[iColRP1])@(6 - iRow)</button>
+                    </td>
+
+                    if (iCol == 18) { iColRP1 = 3; } else { iColRP1--; }
+                }
+
+                else if (iRow >= 6 && iRow <= 8 && iCol >= 15 && iCol <= 18)
+                {
+
+                    <td>
+                        <button style="background: #26a69a;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iColRP2])@(9-iRow)">@(alpha[iColRP2])@(9 - iRow)</button>
+                    </td>
+
+                    if (iCol == 18) { iColRP2 = 0; } else { iColRP2++; }
+                }
+
+                else if (iRow >= 5 && iRow <= 7 && iCol >= 20 && iCol <= 23)
+                {
+
+                    <td>
+                        <button style="background: #95dcd5;" class="btn btn-xs btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iColRP1])@(8-iRow)">@(alpha[iColRP1])@(8 - iRow)</button>
+                    </td>
+
+                    if (iCol == 23) { iColRP1 = 3; } else { iColRP1--; }
+                }
+
+                else if (iRow >= 10 && iRow <= 15 && iCol >= 1 && iCol <= 8)
+                {
+
+                    <td>
+                        <button style="background: #8775a7;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iCol-1])@(16-iRow)">@(alpha[iCol-1])@(16 - iRow)</button>
+                    </td>
+
+                    if (iCol == 23) { iColRPL = 3; } else { iColRPL--; }
+                }
+
+                else if (iRow >= 10 && iRow <= 15 && iCol >= 10 && iCol <= 17)
+                {
+
+                    <td>
+                        <button style="background: #8775a7;" class="btn btn-xs btn-warning btn-block text-center small text-white btn-info-rak" data-area="" data-rak="@(alpha[iCol-10])@(16-iRow)">@(alpha[iCol-10])@(16 - iRow)</button>
+                    </td>
+
+                    if (iCol == 23) { iColRPL = 3; } else { iColRPL--; }
+                }
+
+                else if (iRow >= 16 && iRow <= 16 && iCol >= 1 && iCol <= 8)
+                {
+                    if (iRow == 16 && iCol == 1)
+                    {
+                        <td colspan="8" style="padding: 10px 105px 1px;">
+                            <h6>RACK BALANCE 01</h6>
+                        </td>
+                    }
+
+                }
+
+                else if (iRow >= 16 && iRow <= 16 && iCol >= 10 && iCol <= 17)
+                {
+                    if (iRow == 16 && iCol == 10)
+                    {
+                        <td colspan="8" style="padding: 10px 105px 1px;">
+                            <h6>RACK BALANCE 02</h6>
+                        </td>
+                    }
+
+                }
+
+
+
+                else if (iRow >= 7 && iRow <= 9 && iCol >= 25 && iCol <= 27)
+                {
+
+                    if (iRow == 7 && iCol == 25)
+                    {
+                        <td colspan="3" rowspan="3">
+                            <button id="btn-next-wip" style="" class="btn btn-xs btn-block text-center small text-white btn-next-rak">NEXT ></button>
+                        </td>
+                    }
+
+                }
+
+                else
+                {
+                    <td><button type="button" class="btn btn-xs btn-block text-center small bg-white text-white" disabled>@iRow:@iCol</button></td>
+                }
+
+
+
+            }
+
+            @{
+                Rak5Row--;
+                Rak6Row--;
+                Rak7Row--;
+                Rak12Row--;
+                if (new int[] { 5, 7, 9, 11, 13, 15 }.Contains(iRow))
+                {
+                    Rak11Row++;
+                }
+            }
+        </tr>
+
+                }
+    </tbody>
+</table>
+
+
+<table id="table-wip-2" class="table-floor table table-bordered table-sm table-wip-2" style="display: none;">
+    <tbody>
+        @for (int iRow = 1; iRow < 14; iRow++)
+        {
+
+        <tr>
+            @for (int iCol = 1; iCol < 24; iCol++)
+            {
+                if (iRow >= 1 && iRow <= 3 && iCol >= 4 && iCol <= 23)
+                {
+                    if ((iCol % 2) == 0)
+                    {
+                        if (iCol > 14)
+                        {
+                            <td colspan="2">
+                                <button style="" class="btn btn-xs btn-top btn-danger btn-block text-center small text-white btn-info-rak" id="AR012PRD06-@(alpha[iColOR])@(4-iRow)" data-area="AR012" data-rak="PRD06-@(alpha[iColOR])@(4-iRow)">@(alpha[iColOR])@(4 - iRow)</button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td colspan="2">
+                                <button style="" class="btn btn-xs btn-top btn-primary btn-block text-center small text-white btn-info-rak" id="AR013PRD06-@(alpha[iColOR])@(4-iRow)" data-area="AR013" data-rak="PRD06-@(alpha[iColOR])@(4-iRow)">@(alpha[iColOR])@(4 - iRow)</button>
+                            </td>
+                        }
+
+                        if (iCol == 10) { iColOR = 0; } else { iColOR++; }
+                    }
+                }
+                else if (iRow >= 5 && iRow <= 12 && iCol >= 4 && iCol <= 6)
+                {
+                    <td>
+                        <button style="" class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" id="AR010PRD01-@(alpha[iRow-5])@(iCol-3)" data-area="AR010" data-rak="PRD01-@(alpha[iRow-5])@(iCol-3)">@(alpha[iRow-5])@(iCol-3)</button>
+                    </td>
+                }
+
+                else if (iRow >= 13 && iRow <= 13 && iCol >= 4 && iCol <= 6)
+                {
+                    if (iRow == 13 && iCol == 4)
+                    {
+                        <td colspan="3" style="padding: 10px 15px 1px;">
+                            <h6>RACK PRD 01</h6>
+                        </td>
+                    }
+
+                }
+
+                else if (iRow >= 5 && iRow <= 12 && iCol >= 7 && iCol <= 9)
+                {
+
+                    <td>
+                        <button style="" class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" id="@(alpha[12-iRow])@iColRPRD2" data-area="" data-rak="@(alpha[12-iRow])@iColRPRD2">@(alpha[12-iRow])@iColRPRD2</button>
+                    </td>
+                    if (iCol == 9) { iColRPRD2 = 3; } else { iColRPRD2--; }
+                }
+
+                else if (iRow >= 13 && iRow <= 13 && iCol >= 7 && iCol <= 9)
+                {
+                    if (iRow == 13 && iCol == 7)
+                    {
+                        <td colspan="3" style="padding: 10px 15px 1px;">
+                            <h6>RACK PRD 02</h6>
+                        </td>
+                    }
+
+                }
+
+
+
+
+                else if (iRow >= 5 && iRow <= 12 && iCol >= 12 && iCol <= 14)
+                {
+                    <td>
+                        <button style="" class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" id="@(alpha[iRow-5])@(iCol-11)" data-area="" data-rak="@(alpha[iRow-5])@(iCol-11)">@(alpha[iRow-5])@(iCol-11)</button>
+                    </td>
+                }
+
+                else if (iRow >= 13 && iRow <= 13 && iCol >= 12 && iCol <= 14)
+                {
+                    if (iRow == 13 && iCol == 12)
+                    {
+                        <td colspan="3" style="padding: 10px 15px 1px;">
+                            <h6>RACK PRD 03</h6>
+                        </td>
+                    }
+
+                }
+
+
+
+                else if (iRow >= 5 && iRow <= 12 && iCol >= 15 && iCol <= 17)
+                {
+                    <td>
+                        <button style="" class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" id="@(alpha[12-iRow])@(iColRPRD4)" data-area="" data-rak="@(alpha[12-iRow])@(iColRPRD4)">@(alpha[12-iRow])@(iColRPRD4)</button>
+                    </td>
+                    if (iCol == 17) { iColRPRD4 = 3; } else { iColRPRD4--; }
+                }
+
+                else if (iRow >= 13 && iRow <= 13 && iCol >= 15 && iCol <= 17)
+                {
+                    if (iRow == 13 && iCol == 15)
+                    {
+                        <td colspan="3" style="padding: 10px 15px 1px;">
+                            <h6>RACK PRD 04</h6>
+                        </td>
+                    }
+
+                }
+
+
+
+                else if (iRow >= 5 && iRow <= 12 && iCol >= 21 && iCol <= 23)
+                {
+                    <td>
+                        <button style="" class="btn btn-xs btn-warning btn-block text-center small btn-info-rak" id="@(alpha[iRow-5])@(iCol-20)" data-area="" data-rak="@(alpha[iRow-5])@(iCol-20)">@(alpha[iRow-5])@(iCol-20)</button>
+                    </td>
+                }
+
+                else if (iRow >= 13 && iRow <= 13 && iCol >= 21 && iCol <= 23)
+                {
+                    if (iRow == 13 && iCol == 21)
+                    {
+                        <td colspan="3" style="padding: 10px 15px 1px;">
+                            <h6>RACK PRD 05</h6>
+                        </td>
+                    }
+
+                }
+
+
+                else if (iRow >= 5 && iRow <= 7 && iCol >= 1 && iCol <= 3)
+                {
+
+                    if (iRow == 5 && iCol == 1)
+                    {
+                        <td colspan="3" rowspan="3">
+                            <button id="btn-prev-wip" style="" class="btn btn-xs btn-block text-center small text-white btn-prev-rak">< PREV</button>
+                        </td>
+                    }
+
+                }
+
+
+
+                else
+                {
+                    <td><button type="button" class="btn btn-xs btn-block text-center small bg-white text-white" disabled>@iRow:@iCol</button></td>
+                }
+
+
+
+            }
+
+            @{
+                Rak5Row--;
+                Rak6Row--;
+                Rak7Row--;
+                Rak12Row--;
+                if (new int[] { 5, 7, 9, 11, 13, 15 }.Contains(iRow))
+                {
+                    Rak11Row++;
+                }
+            }
+        </tr>
+                    
+                }
+    </tbody>
+</table>

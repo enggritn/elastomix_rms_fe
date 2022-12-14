@@ -1,0 +1,291 @@
+﻿
+@{
+    ViewBag.Title = "Actual Stock";
+    ViewBag.Module = "ActualStock";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-file bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-file"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Report</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Warehouse</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="WarehouseFilter">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Area</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="AreaFilter">
+                                <option value="">Select Area</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Bin/Rack</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="RackFilter">
+                                <option value="">Select Bin/Rack</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                            <button type="button" class="btn btn-warning" id="btnClearFilter">Clear Filter</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>WAREHOUSE CODE</th>
+                                <th>WAREHOUSE NAME</th>
+                                <th>AREA</th>
+                                <th>BIN RACK</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                @*<th>STOCK CODE</th>*@
+                                <th>LOT NO.</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>BAG QTY</th>
+                                <th>QTY/BAG</th>
+                                <th>TOTAL QTY</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+
+    <style>
+        
+        tr.row_expired td {
+            background-color: lightyellow !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '150%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[10, "asc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/Report/DatatableActualStock",
+                data: function (d) {
+                    d.warehouseCode = $('#WarehouseFilter').val();
+                    d.areaCode = $('#AreaFilter').val();
+                    d.binRackCode = $('#RackFilter').val();
+                }
+            },
+            columnDefs: [
+                //{ orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "WarehouseCode", "name": "WarehouseCode", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                //{ "data": "Barcode", "name": "Barcode", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (!data.IsExpired) {
+                            badge = '<span class="badge badge-success"><i class="ik ik-check"></i></span>';
+                        } else  {
+                            badge = '<span class="badge badge-danger"><i class="ik ik-x-circle"></i></span>';
+                        }
+                        return badge;
+                    },
+                    "name": "IsExpired"
+                },
+                //{ "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                //{ "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                //{ "data": "BinRackAreaCode", "name": "BinRackAreaCode", "autoWidth": true },
+                //{ "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                //{ "data": "WarehouseCode", "name": "WarehouseCode", "autoWidth": true },
+                //{ "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+            ]
+        });
+
+        $('#WarehouseFilter').select2();
+        $('#AreaFilter').select2();
+        $('#RackFilter').select2();
+
+        loadWarehouse();
+
+        function loadWarehouse() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Warehouse/GetData',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#WarehouseFilter').empty();
+                        $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
+                        var html = '';
+                        $.each(response.list, function (index, value) {
+                            html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                        });
+                        $('#WarehouseFilter').append(html);
+                        $('#WarehouseFilter').select2();
+                        table.ajax.reload();
+                    }
+                }
+            });
+        }
+
+        $('#WarehouseFilter').change(function () {
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRackArea/WarehouseArea?id=' + this.value,
+                success: function (response) {
+
+                    $('#AreaFilter').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Area</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#AreaFilter').append(html);
+                    $('#AreaFilter').select2();
+                    table.ajax.reload();
+                }
+            });
+        });
+
+
+        $('#AreaFilter').change(function () {
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRack/AreaRack?id=' + this.value,
+                success: function (response) {
+
+                    $('#RackFilter').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Bin/Rack</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#RackFilter').append(html);
+                    $('#RackFilter').select2();
+                    table.ajax.reload();
+                }
+            });
+        });
+
+        $('#RackFilter').change(function () {
+            table.ajax.reload();
+        });
+
+        btnClearFilter
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+        $('#btnClearFilter').click(function () {
+            loadWarehouse();
+            table.ajax.reload();
+        });
+
+</script>
+}

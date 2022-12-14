@@ -1,0 +1,279 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>RMI - @ViewBag.Title</title>
+    <link rel="icon" href="@Url.Content("~/Content/img/logo.png")">
+
+    @Styles.Render("~/bundles/css")
+    @Styles.Render("~/Content/plugins/fontawesome-free/css/all.min.css")
+    @Styles.Render("~/Content/plugins/icon-kit/dist/css/iconkit.min.css")
+    @*@Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")*@
+    @*@Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")*@
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
+
+    <style>
+        #preloader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 999999999;
+            background-color: rgba(0,0,0,0.5) !important;
+        }
+        .sk-cube-grid {
+            width: 40px;
+            height: 40px;
+            margin: 250px auto;
+        }
+        .sk-cube-grid .sk-cube {
+            width: 33%;
+            height: 33%;
+            background-color: #007bff;
+            float: left;
+            -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+                    animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out; 
+        }
+        .sk-cube-grid .sk-cube1 {
+            -webkit-animation-delay: 0.2s;
+                    animation-delay: 0.2s; 
+        }
+        .sk-cube-grid .sk-cube2 {
+            -webkit-animation-delay: 0.3s;
+                    animation-delay: 0.3s; 
+        }
+        .sk-cube-grid .sk-cube3 {
+            -webkit-animation-delay: 0.4s;
+                    animation-delay: 0.4s; 
+        }
+        .sk-cube-grid .sk-cube4 {
+            -webkit-animation-delay: 0.1s;
+                    animation-delay: 0.1s;
+        }
+        .sk-cube-grid .sk-cube5 {
+            -webkit-animation-delay: 0.2s;
+                    animation-delay: 0.2s;
+        }
+        .sk-cube-grid .sk-cube6 {
+            -webkit-animation-delay: 0.3s;
+                    animation-delay: 0.3s; 
+        }
+        .sk-cube-grid .sk-cube7 {
+            -webkit-animation-delay: 0s;
+                    animation-delay: 0s;
+        }
+        .sk-cube-grid .sk-cube8 {
+            -webkit-animation-delay: 0.1s;
+                    animation-delay: 0.1s; 
+        }
+        .sk-cube-grid .sk-cube9 {
+            -webkit-animation-delay: 0.2s;
+                    animation-delay: 0.2s; 
+        }
+
+        @@-webkit-keyframes sk-cubeGridScaleDelay {
+          0%, 70%, 100% {
+            -webkit-transform: scale3D(1, 1, 1);
+                    transform: scale3D(1, 1, 1);
+          } 35% {
+            -webkit-transform: scale3D(0, 0, 1);
+                    transform: scale3D(0, 0, 1); 
+          }
+        }
+
+        @@keyframes sk-cubeGridScaleDelay {
+          0%, 70%, 100% {
+            -webkit-transform: scale3D(1, 1, 1);
+                    transform: scale3D(1, 1, 1);
+          } 35% {
+            -webkit-transform: scale3D(0, 0, 1);
+                    transform: scale3D(0, 0, 1);
+          } 
+        }
+    </style>
+    @RenderSection("custom_css", required: false)
+
+
+</head>
+
+<body>
+    <div id="preloader" style="display:none;">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <header class="header-top" header-theme="blue">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between fa-pull-left">
+                    <div class="top-menu d-flex align-items-center">
+                        <button type="button" class="btn-icon mobile-nav-toggle d-lg-none"><span></span></button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between fa-pull-right">
+                    <div class="top-menu d-flex align-items-center">
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img class="avatar" src="@Url.Content("~/Content/img/user.png")" alt=""></a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href=""><i class="ik ik-user dropdown-icon"></i> Profile</a>
+                                <a class="dropdown-item" onclick="(e) => e.preventDefault(); window.localStorage.removeItem('token'); window.localStorage.removeItem('username'); window.localStorage.removeItem('rememberMe'); window.location.replace('@Url.Action("Index", "Login")')" href="@Url.Action("Index", "Login")"><i class="ik ik-power dropdown-icon"></i> Logout</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-wrap">
+            <div class="app-sidebar colored">
+                <div class="sidebar-header">
+                    <a class="header-brand" href="">
+                        <div class="logo-img">
+                            <img style="width:30px;height:30px;" src="@Url.Content("~/Content/img/logo.jpg")" class="header-brand-img" alt="logo">
+                        </div>
+                        <span class="text">RM Inventory</span>
+                    </a>
+                    <button type="button" class="nav-toggle"><i data-toggle="expanded" class="ik ik-toggle-right toggle-icon"></i></button>
+                    <button id="sidebarClose" class="nav-close"><i class="ik ik-x"></i></button>
+                </div>
+
+                @*all menu open new tab, focus new tab*@
+                <div class="sidebar-content">
+                    <div class="nav-container">
+                        <nav id="main-menu-navigation" class="navigation-main">
+                            <div class="nav-lavel">Navigation</div>
+                            <div class="nav-item active">
+                                <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Dashboard")', 'Dashboard')"><i class="ik ik-bar-chart-2"></i><span>Dashboard</span></a>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>Master Data</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "User")', 'User')" class="menu-item">User</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "UserRole")', 'UserRole')" class="menu-item">Role</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "Warehouse")', 'Warehouse')" class="menu-item">Warehouse</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "Supplier")', 'Supplier')" class="menu-item">Supplier</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "Customer")', 'Customer')" class="menu-item">Customer</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "FinishGoods")', 'FinishGoods')" class="menu-item">Finish Goods</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "SemiFinishGoods")', 'SemiFinishGoods')" class="menu-item">Semi Finish Goods</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "Recipe")', 'Recipe')" class="menu-item">Recipe</a>
+                                    <a href="javascript:void(0)" onclick="openMenu('@Url.Action("Index", "RawMaterial")', 'RawMaterial')" class="menu-item">Raw Material</a>
+                                </div>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>Sales</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "PRF")', 'PRF')" class="menu-item">Production Request Form</a>
+                                </div>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>PPIC</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "ProductionPlan")', 'ProductionPlan')" class="menu-item">Production Plan</a>
+                                </div>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>Logistic</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "MaterialRequest")', 'MaterialRequest')" class="menu-item">Material Request</a>
+                                    @*<a href="@Url.Action("Index", "InboundManual")" class="menu-item">Import & Print RM</a>*@
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Receiving")', 'Receiving')" class="menu-item">Receiving</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "IssueSlip")', 'IssueSlip')" class="menu-item">Issue Slip</a>
+                                </div>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>Production</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("IndexWIP", "Receiving")', 'ReceivingWIP')" class="menu-item">Receiving</a>
+                                </div>
+                            </div>
+                            <div class="nav-item has-sub">
+                                <a href="#"><i class="ik ik-database"></i><span>Operation</span></a>
+                                <div class="submenu-content">
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Movement")', 'Movement')" class="menu-item">Movement</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "StockOpname")', 'StockOpname')" class="menu-item">Stock Opname</a>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+
+
+            <footer class="footer">
+                <div class="w-100 clearfix">
+                    <span class="text-center text-sm-left d-md-inline-block">Copyright © @DateTime.Now.Year <b>PT. Elastomix Indonesia</b></span>
+                    @*<span class="float-none float-sm-right mt-1 mt-sm-0 text-center text-warning">Powered by PT. Duta Kalingga Pratama</span>*@
+                </div>
+            </footer>
+
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/js")
+    @*@Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")*@
+    @*@Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")*@
+    @*@Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")*@
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    <script>
+        getPermission('@ViewBag.Module', '@ViewBag.Method');
+        function getPermission(module, method) {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', '@Session["token"]');
+                },
+                url: '@ViewBag.Server' + 'Api/Permission/CheckPermission',
+                data: {
+                    MenuName: module,
+                    ControlName: method,
+                },
+                success: function (response) {
+                    isValid = response.status;
+                }
+            });
+        };
+    </script>
+    <script>
+        var preloader = $('#preloader');
+        $(document).ajaxStart(function () {
+            preloader.show();
+        }).ajaxStop(function () {
+            preloader.hide();
+        });
+
+
+        function openMenu(url, name) {
+            window.open(url, name).focus();
+        }
+    </script>
+    @RenderSection("custom_js", required: false)
+
+
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+﻿@{
+    ViewBag.Title = "Raw Material";
+    ViewBag.Module = "RawMaterial";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Raw Material Code</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" id="MaterialCode" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Raw Material Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="MaterialName" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Qty per Bag</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" id="Qty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Shelf Life</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number-non-decimal" id="ShelfLife" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" id="LifeRange">
+                                    <option value="d">Day(s)</option>
+                                    <option value="m">Month(s)</option>
+                                    <option value="y">Year(s)</option>
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Min Purchase Qty</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" id="MinPurchaseQty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Maker Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="Maker" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Supplier Name <span class="text-muted">(Optional)</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="Vendor" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PO Rate</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control po-rate" id="PoRate" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Manufacture Code <span class="text-muted">(Optional)</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="ManfCd" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Vendor Code <span class="text-muted">(Optional)</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="VendorCode" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+}
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+
+         $('#btnBack').click(function () {
+                window.location.replace('@Url.Action("Index", "RawMaterial")')
+        });
+
+        $("#btnSave").click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.po-rate').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 4, 'digitsOptional': false });
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': true });
+
+    function clearForm() {
+            $('#MaterialCode').removeClass('is-invalid');
+            $('#MaterialCode').next().html('');
+            $('#MaterialName').removeClass('is-invalid');
+            $('#MaterialName').next().html('');
+            $('#Qty').removeClass('is-invalid');
+            $('#Qty').next().html('');
+            $('#ShelfLife').removeClass('is-invalid');
+            $('#ShelfLife').next().html('');
+            $('#MinPurchaseQty').removeClass('is-invalid');
+            $('#MinPurchaseQty').next().html('');
+            $('#Maker').removeClass('is-invalid');
+            $('#Maker').next().html('');
+            $('#Vendor').removeClass('is-invalid');
+            $('#Vendor').next().html('');
+            $('#PoRate').removeClass('is-invalid');
+            $('#PoRate').next().html('');
+            $('#ManfCd').removeClass('is-invalid');
+            $('#ManfCd').next().html('');
+            $('#VendorCode').removeClass('is-invalid');
+            $('#VendorCode').next().html('');
+    }
+
+    clearValue();
+
+        function clearValue() {
+            $('#MaterialCode').val('');
+            $('#MaterialName').val('');
+            $('#Qty').val('0');
+            $('#ShelfLife').val('0');
+            $('#MinPurchaseQty').val('0');
+            $('#Maker').val('');
+            $('#Vendor').val('');
+            $('#PoRate').val('0');
+            $('#ManfCd').val('');
+            $('#VendorCode').val('');
+            $('#LifeRange').prop('selectedIndex', 0);
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+    $('#btnYes').click(function () {
+            clearForm();
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/@ViewBag.Module/Create',
+                    data: {
+                        MaterialCode: $('#MaterialCode').val(),
+                        MaterialName: $('#MaterialName').val(),
+                        Qty: $('#Qty').val() ? $('#Qty').val().replace(/\,/g, '') : 0,
+                        ShelfLife: $('#ShelfLife').val() ? $('#ShelfLife').val().replace(/\,/g, '') : 0,
+                        LifeRange : $('#LifeRange').val(),
+                        MinPurchaseQty: $('#MinPurchaseQty').val() ? $('#MinPurchaseQty').val().replace(/\,/g, '') : 0,
+                        Maker: $('#Maker').val(),
+                        Vendor: $('#Vendor').val(),
+                        PoRate: $('#PoRate').val() ? $('#PoRate').val().replace(/\,/g, '') : 0,
+                        ManfCd: $('#ManfCd').val(),
+                        VendorCode: $('#VendorCode').val(),
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            toastr.error(response.message);
+                            dissmissDialog();
+                        } else {
+                            clearValue();
+                            clearForm();
+                            dissmissDialog();
+                            toastr.success(response.message);
+                        }
+                    }
+                });
+        });
+</script>
+}

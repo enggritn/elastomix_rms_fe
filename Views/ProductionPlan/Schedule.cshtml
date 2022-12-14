@@ -1,0 +1,473 @@
+﻿
+@{
+    ViewBag.Title = "Production Plan - Line " + ViewBag.LineNumber;
+    ViewBag.Name = "Production Plan";
+
+
+    DateTime currentDate = DateTime.Now;
+    var startYear = 2020;
+    List<int> yearList = new List<int>();
+
+    for (int i = startYear; i <= currentDate.Year; i++)
+    {
+        yearList.Add(i);
+    }
+
+    string[] months = { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember" };
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Name</h5>
+                    <span>Schedule</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC Data</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Name</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>Schedule Line @ViewBag.LineNumber</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2" id="ItemNameLabel">Stock Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" name="ItemName" id="ItemName" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id='calendar'></div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="formModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Insert Break Time - Line @ViewBag.LineNumber</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Production Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control datepicker" id="productionDate" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Break Time (Minute)</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number1" name="breakMinute" id="breakMinute" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>Cancel</button>
+                <button type="button" class="btn btn-success" id="btnSave"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="formModalEdit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Break Time - Line @ViewBag.LineNumber</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Production Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="productionDate" disabled />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Break Time (Minute)</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number1" name="breakMinute" id="breakMinute" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="ik ik-x-circle"></i>Cancel</button>
+                <button type="button" class="btn btn-danger" id="btnRemove"><i class="ik ik-trash"></i>Remove</button>
+                <button type="button" class="btn btn-success" id="btnUpdate"><i class="ik ik-check-circle"></i>Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/fullcalendar/lib/main.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+
+    <style>
+        .fc-event-main { /* force events to be one-line tall */
+            overflow: auto;
+        }
+
+        /*.fc-view > table {
+            min-width: 350%;
+            width: 350%;
+        }*/
+
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/fullcalendar/lib/main.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+    <script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let year = "@ViewBag.Year";
+        let month = "@ViewBag.Month";
+        let line = "@ViewBag.LineNumber";
+        let currentMoment = moment(year + '-' + month, 'YYYY-MM');
+        let itemName = '';
+        let breakId = "";
+
+      $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "ProductionPlan")')
+      });
+
+        $('.number1').inputmask("9{*}", { "placeholder": "" });
+
+
+        var minDate = new Date(year, month - 1, currentMoment.startOf('month').format('DD'));
+        var maxDate = new Date(year, month - 1, currentMoment.endOf('month').format('DD'));
+
+        $("#productionDate").datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "right",
+            autoclose: true,
+            startDate: minDate,
+            endDate: maxDate
+        });
+
+    var calendarEl = document.getElementById('calendar');
+    currentMoment.add(0, 'M')
+    let clickCnt = 0;
+   var calendar = new FullCalendar.Calendar(calendarEl, {
+       initialView: 'timeGridWeek',
+        duration: { days: currentMoment.daysInMonth() },
+        initialDate: currentMoment.startOf('month').format('YYYY-MM-DD'),
+        allDaySlot: false,
+       slotDuration: '00:05:00',
+        scrollTime: '07:00:00',
+        slotMinTime: '00:00:00',
+       slotLabelInterval: '01:00:00',
+        dayHeaderFormat: { weekday: 'short', day: 'numeric', omitCommas: true },
+        slotLabelFormat: { hour: 'numeric', minute: '2-digit', hour12: false },
+        dayHeaderContent: (args) => {
+            return moment(args.date).format('ddd') + " / " + args.date.getDate();
+        },
+        slotLaneContent: function (arg) {
+        },
+        //events: [
+        //    {
+        //        "title": "BREAK",
+        //        "start": "2020-11-23T11:30:00",
+        //        "end": "2020-11-23T12:30:00",
+        //        "allDay": false,
+        //        "backgroundColor": "#4f4f4f",
+        //        "textColor": "#fff"
+        //    }
+        //],
+
+        eventColor: '#FFFF99',
+        eventTextColor: '#000',
+        eventSources: [
+            {
+                url: server + 'Api/ProductionPlan/GetSchedule?year=' + year + '&month=' + month + '&line=' + line + '&itemName=',
+                type: 'GET',
+                cache: false,
+            }
+        ],
+       eventContent: function (arg) {
+           let card = '<div><b><u>' + arg.timeText + '</u><br>' + arg.event.title + '</b></div>';
+            return {
+                html: card
+            }
+           //var icon = $(document.createElement('div'));
+           //icon.css('background-image', "url(icons/kalender_medicin_100px.png)");
+           //element.find('.fc-event-title').html(icon + copiedEventObject.title);
+       },
+       eventDidMount: function (info) {
+           @*info.el.addEventListener('click', function () {
+               clickCnt++;
+               if (clickCnt === 2) {
+                   clickCnt = 0;
+                    let id = info.event.id;
+                    if (id)
+                        window.open("@Url.Action("Edit", "ProductionPlan")?id=" + id, "_blank");
+               }
+           });*@
+           info.el.addEventListener('dblclick', function () {
+               let id = info.event.id;
+               if (id) {
+                   if (info.event.title == "BREAK") {
+                       //load data to form, ajax get
+                       $.ajax({
+                           type: 'GET',
+                           async: false,
+                           dataType: "json",
+                           beforeSend: function (request) {
+                               request.setRequestHeader('Token', token);
+                           },
+                           url: server + 'Api/ProductionPlan/GetBreakScheduleById?id=' + id,
+                           success: function (response) {
+                               isValid = response.status;
+                               if (isValid) {
+                                   let data = response.data;
+                                   breakId = data.ID;
+                                   $('#formModalEdit #productionDate').val(data.ScheduleDate);
+                                   $('#formModalEdit #breakMinute').val(data.BreakMinute);
+                                   $('#formModalEdit').modal('show');
+                               }
+                           }
+                       });
+                       
+                   } else {
+                       window.open("@Url.Action("Edit", "ProductionPlan")?id=" + id, "_blank");
+                   }
+
+               }
+
+           });
+
+       },
+        eventClick: function (info) {
+            @*info.jsEvent.preventDefault(); // don't let the browser navigate
+            if (confirm("View Schedule ? ")) {
+                let id = info.event.id;
+                 if(id)
+                    window.open("@Url.Action("Edit", "ProductionPlan")?id=" + id, "_blank");
+            }*@
+
+       },
+         eventMouseEnter: function (info) {
+            @*info.jsEvent.preventDefault(); // don't let the browser navigate
+            if (confirm("View Schedule ? ")) {
+                let id = info.event.id;
+                 if(id)
+                    window.open("@Url.Action("Edit", "ProductionPlan")?id=" + id, "_blank");
+            }*@
+
+       },
+        stickyHeaderDates: true,
+        stickyFooterScrollbar: true,
+        customButtons: {
+            //CloseButton: {
+            //    text: 'Close',
+            //    click: function () {
+            //        window.close();
+            //    }
+
+            //},
+            BreakButton: {
+                text: 'Insert Break Time',
+                click: function () {
+                    $('#productionDate').val("");
+                    $('#breakMinute').val("");
+                    $('#formModalAdd').modal('show');
+                }
+
+            }
+        },
+        headerToolbar: {
+            left: 'BreakButton',
+            center: 'title',
+            right: 'prev,next',
+        },
+        validRange: {
+            start: currentMoment.startOf('month').format('YYYY-MM-DD'),
+            end: currentMoment.endOf('month').add(1, 'days').format('YYYY-MM-DD')
+        },
+        height: 650,
+        //eventClick: function (event) {
+        //    if (event.headerId) {
+        //        alert(headerId);
+        //    }
+        //}
+    });
+
+    calendar.render();
+
+    setInterval(function () {
+        calendar.refetchEvents();
+    }, 5000);
+
+    $('#ItemName').keyup(function () {
+        itemName = $(this).val();
+        //$('#calendar').FullCalendar('removeEvents');
+        //$('#calendar').FullCalendar('addEventSource', )
+        //$('#calendar').FullCalendar('rerenderEvents');
+        //calendar.refetchResources();
+        //calendar.refetchEvents();
+        //calendar.removeEventSources();
+        //calendar.addEventSource();
+        //calendar.rerenderEvents();
+        var eventSources = calendar.getEventSources();
+        eventSources[0].remove();
+        calendar.addEventSource(server + 'Api/ProductionPlan/GetSchedule?year=' + year + '&month=' + month + '&line=' + line + '&itemName=' + itemName);
+        calendar.refetchEvents();
+    });
+
+        $('#btnSave').click(function (){
+            let productionDate = $('#formModalAdd #productionDate').val();
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/CreateBreakTime',
+                data: {
+                    LineNumber: line,
+                    ScheduleDate: productionDate != "" ? moment(productionDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : "",
+                    BreakMinute: $('#formModalAdd #breakMinute').val() ? $('#formModalAdd #breakMinute').val() : 0
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+
+                        });
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        $('#formModalAdd').modal('hide');
+                        calendar.refetchEvents();
+                        notify("Success", "success", response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnUpdate').click(function () {
+            let productionDate = $('#formModalEdit #productionDate').val();
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/UpdateBreakTime',
+                data: {
+                    ID : breakId,
+                    BreakMinute: $('#formModalEdit #breakMinute').val() ? $('#formModalEdit #breakMinute').val() : 0
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+
+                        });
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        $('#formModalEdit').modal('hide');
+                        calendar.refetchEvents();
+                        notify("Success", "success", response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnRemove').click(function () {
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/RemoveBreakTime',
+                data: {
+                    ID: breakId
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+
+                        });
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        $('#formModalEdit').modal('hide');
+                        calendar.refetchEvents();
+                        notify("Success", "success", response.message);
+                    }
+                }
+            });
+        });
+    </script>
+}

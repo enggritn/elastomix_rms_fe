@@ -1,0 +1,1939 @@
+﻿@{
+    ViewBag.Title = "Issue Slip";
+    ViewBag.Module = "IssueSlip";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issue Slip Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <input type="hidden" id="ID" class="form-control" />
+                                <input type="hidden" id="CodeHidden" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issue Slip Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Name" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Total Weight</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="TotalRequestedQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="TransactionStatus"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>&nbsp;
+                <button class="btn btn-danger" id="btnCancel"><i class="ik ik-x-circle"></i>Cancel</button>
+                <div class="float-right">
+                    <button class="btn btn-success" id="btnDownload" style="display:none"><i class="ik ik-download"></i>Download</button> &nbsp;
+                    <button class="btn btn-warning" id="btnClose" style="display:none"><i class="ik ik-check-square"></i>Close</button>
+                    <button class="btn btn-default" id="btnOpen" style="display:none"><i class="ik ik-check-square"></i>Open</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-2">Import Data (Revise)</label>
+                    <div class="col-sm-6">
+                        <div class="custom-file">
+                            @Html.TextBox("file_upload", "", new { @type = "file", @class = "custom-file-input", @id = "file_upload", @accept = "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <span class="text-muted text-sm"><i>Allowed file type : .xls/ .xlsx</i></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-warning" onclick="resetUpload()"><i class="ik ik-delete"></i>Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadData()"><i class="ik ik-upload"></i>Import Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#list"><b>Issue Slip Order</b></a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="list">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="listTable">
+                                        <thead>
+                                            <tr>
+                                                <th>NO.</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>VENDOR NAME</th>
+                                                <th>ORDER QTY</th>
+                                                <th>PICKED QTY</th>
+                                                <th>DIFF QTY</th>
+                                                <th>RETURNED QTY</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-md-12">
+        <b>Summary</b>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" id="pickingSum" href="#pickingSumTab">Picking</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" id="returnSum" href="#returnSumTab">Return</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="pickingSumTab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="pickingSumTable">
+                                        <thead>
+                                            <tr>
+                                                <th>NO.</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO.</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>TOTAL QTY</th>
+                                                <th>QTY/BAG</th>
+                                                <th>BAG QTY</th>
+                                                <th>RETURN QTY</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="returnSumTab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="returnSumTable">
+                                        <thead>
+                                            <tr>
+                                                <th>NO.</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO.</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>TOTAL QTY</th>
+                                                <th>QTY/BAG</th>
+                                                <th>BAG QTY</th>
+                                                <th>PUTAWAY QTY</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mb-2">
+    <div class="col-md-12">
+        <b>Logs</b>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" id="usage" href="#usageTab">Picking</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" id="return" href="#returnTab">Return</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" id="putaway" href="#putawayTab">Putaway</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="usageTab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="pickingTable">
+                                        <thead>
+                                            <tr>
+                                                <th>BIN/RACK CODE</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO.</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>BAG QTY</th>
+                                                <th>QTY/BAG</th>
+                                                <th>TOTAL QTY</th>
+                                                <th>UOM</th>
+                                                <th>PICKING METHOD</th>
+                                                <th>PICKED BY</th>
+                                                <th>PICKED ON</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="returnTab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="returnTable">
+                                        <thead>
+                                            <tr>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO.</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>BAG QTY</th>
+                                                <th>QTY/BAG</th>
+                                                <th>TOTAL QTY</th>
+                                                <th>RETURNED METHOD</th>
+                                                <th>RETURNED BY</th>
+                                                <th>RETURNED ON</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="putawayTab">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="putawayTable">
+                                        <thead>
+                                            <tr>
+                                                <th>BIN/RACK CODE</th>
+                                                <th>BIN/RACK NAME</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO.</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>BAG QTY</th>
+                                                <th>QTY/BAG</th>
+                                                <th>TOTAL QTY</th>
+                                                <th>PUTAWAY METHOD</th>
+                                                <th>PUTAWAY BY</th>
+                                                <th>PUTAWAY ON</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Submit Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnSubmit"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="closeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Close Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesClose"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="openModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Open Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesOpen"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesDelete"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPickingModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Picking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Outstanding Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="OutstandingQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Outstanding Bag Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="OutstandingBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableFifo">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>AREA NAME</th>
+                                        <th>BIN/RACK NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>BAG QTY</th>
+                                        <th>QTY/BAG</th>
+                                        <th>TOTAL QTY</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Bag Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="AvailableBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number" id="BagQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPick"><i class="ik ik-save"></i>Pick</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formReturnModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Return</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Picked Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="BagQtyTotal" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="PickedQtyTotal" readonly />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Returned Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="ReturnedQtyTotal" readonly />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-8"><strong>Return</strong></label>
+                    <div class="col-sm-4">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" id="ReturnAvailQty" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="FullBagQty" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Remainder Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" id="RemainderQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly style="text-align: right;" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" id="ReturnQty" readonly="" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnReturn"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Putaway Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Putaway QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control PutawayQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control PutawayBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Bin/Rack</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Warehouse</label>
+                    <div class="col-sm-8">
+                        <select id="WarehouseList" class="form-control">
+                            <option value="" selected>Select Warehouse</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area</label>
+                    <div class="col-sm-8">
+                        <select id="AreaList" class="form-control">
+                            <option value="" selected>Select Area</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/ Rack</label>
+                    <div class="col-sm-8">
+                        <select id="BinRackID" class="form-control">
+                            <option value="" selected>Select Bin/Rack</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_binrack"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Putaway Bag Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PutawayQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPutaway"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPrintBarcode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Barcode Printing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control LotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control InDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Expired Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control ExpDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control BagQty" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">List Printer</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ListPrinter">
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPrint"><i class="ik ik-printer"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        tr.row_expired td {
+            background-color: lightyellow !important;
+        }
+
+        tr.row_qc td {
+            background-color: lightblue !important;
+        }
+
+        /* Important part */
+        .modal-dialog-big {
+            overflow-y: initial !important
+        }
+
+        .modal-body-big {
+            height: 70vh;
+            overflow-y: auto;
+        }
+
+        #StockDataTable tbody tr {
+            cursor: pointer;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+
+        var listTable = null;
+        var pickingSumTable = null;
+        var returnSumTable = null;
+        var pickingTable = null;
+        var returnTable = null;
+        var putawayTable = null;
+
+
+
+    $('.number1').inputmask("9{*}", { "placeholder": "" });
+        //$('.number').inputmask("9{*}", { "placeholder": "" });
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+
+    $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+          $('#btnBack').click(function () {
+                window.location.replace('@Url.Action("Index", "IssueSlip")')
+        });
+
+
+        initData();
+
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#Name').val(data.Name);
+                        $('#Code').val(data.Code);
+                        $('#TotalRequestedQty').val(data.TotalRequestedQty);
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#btnDownload').hide();
+                            $('#btnClose').hide();
+                            $('#TransactionStatus').addClass('badge badge-info');
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            $('#btnCancel').hide();
+                            $('#btnDownload').hide();
+                            $('#btnClose').show();
+                            $('#TransactionStatus').addClass('badge badge-warning');
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            $('#btnCancel').hide();
+                            $('#btnDownload').hide();
+                            $('#btnClose').show();
+                            $('#TransactionStatus').addClass('badge badge-success');
+                        } else {
+                            $('#btnCancel').hide();
+                            $('#btnDownload').show();
+                            $('#btnOpen').show();
+                            $('#btnClose').hide();
+                            $('#TransactionStatus').addClass('badge badge-danger');
+                        }
+                        $('#TransactionStatus').html(data.TransactionStatus);
+                        initList();
+                        initPickingSumTable();
+                        initPickingTable();
+                        initReturnSumTable();
+                        initReturnTable();
+                        initPutawayTable();
+                    } else {
+                        notify("Warning", "warning", response.message);
+                        setTimeout(function () { window.location = '@Url.Action("Index", "IssueSlip")'; }, 1000);
+                    }
+                }
+            });
+        }
+
+        function initList() {
+            listTable = $('#listTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[0, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatableOrder?HeaderID=@ViewBag.Param"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Number", "name": "No", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "VendorName", "name": "VendorName", "autoWidth": true },
+                { "data": "RequestedQty", "name": "RequestedQty", "autoWidth": true },
+                { "data": "PickedQty", "name": "PickedQty", "autoWidth": true },
+                { "data": "DiffQty", "name": "DiffQty", "autoWidth": true },
+                { "data": "ReturnedQty", "name": "ReturnedQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        if ($('#TransactionStatus').text() != 'CLOSED' && $('#TransactionStatus').text() != 'CANCELLED') {
+                            button += '<button type="button" class="btn btn-primary" onclick="return ShowPickingForm(this)"><i class="ik ik-inbox"></i>Picking</button> ';
+                        }
+
+                        //if (data.PickedQty != "0.00") {
+                        //    button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-check-circle"></i>Return</button>';
+                        //}
+                        return button;
+                    }
+                },
+            ]
+        });
+    }
+
+     function initPickingSumTable() {
+         pickingSumTable = $('#pickingSumTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+             order: [[0, "asc"]],
+             columnDefs: [
+                 { orderable: false, targets: -1 }
+             ],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatablePickingSummary?HeaderID=@ViewBag.Param"
+            },
+             columns: [
+                 { "data": "RowNum", "name": "RowNum", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
+                 { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                 { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                 { "data": "ReturnedTotalQty", "name": "ReturnQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-inbox"></i>Return</button>';
+                        //if (data.PickedQty != "0.00") {
+                        //    button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-check-circle"></i>Return</button>';
+                        //}
+                        return button;
+                    }
+                }
+            ]
+        });
+    }
+
+      function initReturnSumTable() {
+         returnSumTable = $('#returnSumTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+             order: [[0, "asc"]],
+             columnDefs: [
+                 { orderable: false, targets: -1 }
+             ],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatableReturnSummary?HeaderID=@ViewBag.Param"
+            },
+             columns: [
+                 { "data": "RowNum", "name": "RowNum", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
+                 { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                 { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                 { "data": "TotalPutawayQty", "name": "PutawayQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        button += '<button class="btn btn-info-outline" onclick = "return ShowBarcodeForm(this)" > <i class="fas fa-barcode"></i>Print</button> ';
+                        button += '<button type="button" class="btn btn-success" onclick="return ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                        return button;
+                    }
+                }
+            ]
+        });
+    }
+
+     function initPickingTable() {
+         pickingTable = $('#pickingTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+             order: [[12, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatablePicking?HeaderID=@ViewBag.Param"
+            },
+             columns: [
+                 { "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
+                { "data": "UoM", "name": "UoM", "autoWidth": true },
+                { "data": "PickingMethod", "name": "PickingMethod", "autoWidth": true },
+                { "data": "PickedBy", "name": "PickedBy", "autoWidth": true },
+                { "data": "PickedOn", "name": "PickedOn", "autoWidth": true },
+                //{
+                //    "data": null,
+                //    "render": function (data, type, row) {
+                //        let button = '';
+                //        button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-inbox"></i>Return</button>';
+                //        //if (data.PickedQty != "0.00") {
+                //        //    button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-check-circle"></i>Return</button>';
+                //        //}
+                //        return button;
+                //    }
+                //}
+            ]
+        });
+    }
+
+    function initReturnTable() {
+        returnTable = $('#returnTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[10, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatableReturn?HeaderID=@ViewBag.Param"
+            },
+            columns: [
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "TotalQty", "name": "Qty", "autoWidth": true },
+                { "data": "ReturnMethod", "name": "ReturnMethod", "autoWidth": true },
+                { "data": "ReturnedBy", "name": "ReturnedBy", "autoWidth": true },
+                { "data": "ReturnedOn", "name": "ReturnedOn", "autoWidth": true },
+                //{
+                //    "data": null,
+                //    "render": function (data, type, row) {
+                //        let button = '';
+                //        button += '<button type="button" class="btn btn-success" onclick="return ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                //        //if (data.PickedQty != "0.00") {
+                //        //    button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-check-circle"></i>Return</button>';
+                //        //}
+                //        return button;
+                //    }
+                //}
+            ]
+        });
+    }
+
+        function initPutawayTable() {
+            putawayTable = $('#putawayTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[12, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/IssueSlip/DatatablePutaway?HeaderID=@ViewBag.Param"
+            },
+            columns: [
+                { "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "TotalQty", "name": "Qty", "autoWidth": true },
+                { "data": "PutawayMethod", "name": "PutawayMethod", "autoWidth": true },
+                { "data": "PutBy", "name": "PutBy", "autoWidth": true },
+                { "data": "PutOn", "name": "PutOn", "autoWidth": true },
+                //{
+                //    "data": null,
+                //    "render": function (data, type, row) {
+                //        let button = '';
+                //        button += '<button type="button" class="btn btn-success" onclick="return ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                //        //if (data.PickedQty != "0.00") {
+                //        //    button += '<button type="button" class="btn btn-success" onclick="return ShowReturnForm(this)"><i class="ik ik-check-circle"></i>Return</button>';
+                //        //}
+                //        return button;
+                //    }
+                //}
+            ]
+        });
+        }
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        switch (e.target.id) {
+            case "pickingSum": {
+                $('#pickingSumTable').DataTable().ajax.reload();
+                $('#pickingSumTable').DataTable().columns.adjust();
+                break;
+            }
+            case "returnSum": {
+                $('#returnSumTable').DataTable().ajax.reload();
+                $('#returnSumTable').DataTable().columns.adjust();
+                break;
+            }
+            case "usage": {
+                $('#pickingTable').DataTable().ajax.reload();
+                $('#pickingTable').DataTable().columns.adjust();
+                break;
+            }
+            case "return": {
+                $('#returnTable').DataTable().ajax.reload();
+                $('#returnTable').DataTable().columns.adjust();
+                break;
+            }
+            case "putaway": {
+                $('#putawayTable').DataTable().ajax.reload();
+                $('#putawayTable').DataTable().columns.adjust();
+                break;
+            }
+        }
+    })
+
+
+    $('#btnCancel').click(function () {
+        $('#deleteModal').modal('show');
+    });
+
+
+     $('#btnYesDelete').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/IssueSlip/Cancel?id=@ViewBag.param',
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#deleteModal').modal('hide');
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Index", "IssueSlip")'); }, 1000);
+                    }
+                }
+            });
+     });
+
+    let OrderId = "";
+    let list_fifo = [];
+    let data_fifo = {};
+    function ShowPickingForm(row) {
+
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = $('#listTable').DataTable().row($(elementRow)).data();
+
+        OrderId = dataTableRow.ID;
+        $('#BagQty').val(0);
+        $('#AvailableBagQty').val(0);
+        $('#OutstandingQty').val(dataTableRow.OutstandingQty);
+        $('#OutstandingBagQty').val(dataTableRow.PickingBagQty);
+
+        $('.MaterialCode').val(dataTableRow.MaterialCode);
+        $('.MaterialName').val(dataTableRow.MaterialName);
+
+        $('#BagQty').next().html('');
+        $('#BagQty').removeClass('is-invalid');
+
+        //ajax get list fifo
+
+        loadFifo();
+
+    }
+
+    function loadFifo() {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/GetFifo',
+            data: {
+                OrderId: OrderId
+            },
+            success: function (response) {
+
+                $('#tableFifo tbody').empty();
+                if (response.status) {
+                    list_fifo = response.data;
+                    var html = "";
+
+                    if (list_fifo.length > 0) {
+                        $.each(list_fifo, function (index, value) {
+                            if (value.IsExpired) {
+                                html += '<tr class="row_expired">';
+                                html += '<td><button class="btn btn-primary" onclick ="event.stopPropagation(); createQC(\'' + index + '\')"> <i class="ik ik-check"></i>QC</button></td>';
+                            } else if (value.QCInspected) {
+                                html += '<tr class="row_qc">';
+                                html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+                            } else {
+                                html += '<tr>';
+                                html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+                            }
+                            html += '<td>' + value.BinRackAreaName + '</td>';
+                            html += '<td>' + value.BinRackName + '</td>';
+                            //html += '<td>' + value.StockCode + '</td>';
+                            html += '<td>' + value.LotNo + '</td>';
+                            html += '<td>' + value.InDate + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.BagQty + '</td>';
+                            html += '<td>' + value.QtyPerBag + '</td>';
+                            html += '<td>' + value.TotalQty + '</td>';
+                            //html += '<td>' + value.WarehouseCode + '</td>';
+                            //html += '<td>' + value.WarehouseName + '</td>';
+                            //html += '<td>' + value.BinRackAreaCode + '</td>';
+                            //html += '<td>' + value.BinRackAreaName + '</td>';
+                            //html += '<td>' + value.BinRackCode + '</td>';
+                            //html += '<td>' + value.BinRackName + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+
+
+
+                    $('#tableFifo tbody').append(html);
+
+                    $('#formPickingModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+
+
+            }
+        });
+
+    }
+
+    function chooseStock(index) {
+        data_fifo = list_fifo[index];
+        $('#AvailableBagQty').val(data_fifo.BagQty);
+        StockId = data_fifo.ID;
+    }
+
+    let StockId = "";
+
+    $('#btnPick').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/Picking',
+            data: {
+                OrderID: OrderId,
+                StockID: StockId,
+                BagQty: $('#BagQty').val() != "" ? $('#BagQty').val().replace(/\,/g, '') : 0
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    let data = response.data;
+                    OrderId = OrderId;
+                    $('#BagQty').val(0);
+                    $('#AvailableBagQty').val(0);
+                    $('#OutstandingQty').val(data.OutstandingQty);
+                    $('#OutstandingBagQty').val(data.PickingBagQty);
+
+                    $('.MaterialCode').val(data.MaterialCode);
+                    $('.MaterialName').val(data.MaterialName);
+
+                    $('#BagQty').next().html('');
+                    $('#BagQty').removeClass('is-invalid');
+                    loadFifo();
+                    $('#listTable').DataTable().ajax.reload();
+                    $('#listTable').DataTable().columns.adjust();
+                    //$('#formPickingModal').modal('hide');
+                    notify("Success", "success", response.message);
+
+                    $('#pickingSumTable').DataTable().ajax.reload();
+                    $('#pickingSumTable').DataTable().columns.adjust();
+
+                     $('#pickingTable').DataTable().ajax.reload();
+                    $('#pickingTable').DataTable().columns.adjust();
+
+
+
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+
+    });
+
+    let dataSummary = {};
+    let StockCode = "";
+    let OrderID = "";
+    function ShowReturnForm(row) {
+
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = $('#pickingSumTable').DataTable().row($(elementRow)).data();
+
+        $('.MaterialCode').val(dataTableRow.MaterialCode);
+        $('.MaterialName').val(dataTableRow.MaterialName);
+
+        $('#PickedQtyTotal').val(dataTableRow.TotalQty);
+        $('#BagQtyTotal').val(dataTableRow.BagQty);
+
+        $('#ReturnedQtyTotal').val(dataTableRow.ReturnedTotalQty);
+        $('#ReturnAvailQty').val(dataTableRow.AvailableReturnQty);
+
+        $('#ReturnQty').val(0);
+
+        $('.QtyPerBag').val(dataTableRow.QtyPerBag);
+
+        $('#FullBagQty').val(0);
+        $('#RemainderQty').val(0);
+
+        dataSummary = dataTableRow;
+        StockCode = dataSummary.StockCode;
+        OrderID = dataSummary.OrderID;
+
+
+        $('#formReturnModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    $('#FullBagQty').on('input', function () {
+
+        let QtyPerBag = parseFloat(dataSummary.QtyPerBag);
+        let TotalQty = 0;
+        let FullBagQty = $(this).val();
+        let RemainderQty = $('#RemainderQty').val();
+
+        if (FullBagQty) {
+            FullBagQty = parseInt(FullBagQty);
+        }
+
+        if (RemainderQty) {
+            RemainderQty = parseFloat(RemainderQty);
+        }
+
+
+        TotalQty = FullBagQty * QtyPerBag + RemainderQty;
+        $('#ReturnQty').val(TotalQty);
+    });
+
+    $('#RemainderQty').on('input', function () {
+        let QtyPerBag = parseFloat(dataSummary.QtyPerBag);
+        let TotalQty = 0;
+        let RemainderQty = $(this).val();
+        let FullBagQty = $('#FullBagQty').val();
+
+        if (FullBagQty) {
+            FullBagQty = parseInt(FullBagQty);
+        }
+
+        if (RemainderQty) {
+            RemainderQty = parseFloat(RemainderQty);
+        }
+
+
+        TotalQty = FullBagQty * QtyPerBag + RemainderQty;
+        $('#ReturnQty').val(TotalQty);
+
+    });
+
+    //$('#RemainderQty').on('input', function () {
+
+    //    var FullBagQty = 0;
+    //    var RemainderQty = 0;
+
+    //    var TotalQty = parseFloat(dataSummary.TotalQty.replace(',', ''));
+    //    var QtyPerBag = parseFloat(dataSummary.QtyPerBag);
+    //    var ReturnQty = parseFloat(this.value.replace(',', ''));
+
+
+    //    if ((TotalQty !== undefined && TotalQty !== null && TotalQty > 0) && (ReturnQty !== undefined && ReturnQty !== null && ReturnQty > 0)) {
+
+    //        if (ReturnQty > TotalQty) {
+    //            ReturnQty = TotalQty;
+    //            $(this).val(ReturnQty);
+    //        }
+
+    //        FullBagQty = Math.floor(ReturnQty / QtyPerBag);
+    //        RemainderQty = ReturnQty - (parseInt(FullBagQty) * QtyPerBag);
+    //    }
+
+    //    $('#FullBagQty').val(FullBagQty);
+    //    $('#RemainderQty').val(RemainderQty);
+    //});
+
+
+
+    $('#btnReturn').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/Return',
+            data: {
+                OrderID: OrderID,
+                StockCode : StockCode,
+                Qty: $('#ReturnQty').val() != "" ? $('#ReturnQty').val().replace(/\,/g, '') : 0
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    $('#listTable').DataTable().ajax.reload();
+                    $('#listTable').DataTable().columns.adjust();
+                    $('#formReturnModal').modal('hide');
+                    notify("Success", "success", response.message);
+                    $('#returnTable').DataTable().ajax.reload();
+                    $('#returnTable').DataTable().columns.adjust();
+
+                    $('#pickingSumTable').DataTable().ajax.reload();
+                    $('#pickingSumTable').DataTable().columns.adjust();
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+
+    });
+
+    function ShowPutawayForm(row) {
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = $('#returnSumTable').DataTable().row($(elementRow)).data();
+
+        dataSummary = dataTableRow;
+        StockCode = dataSummary.StockCode;
+        OrderID = dataSummary.OrderID;
+
+        $('#PutawayQTY').val(0);
+        $('.MaterialCode').val(dataTableRow.MaterialCode);
+        $('.MaterialName').val(dataTableRow.MaterialName);
+        $('.PutawayQty').val(dataTableRow.TotalPutawayQty);
+
+
+        $('#PutawayQTY').next().html('');
+        $('#PutawayQTY').removeClass('is-invalid');
+
+        setWarehouseList();
+
+            $('#formPutawayModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        };
+
+
+    $('#btnPutaway').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/Putaway',
+            data: {
+                OrderID: OrderID,
+                StockCode: StockCode,
+                BagQty: $('#PutawayQTY').val() != "" ? $('#PutawayQTY').val().replace(/\,/g, '') : 0,
+                BinRackID: $('#BinRackID').val()
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    $('#listTable').DataTable().ajax.reload();
+                    $('#listTable').DataTable().columns.adjust();
+                    $('#formPutawayModal').modal('hide');
+                    notify("Success", "success", response.message);
+                    $('#putawayTable').DataTable().ajax.reload();
+                    $('#putawayTable').DataTable().columns.adjust();
+
+                    $('#returnSumTable').DataTable().ajax.reload();
+                    $('#returnSumTable').DataTable().columns.adjust();
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+
+    });
+
+        function setWarehouseList() {
+            $('#WarehouseList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Warehouse/GetData',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#WarehouseList').empty();
+                        $('#WarehouseList').append('<option value="">Select Warehouse</option>');
+                        var html = '';
+                        $.each(response.list, function (index, value) {
+                            html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                        });
+                        $('#WarehouseList').append(html);
+                        $('#WarehouseList').select2({ width: '100%' });
+                    }
+                }
+            });
+
+
+        }
+        $('#AreaList').select2();
+        $('#WarehouseList').change(function () {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRackArea/WarehouseArea?id=' + this.value,
+                success: function (response) {
+
+                    $('#AreaList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Area</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#AreaList').append(html);
+                    $('#AreaList').select2({ width: '100%' });
+                }
+            });
+        });
+
+
+        $('#BinRackList').select2();
+        $('#AreaList').change(function () {
+
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRack/AreaRack?id=' + this.value,
+                success: function (response) {
+
+                    $('#BinRackID').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Bin/Rack</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#BinRackID').append(html);
+                    $('#BinRackID').select2({ width: '100%' });
+                }
+            });
+        });
+
+        function createQC(index) {
+            data_fifo = list_fifo[index];
+            let idStock = data_fifo.ID;
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/Create',
+                data: {
+                    StockID: idStock,
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        notify("Success", "success", response.message);
+                        $('#formPickingModal').modal('hide')
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+
+                }
+            });
+        }
+
+        $('#btnClose').click(function () {
+
+            $('#closeModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+        });
+
+        $('#btnOpen').click(function () {
+
+            $('#openModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+        });
+
+
+        $('#btnYesClose').on('click', function () {
+             $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/IssueSlip/Close?id=@ViewBag.param',
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#closeModal').modal('hide');
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload(); }, 1000);
+                    }
+                }
+            });
+
+        });
+
+
+    $('#btnYesOpen').on('click', function () {
+             $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/IssueSlip/Open?id=@ViewBag.param',
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#openModal').modal('hide');
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload(); }, 1000);
+                    }
+                }
+            });
+
+        });
+
+
+    let dataTableReturn = [];
+    function ShowBarcodeForm(row) {
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = $('#returnSumTable').DataTable().row($(elementRow)).data();
+        dataTableReturn = dataTableRow;
+
+        console.log(dataTableReturn);
+
+        $('.MaterialCode').val(dataTableRow.MaterialCode);
+        $('.MaterialName').val(dataTableRow.MaterialName);
+        $('.LotNo').val(dataTableRow.LotNo);
+        $('.InDate').val(dataTableRow.InDate);
+        $('.ExpDate').val(dataTableRow.ExpDate);
+        $('.ExpiredDate').val(dataTableRow.MaterialCode);
+        $('.QtyPerBag').val(dataTableRow.QtyPerBag);
+        $('.BagQty').val(dataTableRow.BagQty);
+
+        //call ajax here
+        $.ajax({
+            type: 'GET',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Control/ListPrinter',
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    $('#ListPrinter').empty();
+                    $('#ListPrinter').append('<option value="">Select Printer</option>');
+                    var html = '';
+                    $.each(response.printers, function (index, value) {
+                        html += '<option value="' + value.PrinterIP + '">' + value.PrinterName + '</option>';
+                    });
+                    $('#ListPrinter').append(html);
+
+                    $('#formPrintBarcode').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }
+            }
+        });
+       
+    };
+
+        $('#btnPrint').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MobileIssueSlip/Print',
+                data: {
+                    OrderId: dataTableReturn.OrderID,
+                    StockCode: dataTableReturn.StockCode,
+                    Printer: $('#ListPrinter').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+
+
+                        $('#PrintQty').next().html('');
+                        $('#PrintQty').removeClass('is-invalid');
+                        let series = $('#PrintSeries').prop('checked') ? 1 : 0;
+                        let qty = $('#PrintQty').val();
+
+                        notify("Success", "success", response.message);
+                        //PrintBarcode(barcode_data.Type, barcode_data.ID, qty, series);
+
+                        $('#formPrintBarcode').modal('hide');
+
+                    } else {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        notify("Warning", "warning", response.message);
+                    }
+
+                }, error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Danger", "Danger", "Something went wrong!");
+                    console.log(thrownError);
+                    console.log(ajaxOptions);
+                    console.log(xhr);
+                },
+            });
+        });
+
+
+    $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            if (fileName)
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            else
+                resetUpload();
+        });
+
+        function resetUpload() {
+            $('#file_upload').val('');
+            $('.custom-file-label').html('Choose file');
+        }
+
+        function uploadData() {
+
+            let fv = $("#file_upload").val();
+            if (fv == undefined || fv == '') {
+                notify("Info", "info", "Please choose file.");
+                return false;
+            }
+
+            $('#uploadModal').modal('show');
+        }
+
+
+
+        $('#btnUploadSave').click(function () {
+            doUpload();
+        });
+
+        function doUpload() {
+            var formData = new FormData();
+            var file = document.getElementById("file_upload").files[0];
+
+            formData.append("file_upload", file);
+            formData.append("id", '@ViewBag.Param');
+
+            $('#btnUploadSave').prop('disabled', true);
+            $('#btnUploadSave').text("Please Wait ...");
+            //loading animation here
+            $.ajax({
+                type: 'POST',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/UploadRev',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.status) {
+                        $('#uploadModal').modal('hide');
+                        notify("Success", "success", response.message);
+                         $('#listTable').DataTable().ajax.reload();
+                        $('#listTable').DataTable().columns.adjust();
+                        resetUpload();
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#btnUploadSave').prop('disabled', false);
+                    $('#btnUploadSave').text("Yes");
+                }
+            });
+        }
+
+    </script>
+}

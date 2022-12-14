@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Recipe Detail";
+    ViewBag.Module = "Recipe";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Finish Good</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="ProductName" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Recipe Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="RecipeNumber" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="Status"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Material Code</th>
+                                    <th>Material Name</th>
+                                    <th>Type</th>
+                                    <th align="right">Qty</th>
+                                    <th align="right">Full Bag</th>
+                                    <th align="right">Remainder Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Recipe")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        initData();
+
+        function initData() {
+            $('#detailTable tbody').empty();
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Formula/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#ProductName').val(data.ProductName);
+                        $('#RecipeNumber').val(data.RecipeNumber);
+
+                        if (data.IsActive == true) {
+                            $('#Status').html("ACTIVE");
+                            $('#Status').addClass('badge badge-info');
+                        } else {
+                            $('#Status').html("NOT ACTIVE");
+                            $('#Status').addClass('badge badge-warning');
+                        }
+
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.MaterialCode + '</td>';
+                            html += '<td>' + value.MaterialName + '</td>';
+                            html += '<td>' + value.Type + '</td>';
+                            html += '<td align="right">' + value.Qty + '</td>';
+                            html += '<td align="right">' + value.Fullbag + '</td>';
+                            html += '<td align="right">' + value.RemainderQty + '</td>';
+                            html += '</tr>';
+                        });
+                        html += '<tr><td colspan="3" align="right"><b>TOTAL</b></td>' +
+                            '<td align="right"><b>' + response.totalQty + '</b></td>' +
+                            '<td colspan="3"></td>' +
+                            '</tr>';
+                        $('#detailTable tbody').append(html);
+                    }
+                }
+            });
+        };
+
+        $('#btnDelete').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Recipe/Delete?id=@ViewBag.param',
+                data: {
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        toastr.success(response.message);
+                        window.location.replace('@ViewBag.BaseUrl/Recipe/');
+                    }
+                }
+            });
+        });
+    </script>
+}

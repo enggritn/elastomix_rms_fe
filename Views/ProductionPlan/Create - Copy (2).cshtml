@@ -1,0 +1,359 @@
+﻿@{
+    ViewBag.Title = "Production Plan";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="ProductType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="SourceLabel">Product</label>
+                            <div class="col-sm-8">
+                                <u><a href="#" id="btnSelectProduct"><i class="ik ik-eye"></i>&nbsp; <ins id="ProductSelectLabel">Select Product</ins></a></u>
+                                <br />
+                                <span class="help-block text-danger" id="item_error"></span>
+                                <input type="hidden" id="ItemID" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="ItemNumberLabel">Item Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="ItemNumber" id="ItemNumber" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="StockNameLabel">Stock Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="StockName" id="StockName" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Production Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="productionDate" />
+                            </div>
+                        </div>
+                        <div class="form-group row" id="qtyBatchSFG" style="display:none;">
+                            <label class="col-form-label col-sm-4" id="StockNameLabel">Quantity Batch</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number-non-decimal" name="Qty" id="Qty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row" id="recipeSection" style="display:none;">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4"><b>Recipe</b></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Recipe Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" autocomplete="off" id="RecipeNumber" class="form-control" readonly />
+                                        <input type="hidden" id="ID" />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                <br />
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="recipeTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Raw Material Code</th>
+                                            <th>Raw Material Name</th>
+                                            <th>Qty</th>
+                                            <th>Full Bag</th>
+                                            <th>Remainder Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "ProductionPlan")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="formProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="productDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>ITEM CODE</th>
+                                <th>ITEM NAME</th>
+                                <th>PRODUCT TYPE</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/daterangepicker/daterangepicker.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/daterangepicker.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+
+<script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        initProductType();
+        let productType = "";
+
+        $('#productionDate').daterangepicker({
+            timePicker: true,
+            timePicker24Hour: true,
+            timePickerIncrement: 5,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(1, 'hour'),
+            locale: {
+                format: 'DD/MM/YYYY HH:mm'
+            }
+        });
+
+    $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': false });
+    $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        function initProductType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/GetProductType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.product_type;
+                        let body = '';
+                        $('#ProductType').empty();
+                        $.each(data, function (index, value) {
+                            body += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#ProductType').append(body);
+                    }
+                }
+            });
+        };
+
+
+        var productDataTable = $('#productDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/ProductionPlan/DatatableProduct",
+                "data": function (d) {
+                    d.ProductType = productType;
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "ItemNumber", "name": "ItemNumber", "autoWidth": true },
+                { "data": "StockName", "name": "StockName", "autoWidth": true },
+                { "data": "ProdType", "name": "ProdType", "autoWidth": true }
+            ]
+        });
+
+
+        $('#btnSelectProduct').click(function () {
+            productType = $('#ProductType').val();
+            productDataTable.draw();
+            $('#formProductModal').modal('show');
+            productDataTable.columns.adjust();
+        });
+
+    $('#productDataTable tbody').on('click', 'tr', function () {
+        var data = productDataTable.row(this).data();
+        $('#ItemID').val(data.ID);
+        $('#ItemNumber').val(data.ItemNumber);
+        $('#StockName').val(data.StockName);
+        $('#formProductModal').modal('hide');
+
+        $("#productDataTable tbody tr").removeClass('row_selected');
+        $(this).addClass('row_selected');
+
+        loadRecipe(data);
+    });
+
+
+    function loadRecipe(data) {
+        $.ajax({
+                    type: 'GET',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Formula/GetDataByProduct?itemId=' + data.ID,
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            var data = response.data;
+                            $('#RecipeNumber').val(data.RecipeNumber);
+
+                            var html = '';
+                            $.each(data.Details, function (index, value) {
+                                html += '<tr>';
+                                html += '<td>' + value.MaterialCode + '</td>';
+                                html += '<td>' + value.MaterialName + '</td>';
+                                html += '<td align="right">' + value.Qty + '</td>';
+                                html += '<td align="right">' + value.Fullbag + '</td>';
+                                html += '<td align="right">' + value.RemainderQty + '</td>';
+                                html += '</tr>';
+                            });
+                            html += '<tr><td colspan="2" align="right"><b>TOTAL</b></td>' +
+                                '<td align="right"><b>' + response.totalQty + '</b></td>' +
+                                '<td colspan="2"></td>' +
+                                '</tr>';
+                            $('#recipeTable tbody').append(html);
+                            $('#recipeSection').show();
+                        } else {
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+        
+    }
+
+    $('#ProductType').change(function () {
+
+        if ($(this).val() == "FG") {
+            $('#btnAdd').show();
+            $('#detailTable').show();
+            $('#qtyBatchSFG').hide();
+        } else if ($(this).val() == "SFG") {
+            $('#btnAdd').hide();
+            $('#detailTable').hide();
+            $('#qtyBatchSFG').show();
+        } else {
+            notify("Warning", "warning", "Product Type not recognized.");
+            setTimeout(function () { window.location.reload(); }, 1000);
+        }
+
+    });
+
+
+</script>
+
+}

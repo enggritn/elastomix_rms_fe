@@ -1,0 +1,776 @@
+﻿@{
+    ViewBag.Title = "Receiving";
+    ViewBag.Module = "Receiving";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Warehouse</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PO Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailPONumber" id="detailPONumber" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PO Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailPODate" id="detailPODate" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ETA</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailETA" id="detailETA" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ATA</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailATA" id="detailATA" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Supplier Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailSupplierCode" id="detailSupplierCode" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Supplier Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailSupplierName" id="detailSupplierName" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailStatus" id="detailStatus" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailWarehouse" id="detailWarehouse" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <b>PO Item</b>
+                        <br />
+                        <br />
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="detailTable">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="hide_column">ID</th>
+                                        <th>RM Code</th>
+                                        <th>RM Name</th>
+                                        <th>QTY/Full Bag</th>
+                                        <th>Ordered QTY</th>
+                                        <th>Total Received QTY</th>
+                                        <th>Lot Number</th>
+                                        <th>In Date</th>
+                                        <th>Expire Date</th>
+                                        <th>Receive QTY</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <br />
+                        <br />
+                        <b>Receiving Detail</b>
+                        <br />
+                        <br />
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailReceivingTable">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="hide_column">ID</th>
+                                        <th>Barcode</th>
+                                        <th>Qty</th>
+                                        <th>Inspection</th>
+                                        <th>Judgement</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Receiving")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <div class="float-right">
+                    <a href="#" class="btn btn-danger" id="btnRevertAll"><i class="ik ik-trash-2"></i>Revert Data</a>
+                    <a href="#" class="btn btn-primary" id="btnSaveAll"><i class="ik ik-save"></i>Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+                <input type="hidden" id="method" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formInspectionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Inspection Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="InspectionQty" placeholder="Inspection QtY" />
+                <input type="hidden" id="inspectionID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveInspection"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Judgement Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="JudgementQty" placeholder="Judgement QtY" />
+                <input type="hidden" id="judgementID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select BinRack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="BinRackID" />
+                <input type="hidden" id="BinRackRack" />
+                <input type="hidden" id="BinRackRow" />
+                <input type="hidden" id="BinRackColumn" />
+                <input type="hidden" id="putawayID" />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="BinRackDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>BARCODE</th>
+                                <th>WAREHOUSE</th>
+                                <th>AREA</th>
+                                <th>RACK</th>
+                                <th>ROW</th>
+                                <th>COLUMN</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePutaway"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+
+    <style>
+        .hide_column {
+            display : none;
+        }
+
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let receivingStatus = '';
+
+        initData();
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.data;
+                        $('#detailPONumber').val(data.PONumber);
+                        $('#detailPODate').val(data.PODate);
+                        $('#detailSupplierCode').val(data.SupplierCode);
+                        $('#detailSupplierName').val(data.SupplierName);
+                        $('#detailETA').val(data.ETA);
+                        $('#detailStatus').val(data.TransactionStatus);
+                        $('#detailWarehouse').val(data.WarehouseName);
+                        receivingStatus = data.TransactionStatus;
+                    } else {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        };
+
+
+        var detailTable = $('#detailTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "api/Receiving/DatatableDetail?HeaderID=@ViewBag.Param",
+            },
+            initComplete: function (settings, json) {
+                initDetailButton();
+            },
+            columns: [
+                { "data": "RawMaterialID", "name": "RawMaterialID", "autoWidth": true, className: "RawMaterialID hide_column" },
+                { "data": "RawMaterialCode", "name": "RawMaterialCode", "autoWidth": true, className: "RawMaterialCode" },
+                { "data": "RawMaterialName", "name": "RawMaterialName", "autoWidth": true, className: "RawMaterialName" },
+                { "data": "FullbagQty", "name": "FullbagQty", "autoWidth": true },
+                { "data": "OrderQty", "name": "OrderQty", "autoWidth": true },
+                { "data": "TotalReceiveQty", "name": "TotalReceiveQty", "autoWidth": true },
+                { "data": "Lot", "name": "Lot", "autoWidth": true, className: "LotNumberReceive" },
+                { "data": "InDate", "name": "InDate", "autoWidth": true, className: "InDateReceive" },
+                { "data": "ExpiredDate", "name": "ExpiredDate", "autoWidth": true, className: "ExpireDateReceive" },
+                { "data": "ReceiveQty", "name": "ReceiveQty", "autoWidth": true, className: "QtyReceive" },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        if (receivingStatus == 'PROGRESS') {
+                            button += '<a href="#" class="btn btn-success BtnPrint"><i class="ik ik-list"></i>Print</a>';
+                        } else {
+                            if (row.ReceiveQty != '') {
+                                button += '<a class="btn btn-warning BtnReviseReceive"><i class="ik ik-edit"></i>Revise</a>';
+                                button += '<a class="btn btn-primary BtnSaveRevise" style="display:none"><i class="ik ik-save"></i>Save</a>';
+                            } else {
+                                button += '<a class="btn btn-success BtnReceive"><i class="ik ik-check-circle"></i>Receive</a>';
+                                button += '<a class="btn btn-primary BtnSaveReceive" style="display:none"><i class="ik ik-save"></i>Save</a>';
+                            }
+                        }
+                        return button;
+                    }
+                },
+            ]
+        });
+
+        var detailReceivingTable = $('#detailReceivingTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "api/Receiving/DatatablePutaway?HeaderID=@ViewBag.Param",
+            },
+            columns: [
+                {
+                    "data": "ID", "name": "ID", "autoWidth": true, className:"hide_column"
+                },
+                { "data": "Barcode", "name": "Barcode", "autoWidth": true },
+                { "data": "ReceiveQty", "name": "ReceiveQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = row.MaterialQuality;
+                        if (receivingStatus == 'PROGRESS') {
+                            button = '<a href="#" class="btn btn-primary" onclick="return ShowInspectionForm(\'' + row.Barcode + '\')"><i class="ik ik-search"></i>Inspection</a>';
+                        }
+                        return button;
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = row.ActualQty;
+                        if (receivingStatus == 'PROGRESS') {
+                        button = '<a href="#" class="btn btn-primary" onclick="return ShowJudgementForm(\'' + row.Barcode + '\')"><i class="ik ik-list"></i>Judgement</a>';
+                        }
+                        return button;
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = row.BinRackCode;
+                        if (receivingStatus == 'PROGRESS') {
+                        button = '<a href="#" class="btn btn-primary" onclick="return ShowPutawayForm(\'' + row.Barcode + '\')"><i class="ik ik-inbox"></i>Putaway</a>';
+                        }
+                        return button;
+                    }
+                },
+            ]
+        });
+
+        //$('.datepicker').datepicker({
+        //    format: "dd/mm/yyyy",
+        //    todayBtn: "linked",
+        //    todayHighlight: true,
+        //    orientation: "left",
+        //    autoclose: true,
+        //    startDate: '+0d'
+        //});
+
+        //$(document).on('focus', '.datepicker', function() {
+            //$(this).datepicker({
+            //    format: "dd/mm/yyyy",
+            //    todayBtn: "linked",
+            //    todayHighlight: true,
+            //    orientation: "left",
+            //    autoclose: true,
+            //    startDate: '+0d'
+            //});
+        //});
+
+        function initDetailButton() {
+            $('.BtnReceive').on('click', function () {
+                if ($('.InputQtyReceive')[0]) {
+                    toastr.error('Please Save Receiving First');
+                } else {
+                    console.log('Receive Button');
+                    var ParentTable = $(this).parent().parent();
+                    var Qty = '<input type="text" autocomplete="off" class="form-control InputQtyReceive" />';
+                    var LotNumber = '<input type="text" class="form-control LotNumber" />';
+                    var InDate = '<input type="text" class="form-control InDate datepicker" />';
+                    var ExpireDate = '<input type="text" class="form-control ExpireDate datepicker" />';
+                    $(this).hide();
+
+                    ParentTable.find('.QtyReceive').html(Qty);
+                    ParentTable.find('.LotNumberReceive').html(LotNumber);
+                    ParentTable.find('.InDateReceive').html(InDate);
+                    ParentTable.find('.ExpireDateReceive').html(ExpireDate);
+                    ParentTable.find('.BtnSaveReceive').show();
+
+                    $('.datepicker').datepicker({
+                        format: "dd/mm/yyyy",
+                        todayBtn: "linked",
+                        todayHighlight: true,
+                        orientation: "left",
+                        autoclose: true,
+                        startDate: '+0d'
+                    });
+                }
+            });
+
+            $('.BtnReviseReceive').on('click', function () {
+                console.log('Revise Button');
+                var ParentTable = $(this).parent().parent();
+                var Qty = '<input type="text" autocomplete="off" class="form-control InputQtyReceive" value="' + ParentTable.find('.QtyReceive').html() + '" />';
+                var LotNumber = '<input type="text" autocomplete="off" class="form-control LotNumber" value="' + ParentTable.find('.LotNumberReceive').html() + '" />';
+                var InDate = '<input type="text" autocomplete="off" class="form-control InDate datepicker" value="' + ParentTable.find('.InDateReceive').html() + '" />';
+                var ExpireDate = '<input type="text" autocomplete="off" class="form-control ExpireDate datepicker" value="' + ParentTable.find('.ExpireDateReceive').html() + '" />';
+                $(this).hide();
+
+                ParentTable.find('.QtyReceive').html(Qty);
+                ParentTable.find('.LotNumberReceive').html(LotNumber);
+                ParentTable.find('.InDateReceive').html(InDate);
+                ParentTable.find('.ExpireDateReceive').html(ExpireDate);
+                ParentTable.find('.BtnSaveRevise').show();
+                $('.datepicker').datepicker({
+                    format: "dd/mm/yyyy",
+                    todayBtn: "linked",
+                    todayHighlight: true,
+                    orientation: "left",
+                    autoclose: true,
+                    startDate: '+0d'
+                });
+            });
+
+            $('.BtnSaveReceive').on('click', function () {
+                var ParentTable = $(this).parent().parent();
+                var BtnSaveReceive = ParentTable.find('.BtnSaveReceive');
+                var QtyReceive = ParentTable.find('.InputQtyReceive').val();
+                var LotNumber = ParentTable.find('.LotNumber').val();
+                var InDate = ParentTable.find('.InDate').val();
+                var ExpireDate = ParentTable.find('.ExpireDate').val();
+                var RawMaterialIDVal = ParentTable.find('.RawMaterialID').html();
+                var RawMaterialCodeVal = ParentTable.find('.RawMaterialCode').html();
+                var RawMaterialNameVal = ParentTable.find('.RawMaterialName').html();
+
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Receiving/CreateReceivingDetail',
+                    data: {
+                        HeaderID: '@ViewBag.Param',
+                        RawMaterialCode: RawMaterialCodeVal,
+                        RawMaterialName: RawMaterialNameVal,
+                        RawMaterialID: RawMaterialIDVal,
+                        InDate: moment(InDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        ExpiredDate: moment(ExpireDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        Lot: LotNumber,
+                        ReceiveQty: QtyReceive,
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            detailTable.draw();
+                            detailReceivingTable.draw();
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            });
+
+            $('.BtnSaveRevise').on('click', function () {
+                var ParentTable = $(this).parent().parent();
+                var BtnSaveReceive = ParentTable.find('.BtnSaveReceive');
+                var QtyReceive = ParentTable.find('.InputQtyReceive').val();
+                var LotNumber = ParentTable.find('.LotNumber').val();
+                var InDate = ParentTable.find('.InDate').val();
+                var ExpireDate = ParentTable.find('.ExpireDate').val();
+                var RawMaterialIDVal = ParentTable.find('.RawMaterialID').html();
+                var RawMaterialCodeVal = ParentTable.find('.RawMaterialCode').html();
+                var RawMaterialNameVal = ParentTable.find('.RawMaterialName').html();
+
+                $.ajax({
+                    type: 'POST',
+                    async: false,
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Receiving/Revise',
+                    data: {
+                        HeaderID: '@ViewBag.Param',
+                        RawMaterialCode: RawMaterialCodeVal,
+                        RawMaterialName: RawMaterialNameVal,
+                        RawMaterialID: RawMaterialIDVal,
+                        InDate: moment(InDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        ExpiredDate: moment(ExpireDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        Lot: LotNumber,
+                        ReceiveQty: QtyReceive,
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            detailTable.draw();
+                            detailReceivingTable.draw();
+                            toastr.success(response.message);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            });
+        };
+
+        function ShowInspectionForm(id) {
+            $('#inspectionID').val(id);
+            $('#formInspectionModal').modal('show');
+        };
+
+        function ShowJudgementForm(id) {
+            $('#judgementID').val(id);
+            $('#formJudgementModal').modal('show');
+        };
+
+        function ShowPutawayForm(id) {
+            $('#putawayID').val(id);
+            $('#formPutawayModal').modal('show');
+        };
+
+        $('#btnSaveInspection').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/InspectManual',
+                data: {
+                    Barcode: $('#inspectionID').val(),
+                    MaterialQuality: $('#InspectionQty').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formInspectionModal').modal('hide');
+                        detailReceivingTable.draw();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnSaveJudgement').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/JudgeManual',
+                data: {
+                    Barcode: $('#judgementID').val(),
+                    ActualQty: $('#JudgementQty').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formJudgementModal').modal('hide');
+                        detailReceivingTable.draw();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnSavePutaway').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/PutManual',
+                data: {
+                    Barcode: $('#putawayID').val(),
+                    BinRackId: $('#BinRackID').val(),
+                    Rack: $('#BinRackRack').val(),
+                    Row: $('#BinRackRow').val(),
+                    Column: $('#BinRackColumn').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formPutawayModal').modal('hide');
+                        detailReceivingTable.draw();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnSaveAll').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/SaveAll?HeaderID=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnRevertAll').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/RevertAll?HeaderID=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        var BinRackDataTable = $('#BinRackDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "Rack", "name": "Rack", "autoWidth": true },
+                { "data": "Row", "name": "Row", "autoWidth": true },
+                { "data": "Column", "name": "Column", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#BinRackDataTable tbody').on('click', 'tr', function () {
+            var data = BinRackDataTable.row(this).data();
+            $('#BinRackID').val(data.ID);
+            $('#BinRackRack').val(data.Rack);
+            $('#BinRackRow').val(data.Row);
+            $('#BinRackColumn').val(data.Column);
+
+            $("#BinRackDataTable tbody tr").removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        };
+    </script>
+
+}

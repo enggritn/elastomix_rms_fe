@@ -1,0 +1,268 @@
+﻿@{
+    ViewBag.Title = "Semi Finish Goods";
+    ViewBag.Module = "SemiFinishGood";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Code</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="MaterialCode" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Name</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="MaterialName" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Stock Category Name</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="StockCategoryName">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Customer Product Name <span class="text-muted">(Optional)</span></label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="CustProdName" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Expired Date</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number-non-decimal" id="ExpiredDate" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="col-sm-2">
+                                <select class="form-control" id="LifeRange">
+                                    <option value="d">Day(s)</option>
+                                    <option value="m">Month(s)</option>
+                                    <option value="y">Year(s)</option>
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">AB</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="AB" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Weight/Bag</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" id="WeightPerBag" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Weight/Pallet</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" id="PerPalletWeight" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "SemiFinishGoods")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+}
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+        setStockCategoryNameList();
+        $("#btnSave").click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true });
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': true });
+
+        function clearForm() {
+            $('#MaterialCode').removeClass('is-invalid');
+            $('#MaterialCode').next().html('');
+            $('#MaterialName').removeClass('is-invalid');
+            $('#MaterialName').next().html('');
+            $('#StockCategoryName').removeClass('is-invalid');
+            $('#StockCategoryName').next().html('');
+            $('#CustProdName').removeClass('is-invalid');
+            $('#CustProdName').next().html('');
+            $('#ExpiredDate').removeClass('is-invalid');
+            $('#ExpiredDate').next().html('');
+            $('#AB').removeClass('is-invalid');
+            $('#AB').next().html('');
+            $('#WeightPerBag').removeClass('is-invalid');
+            $('#WeightPerBag').next().html('');
+            $('#PerPalletWeight').removeClass('is-invalid');
+            $('#PerPalletWeight').next().html('');
+        }
+
+        function clearValue() {
+            $('#MaterialCode').val('');
+            $('#MaterialName').val('');
+            $('#StockCategoryName').val('');
+            $('#CustProdName').val('');
+            $('#ExpiredDate').val('0');
+            $('#AB').val('');
+            $('#WeightPerBag').val('0');
+            $('#PerPalletWeight').val('0');
+            $('#LifeRange').prop('selectedIndex', 0);
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/@ViewBag.Module/Create',
+                    data: {
+                        MaterialCode: $('#MaterialCode').val(),
+                        MaterialName: $('#MaterialName').val(),
+                        StockCategoryName: $('#StockCategoryName').val(),
+                        CustomerProductName: $('#CustProdName').val(),
+                        AB: $('#AB').val(),
+                        ExpiredDate: $('#ExpiredDate').val() ? $('#ExpiredDate').val().replace(/\,/g, '') : 0,
+                        LifeRange: $('#LifeRange').val(),
+                        WeightPerBag: $('#WeightPerBag').val() ? $('#WeightPerBag').val().replace(/\,/g, '') : 0,
+                        PerPalletWeight: $('#PerPalletWeight').val() ? $('#PerPalletWeight').val().replace(/\,/g, '') : 0,
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            toastr.error(response.message);
+                            dissmissDialog();
+                        } else {
+                            clearValue();
+                            clearForm();
+                            dissmissDialog();
+                            showFlash();
+                        }
+                    }
+                });
+        });
+
+        function setStockCategoryNameList() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/SemiFinishGood/GetStockCategoryNameType',
+                success: function (response) {
+
+                    $('#StockCategoryName').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Stock Category Name</option>';
+                    $.each(response.source_type, function (index, value) {
+                        html += '<option value="' + value + '">' + value + '</option>';
+                    });
+                    $('#StockCategoryName').append(html);
+                }
+            });
+        }
+    </script>
+}

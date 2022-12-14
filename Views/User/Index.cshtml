@@ -1,0 +1,158 @@
+﻿
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master Data</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <a href="@Url.Action("Create", "User")" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Create</a>
+            </div>
+            <div class="card-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>USERNAME</th>
+                                <th>FULL NAME</th>
+                                <th>ROLE NAME</th>
+                                <th>AREA TYPE</th>
+                                <th>MOBILE USER</th>
+                                <th>PHOTO</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+        function reloadTable() {
+            table.ajax.reload();
+        }
+
+        //var table = $('#data_table').DataTable({
+        //    scrollX: true,
+        //});
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/" + module + "/Datatable",
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Username", "name": "Username", "autoWidth": true },
+                { "data": "FullName", "name": "FullName", "autoWidth": true },
+                { "data": "RoleName", "name": "Role.Name", "autoWidth": true },
+                { "data": "AreaType", "name": "AreaType", "autoWidth": true },
+                { "data": "MobileUser", "name": "MobileUser", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let photo_url = server + row.PhotoURL;
+                        return '<img src="' + photo_url + '" alt="' + row.Username + '"height="72" width="72"/>';
+                    }
+                },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '<a class="btn btn-info" href="' + baseUrl + '/' + module + '/Edit?username=' + row.Username + '">';
+                        button += '<i class="ik ik-edit"></i>Edit</a>';
+                        return button;
+                    }
+                },
+            ]
+        });
+</script>
+}

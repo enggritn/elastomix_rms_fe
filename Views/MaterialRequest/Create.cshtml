@@ -1,0 +1,938 @@
+﻿@{
+    ViewBag.Title = "Material Request";
+    ViewBag.Module = "MaterialRequest";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @*<div class="form-group row">
+                                <label class="col-form-label col-sm-4">Reference Number</label>
+                                <div class="col-sm-6">
+                                    <input type="text" autocomplete="off" class="form-control" name="PONumber" id="PONumber" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>*@
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Source Type</label>
+                            <div class="col-sm-6">
+                                <select class="form-control" id="SourceType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="originLbl">
+                            <label class="col-form-label col-sm-4"><b>Origin</b></label>
+                        </div>
+                        <div id="sourceField">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceLabel">Supplier</label>
+                                <div class="col-sm-6">
+                                    <u><a href="#" id="btnSelectSource"><i class="ik ik-eye"></i>&nbsp; <ins id="SourceSelectLabel">Select Supplier</ins></a></u>
+                                    <br />
+                                    <span class="help-block text-danger" id="error_source"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sourceForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceCodeLabel">Supplier Code</label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" id="SourceID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceCode" id="SourceCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceNameLabel">Supplier Name</label>
+                                <div class="col-sm-6">
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceName" id="SourceName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceAddressLabel">Supplier Address</label>
+                                <div class="col-sm-6">
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceAddress" id="SourceAddress" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4"><b>Destination</b></label>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse</label>
+                            <div class="col-sm-6">
+                                <u><a href="#" id="btnSelectWarehouse"><i class="ik ik-eye"></i>&nbsp; Select Warehouse</a></u>
+                                <br />
+                                <span class="help-block text-danger" id="error_destination"></span>
+                            </div>
+                        </div>
+                        <div id="warehouseForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Code</label>
+                                <div class="col-sm-6">
+                                    <input type="hidden" id="WarehouseID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseCode" id="WarehouseCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Name</label>
+                                <div class="col-sm-6">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseName" id="WarehouseName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Type</label>
+                                <div class="col-sm-6">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseType" id="WarehouseType" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="outsourceForm" style="display:none;">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Truck Type</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="TruckType">
+                                    </select>
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                <div class="float-right">
+                    <button type="button" class="btn btn-primary" id="btnSave"><i class="ik ik-save"></i>Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+<div class="modal" id="formSourceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Supplier</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="sourceDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th id="CodeLabel">SUPPLIER CODE</th>
+                                <th id="NameLabel">SUPPLIER NAME</th>
+                                <th>ABBREVIATION</th>
+                                <th>CLASSIFICATION</th>
+                                <th>ADDRESS</th>
+                                <th>TELEPHONE</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+<div class="modal" id="formSourceWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Warehouse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="sourceWarehouseDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>WAREHOUSE CODE</th>
+                                <th>WAREHOUSE NAME</th>
+                                <th>WAREHOUSE TYPE</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Warehouse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="warehouseDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>WAREHOUSE CODE</th>
+                                <th>WAREHOUSE NAME</th>
+                                <th>WAREHOUSE TYPE</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+<script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let sourceID = 'Supplier';
+        $('#sourceForm').hide();
+        $('#warehouseForm').hide();
+        $('#packagingGroup').hide();
+        $('#th_packaging').hide();
+    initSourceType();
+
+
+    let SourceCode = "";
+    let DestinationCode = "";
+    let MaterialCode = "";
+
+    $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "MaterialRequest")')
+        });
+
+        function initSourceType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/GetSourceType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.source_type;
+                        let body = '';
+                        $('#SourceType').empty();
+                        $.each(data, function (index, value) {
+                            body += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#SourceType').append(body);
+                    }
+                }
+            });
+        };
+
+        function initTruckType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/GetTruckType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.source_type;
+                        let body = '';
+                        $('#TruckType').empty();
+                        $.each(data, function (index, value) {
+                            body += '<option value="' + value + '">' + value + ' MT</option>';
+                        });
+                        $('#TruckType').append(body);
+                    }
+                }
+            });
+    };
+        let url = server + 'Api/' + sourceID + '/Datatable';
+        if (sourceID == 'OTHER') {
+            url = server + 'Api/Supplier/DatatableSupplierCustomer';
+        }
+        var sourceDataTable = $('#sourceDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/MaterialRequest/Datatable" + sourceID
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                 {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Abbreviation", "name": "Abbreviation", "autoWidth": true },
+                { "data": "ClassificationName", "name": "ClassificationName", "autoWidth": true },
+                { "data": "Address", "name": "Address", "autoWidth": true },
+                { "data": "Telephone", "name": "Telephone", "autoWidth": true },
+            ]
+        });
+
+        var sourceWarehouseDataTable = $('#sourceWarehouseDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/MaterialRequest/DatatableWarehouse"
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Type", "name": "Type", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        var warehouseDataTable = $('#warehouseDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/MaterialRequest/DatatableWarehouse"
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                 {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Type", "name": "Type", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+
+    $('#SourceType').change(function () {
+        $('#error_source').html("");
+        $('#error_destination').html("");
+        $('#th_packaging').hide();
+            $('#outsourceForm').hide();
+            var stype = $(this).val();
+            $('#sourceForm').hide();
+            if (stype == 'VENDOR' || stype == 'IMPORT' || stype == 'OTHER') {
+                sourceID = 'Supplier';
+                $('#SourceLabel').html('Supplier');
+                $('#SourceCodeLabel').html('Supplier Code');
+                $('#SourceNameLabel').html('Supplier Name');
+                $('#SourceAddressLabel').html('Supplier Address');
+                $('#SourceSelectLabel').html('Select Supplier');
+                $('#sourceField').show();
+                $('#CodeLabel').html('SUPPLIER CODE');
+                $('#NameLabel').html('SUPPLIER NAME');
+                $('#confirmationModalTitle').html('Select Supplier');
+                if (stype == 'OTHER') {
+
+                    $('#SourceLabel').html('Provider');
+                    $('#SourceCodeLabel').html('Provider Code');
+                    $('#SourceNameLabel').html('Provider Name');
+                    $('#SourceAddressLabel').html('Provider Address');
+                    $('#SourceSelectLabel').html('Select Provider');
+                    $('#CodeLabel').html('PROVIDER CODE');
+                    $('#NameLabel').html('PROVIDER NAME');
+                    $('#confirmationModalTitle').html('Select Provider');
+                    sourceDataTable.ajax.url(server + 'Api/Supplier/DatatableSupplierCustomer').load();
+
+                }
+                else {
+                    sourceDataTable.ajax.url(server + "Api/" + sourceID + "/Datatable").load();
+                }
+
+            } else if (stype == 'CUSTOMER') {
+                sourceID = 'Customer';
+                $('#SourceLabel').html('Customer');
+                $('#SourceCodeLabel').html('Customer Code');
+                $('#SourceNameLabel').html('Customer Name');
+                $('#SourceAddressLabel').html('Customer Address');
+                $('#SourceSelectLabel').html('Select Customer');
+                $('#confirmationModalTitle').html('Select Customer');
+                sourceDataTable.ajax.url(server + "Api/MaterialRequest/Datatable" + sourceID).load();
+                $('#sourceField').show();
+                $('#CodeLabel').html('CUSTOMER CODE');
+                $('#NameLabel').html('CUSTOMER NAME');
+            } else if (stype == 'OUTSOURCE') {
+                initTruckType();
+                $('#outsourceForm').show();
+                $('#packagingGroup').show();
+                $('#th_packaging').show();
+                $("#sourceWarehouseDataTable tbody tr").removeClass('row_selected');
+                sourceID = 'Warehouse';
+                $('#SourceLabel').html('Warehouse');
+                $('#SourceCodeLabel').html('Warehouse Code');
+                $('#SourceNameLabel').html('Warehouse Name');
+                $('#SourceSelectLabel').html('Select Warehouse');
+                $('#sourceField').show();
+            } else if (stype == 'MANUAL') {
+                sourceID = 'MANUAL';
+                $('#sourceField').hide();
+                $('#originLbl').hide();
+                SourceCode = 'M1';
+        }
+
+        $('#detailTable tbody').empty();
+        if (sourceID == 'Warehouse') {
+            $('#detailTable tbody').append('<tr><td colspan="8"><center><i>No Data</i></center></td></tr>');
+        } else {
+            $('#detailTable tbody').append('<tr><td colspan="7"><center><i>No Data</i></center></td></tr>');
+        }
+        });
+
+
+
+        $('#sourceDataTable tbody').on('click', 'tr', function () {
+            var data = sourceDataTable.row(this).data();
+            $('#SourceID').val(data.ID);
+            $('#SourceCode').val(data.Code);
+            $('#SourceName').val(data.Name);
+            $('#SourceAddress').val(data.Address);
+            $('#sourceForm').show();
+            $('#SourceAddressLabel').show();
+            $('#SourceAddress').show();
+            $('#formSourceModal').modal('hide');
+
+            $("#sourceDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+
+            SourceCode = data.Code;
+        });
+
+        $('#sourceWarehouseDataTable tbody').on('click', 'tr', function () {
+            var data = sourceWarehouseDataTable.row(this).data();
+            $('#SourceID').val(data.ID);
+            $('#SourceCode').val(data.Code);
+            $('#SourceName').val(data.Name);
+            $('#SourceAddressLabel').hide();
+            $('#SourceAddress').hide();
+            $('#SourceAddress').val("");
+            $('#sourceForm').show();
+            $('#formSourceWarehouseModal').modal('hide');
+
+            $("#sourceWarehouseDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+
+            SourceCode = data.Code;
+        });
+
+        $('#warehouseDataTable tbody').on('click', 'tr', function () {
+            var data = warehouseDataTable.row(this).data();
+            $('#WarehouseID').val(data.ID);
+            $('#WarehouseCode').val(data.Code);
+            $('#WarehouseName').val(data.Name);
+            $('#WarehouseType').val(data.Type);
+            $('#warehouseForm').show();
+            $('#formWarehouseModal').modal('hide');
+
+            $("#warehouseDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+
+            DestinationCode = data.Code;
+        });
+
+
+        $('#btnSelectSource').click(function () {
+            if (sourceID != 'Warehouse') {
+                $('#formSourceModal').modal('show');
+                sourceDataTable.columns.adjust();
+            } else {
+                $('#formSourceWarehouseModal').modal('show');
+                sourceWarehouseDataTable.columns.adjust();
+            }
+
+            $('#error_source').html("");
+        });
+
+        $('#btnSelectWarehouse').click(function () {
+            $('#formWarehouseModal').modal('show');
+            warehouseDataTable.columns.adjust();
+            $('#error_destination').html("");
+        });
+
+        $('#btnAddSource').click(function () {
+            $('#formSourceModal').modal('hide');
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        $('#btnSave').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+    $('#btnYes').click(function () {
+        $('#btnSave').prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/Create',
+                data: {
+                    SourceType: $('#SourceType').val(),
+                    //SourceID: $('#SourceID').val(),
+                    //DestinationID: $('#WarehouseID').val(),
+                    SourceCode: SourceCode,
+                    DestinationCode: DestinationCode,
+                    TruckType : $('#TruckType').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == 'SourceCode') {
+                                $('#error_source').html(value.ErrorMessage);
+                            } else if (value.FieldName == 'DestinationCode') {
+                                $('#error_destination').html(value.ErrorMessage);
+                            } else if (value.FieldName == 'Details') {
+                                $('#error_receiving_plan').html(value.ErrorMessage);
+                            } else {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+
+                        });
+
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () {  window.location.replace('@Url.Action("Edit", "MaterialRequest")?id=' + response.id); }, 1000);
+                        @*setTimeout(function () {  window.location.replace('@ViewBag.BaseUrl/MaterialRequest/Edit?id=' + response.id); }, 1000);*@
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#saveModal').modal('hide');
+                    $('#btnSave').prop('disabled', false);
+                }
+
+            });
+        });
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "250px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/MaterialRequest/DatatableRawMaterial"
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "MaterialCode", "name": "MaterialCode" },
+                { "data": "MaterialName", "name": "MaterialName" },
+                { "data": "Qty", "name": "Qty" },
+                { "data": "UoM", "name": "UoM" },
+                { "data": "ShelfLife", "name": "ShelfLife" },
+                { "data": "OrderedQty", "name": "OrderedQty" },
+                { "data": "TransportingMode", "name": "TransportingMode" },
+                { "data": "MinPurchaseQty", "name": "MinPurchasingQty" },
+                { "data": "Origin", "name": "Origin" },
+                { "data": "Maker", "name": "Maker" },
+                { "data": "Vendor", "name": "Vendor" },
+                { "data": "Msds", "name": "Msds" },
+                { "data": "Specification", "name": "Specification" },
+                { "data": "PoRate", "name": "PoRate" },
+                { "data": "SpecGravity", "name": "SpecGravity" },
+                { "data": "Factor", "name": "Factor" },
+                { "data": "Online", "name": "Online" },
+                { "data": "Hygroscopic", "name": "Hygroscopic" },
+                { "data": "StartDate", "name": "StartDate" },
+                { "data": "UpdateDate", "name": "UpdateDate" },
+                { "data": "Type", "name": "Type" },
+                { "data": "Aman", "name": "Aman" },
+                { "data": "SafetyStock", "name": "SafetyStock" },
+                { "data": "ArrivalDays", "name": "ArrivalDays" }
+            ]
+        });
+
+        $('#btnAdd').click(function () {
+            $('#materialInfo').hide();
+            if (sourceID == 'Warehouse') {
+                if ($('#deliveryDate').val() == '') {
+                    $('#deliveryDate').addClass('is-invalid');
+                    $('#deliveryDate').next().html("Delivery Date is required.");
+                    return false;
+                }
+            }
+            $('#btnAddDetail').hide();
+            $('#formModal').modal('show');
+            table.columns.adjust();
+            $('#data_table tbody tr').removeClass('row_selected');
+            $('#detailIDHidden').val('');
+            $('#detailCodeHidden').val('');
+            $('#detailNameHidden').val('');
+            $('#detailName').val('');
+            $('#detailCode').val('');
+            $('#detailQty').val('0');
+            $('#detailMinPurchaseQty').val('0');
+            $('#detailMinPurchaseQtyKg').val('0');
+            $('#detailMinPurchaseQtyLitre').val('0');
+            $('#detailETA').val('');
+
+            $('#detailQty').next().html('');
+            $('#detailQty').removeClass('is-invalid');
+            $('#detailETA').next().html('');
+            $('#detailETA').removeClass('is-invalid');
+
+            $('#packaging').val('');
+            $('#packaging').next().html('');
+            $('#packaging').removeClass('is-invalid');
+
+            $('#remarks').val('');
+            $('#remarks').next().html('');
+
+            if (sourceID == 'Warehouse') {
+                $('#detailETA').hide();
+                $('#receiveDate').hide();
+                $('#packagingGroup').show();
+            } else {
+                $('#detailETA').show();
+                $('#receiveDate').show();
+                $('#packagingGroup').hide();
+            }
+        });
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('.number1').inputmask("9{*}", { "placeholder": "" });
+        //$('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': false });
+
+        $('#data_table tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+
+            var isValid = true;
+            var numItems = $('.rawMateCode').length;
+            if (numItems == 0) {
+                $('#detailTable tbody').empty();
+            } else {
+                $('.rawMateID').each(function () {
+                    if ($(this).val() == data.ID) {
+                        isValid = false;
+                        toastr.error('Cannot Add Same Raw Material.');
+                        return;
+                    }
+                });
+            }
+
+            if (isValid) {
+
+                $('#materialInfo').show();
+
+                $('#detailIDHidden').val(data.ID);
+                $('#detailCodeHidden').val(data.Code);
+                $('#detailCode').val(data.Code);
+                $('#detailName').val(data.Name);
+                $('#detailNameHidden').val(data.Name);
+                $('#detailMinPurchaseQty').val(data.MinPurchaseQty);
+                $('#detailMinPurchaseQtyKg').val(data.MinPurchaseQty);
+                $('#detailMinPurchaseQtyLitre').val(data.MinPurchaseQtyLitre);
+
+                var html = '<option value="KG">KG</>';
+                if (data.IsConvertible == true) {
+                    html += '<option value="L">L</>';
+                }
+                $('#detailUnitOfOrder').empty();
+                $('#detailUnitOfOrder').append(html);
+
+                $('#data_table tbody tr').removeClass('row_selected');
+		        $(this).addClass('row_selected');
+            }
+        });
+
+        $('#detailUnitOfOrder').change(function () {
+            if ($(this).val() == 'KG') {
+                $('#detailMinPurchaseQty').val($('#detailMinPurchaseQtyKg').val());
+            } else {
+                $('#detailMinPurchaseQty').val($('#detailMinPurchaseQtyLitre').val());
+            }
+        });
+
+        $('#deliveryDate').on("changeDate", function () {
+            $('#detailTable .eta').val($(this).val());
+            $('.eta_txt').text($(this).val())
+        });
+
+
+        $('#btnAddDetail').click(function () {
+            var rawMateCode = $('#detailCodeHidden').val();
+            var rawMateID = $('#detailIDHidden').val();
+            var rawMateName = $('#detailNameHidden').val();
+            var qty = $('#detailQty').val();
+            var eta = $('#detailETA').val();
+            var uom = $('#detailUnitOfOrder').val();
+            var minQty = $('#detailMinPurchaseQty').val();
+            var packaging = $('#packaging').val();
+            var remarks = $('#remarks').val();
+
+            var isValid = true;
+
+
+            if (qty == '' || qty == '0') {
+                $('#detailQty').next().html('This field is Required');
+                $('#detailQty').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#detailQty').next().html('');
+                $('#detailQty').removeClass('is-invalid');
+            }
+
+            if (qty != '0' && qty != '') {
+                if (parseFloat(qty.replace(/\,/g, '')) < parseFloat(minQty.replace(/\,/g, ''))) {
+                    $('#detailQty').next().html('Does not reach with MoQ');
+                    $('#detailQty').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#detailQty').next().html('');
+                    $('#detailQty').removeClass('is-invalid');
+                }
+            }
+
+            if (sourceID == 'Warehouse') {
+                eta = $('#deliveryDate').val();
+
+                if (packaging == '' || packaging == 0) {
+                    $('#packaging').next().html('This field is Required');
+                    $('#packaging').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('#packaging').next().html('');
+                    $('#packaging').removeClass('is-invalid');
+                }
+            }
+
+            if (eta == '') {
+                $('#detailETA').next().html('This field is Required');
+                $('#detailETA').addClass('is-invalid');
+                isValid = false;
+            } else {
+                $('#detailETA').next().html('');
+                $('#detailETA').removeClass('is-invalid');
+            }
+
+            if (isValid) {
+                var html = '<tr>';
+                html += '<td>' + rawMateCode + '<input type="hidden" class="rawMateCode" value="' + rawMateCode + '"></td>';
+                html += '<input type="hidden" class="rawMateID" value="' + rawMateID + '">';
+                html += '<td>' + rawMateName + '</td>';
+                html += '<td>' + qty + '<input type="hidden" class="qty" value="' + qty.replace(/\,/g, '') + '"></td>';
+                html += '<td><span class="eta_txt">' + eta + '</span><input type="hidden" class="eta" value="' + eta + '"></td>';
+                html += '<td>' + uom + '<input type="hidden" class="unitOfOrder" value="' + uom + '"></td>';
+                html += '<td>' + remarks + '<input type="hidden" class="remarks" value="' + remarks + '"></td>';
+
+                if (sourceID == 'Warehouse') {
+                    html += '<td>' + packaging + '<input type="hidden" class="packaging" value="' + packaging + '"></td>';
+                }
+
+
+                html += '<td><button class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</button></td>';
+                html += '</tr>';
+                $('#detailTable tbody').append(html);
+                $('#formModal').modal('hide');
+                $('#error_receiving_plan').html("");
+            }
+        });
+
+        $(document).on('click', '.deleteDetail', function () {
+            console.log('delete clicked');
+            var target = $(this).parent().parent().closest('tr');
+            $(target).remove();
+
+            var numItems = $('.rawMateCode').length;
+            if (numItems == 0) {
+                if (sourceID == 'Warehouse') {
+                    $('#detailTable tbody').append('<tr><td colspan="8"><center><i>No Data</i></center></td></tr>');
+                } else {
+                    $('#detailTable tbody').append('<tr><td colspan="7"><center><i>No Data</i></center></td></tr>');
+                }
+
+            }
+
+        });
+
+</script>
+}

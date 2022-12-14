@@ -1,0 +1,179 @@
+﻿
+@{
+    Layout = null;
+    int i = 1;
+}
+
+@model WMS_FE.Models.MaterialRequestHeaderDTO
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Code</title>
+    <style type="text/css">
+        body {
+            font-family: 'Arial Rounded MT';
+        }
+
+        table{
+            font-size:11px;
+        }
+
+        .tbl_header th, td {
+            padding: 5px;
+        }
+
+        .tableDetail {
+            border-collapse: collapse;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            .tableDetail td {
+                word-break: break-word;
+/*                white-space: pre-wrap;*/
+            }
+
+            .tableDetail, .tableDetail th, .tableDetail td {
+                border: 1px solid black;
+            }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: gray;
+            color: white;
+            text-align: center;
+        }
+
+        .header img {
+            width: 80px ;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .header span {
+            font-size: 10px;
+        }
+
+       /* .tbl_header td{
+            padding:10px;
+        }*/
+
+        header {
+            position: running(header);
+        }
+
+        footer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        @@page {
+            margin-top: 260px;
+
+            @@top-left {
+                content: element(header);
+            }
+
+            @@bottom-left {
+                content: "@Model.Code";
+            }
+
+            @@bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header">
+            @*<img src="@ViewBag.Logo" />
+                <span>PT. ELASTOMIX INDONESIA</span>
+                <h2 style="float:right;font-size:12px;">
+                    <b>@Model.Code</b>
+                </h2>*@
+            <table style="width: 100%; border-collapse: collapse;">
+                <tbody>
+                    <tr>
+                        <td style="width: 40%;"><img src="@ViewBag.Logo" /><b>PT. ELASTOMIX INDONESIA</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h2 style="text-align:center;margin-bottom:25px;">
+            <b>@ViewBag.Title</b>
+        </h2>
+        <table class="tbl_header" style="width: 50%; display: inline-block; ">
+            <tbody>
+                <tr>
+                    <td>Date Request</td>
+                    <td>:</td>
+                    <td>@Model.CreatedOn</td>
+                </tr>
+                <tr>
+                    <td>Request Number</td>
+                    <td>:</td>
+                    <td>@Model.RefNumber</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="tbl_header" style="width: 50%; display: inline-block;">
+            <tbody>
+                <tr>
+                    <td>Customer Name</td>
+                    <td>:</td>
+                    <td>@Model.SourceCode - @Model.SourceName</td>
+                </tr>
+                <tr>
+                    <td>Destination</td>
+                    <td>:</td>
+                    <td>@Model.DestinationCode - @Model.DestinationName</td>
+                </tr>
+            </tbody>
+        </table>
+    </header>
+
+    <table class="tableDetail">
+        <thead>
+            <tr>
+                <th width="5%"><b>NO.</b></th>
+                <th width="15%"><b>ITEM</b></th>
+                <th width="30%"><b>DESCRIPTION</b></th>
+                <th width="13%"><b>QTY</b></th>
+                <th width="5%"><b>U/M</b></th>
+                <th width="15%"><b>REQUEST DATE</b></th>
+                <th width="20%"><b>REMARK</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            @*Dynamic view*@
+            @foreach (var item in Model.Details)
+            {
+                <tr>
+                    <td align="center">@i</td>
+                    <td>@item.MaterialCode</td>
+                    <td>@item.MaterialName</td>
+                    <td align="right">@item.Qty</td>
+                    <td>@item.UoM</td>
+                    <td align="right">@item.ETA</td>
+                    <td>@item.Remarks</td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+
+    <div style="margin-bottom: 50px;">&nbsp;</div>
+        <table width='100%' style="margin-top:10px; border-collapse: collapse;" id="tableApproval">
+        </table>
+</body>
+
+
+</html>

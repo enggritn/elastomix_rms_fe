@@ -1,0 +1,554 @@
+﻿@{
+    ViewBag.Title = "Production Plan";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="ProductType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="SourceLabel">Product</label>
+                            <div class="col-sm-8">
+                                <u><a href="#" id="btnSelectProduct"><i class="ik ik-eye"></i>&nbsp; <ins id="ProductSelectLabel">Select Product</ins></a></u>
+                                <br />
+                                <span class="help-block text-danger" id="item_error"></span>
+                                <input type="hidden" id="ItemID" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="ItemNumberLabel">Item Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="ItemNumber" id="ItemNumber" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="StockNameLabel">Stock Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="StockName" id="StockName" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Production Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="productionDate" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="StockNameLabel">Quantity</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control number" name="Qty" id="Qty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row" id="recipeSection" style="display:none;">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4"><b>Recipe</b></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Recipe Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" autocomplete="off" id="RecipeNumber" class="form-control" readonly />
+                                        <input type="hidden" id="ID" />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                <br />
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="recipeTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Raw Material Code</th>
+                                            <th>Raw Material Name</th>
+                                            <th>Qty</th>
+                                            <th>Full Bag</th>
+                                            <th>Remainder Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="width: 100%;" id="btnAdd"><i class="ik ik-plus"></i>Add Order (PRF)</a>
+                        <br /><br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Order No.</th>
+                                    <th>Item No.</th>
+                                    <th>Customer</th>
+                                    <th>Qty</th>
+                                    <th>ETA</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "ProductionPlan")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="formProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="productDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>ITEM CODE</th>
+                                <th>ITEM NAME</th>
+                                <th>PRODUCT TYPE</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPRFModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="orderDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>ORDER NO.</th>
+                                <th>ITEM NO.</th>
+                                <th>CUSTOMER</th>
+                                <th>QTY</th>
+                                <th>ETA</th>
+                                <th>REMARKS</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Batch Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="totalBag" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/daterangepicker/daterangepicker.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/daterangepicker.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+
+<script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        initProductType();
+        let productType = "";
+
+        $('#productionDate').daterangepicker({
+            timePicker: true,
+            timePicker24Hour: true,
+            timePickerIncrement: 5,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(1, 'hour'),
+            locale: {
+                format: 'DD/MM/YYYY HH:mm'
+            }
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': false });
+
+        function initProductType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/GetProductType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.product_type;
+                        let body = '';
+                        $('#ProductType').empty();
+                        $.each(data, function (index, value) {
+                            body += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#ProductType').append(body);
+                    }
+                }
+            });
+        };
+
+
+        var productDataTable = $('#productDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/ProductionPlan/DatatableProduct",
+                "data": function (d) {
+                    d.ProductType = productType;
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "ItemNumber", "name": "ItemNumber", "autoWidth": true },
+                { "data": "StockName", "name": "StockName", "autoWidth": true },
+                { "data": "ProdType", "name": "ProdType", "autoWidth": true }
+            ]
+        });
+
+
+        $('#btnSelectProduct').click(function () {
+            productType = $('#ProductType').val();
+            productDataTable.draw();
+            $('#formProductModal').modal('show');
+            productDataTable.columns.adjust();
+        });
+
+    $('#productDataTable tbody').on('click', 'tr', function () {
+        var data = productDataTable.row(this).data();
+        $('#ItemID').val(data.ID);
+        $('#ItemNumber').val(data.ItemNumber);
+        $('#StockName').val(data.StockName);
+        $('#formProductModal').modal('hide');
+
+        $("#productDataTable tbody tr").removeClass('row_selected');
+        $(this).addClass('row_selected');
+    });
+
+    $('#ProductType').change(function () {
+
+        if ($(this).val() == "FG") {
+            $('#btnAdd').show();
+            $('#detailTable').show();
+        } else if ($(this).val() == "SFG") {
+            $('#btnAdd').hide();
+            $('#detailTable').hide();
+        } else {
+            notify("Warning", "warning", "Product Type not recognized.");
+            setTimeout(function () { window.location.reload(); }, 1000);
+        }
+
+    });
+
+
+
+    var orderDataTable = $('#orderDataTable').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollY: "500px",
+        scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+        order: [[1, "desc"]],
+        ajax: {
+            "dataType": "json",
+            "type": "POST",
+            "url": server + "Api/ProductionPlan/DatatableOrder",
+            "data": function (d) {
+                d.FGID = $('#ItemID').val()
+            }
+        },
+        columnDefs: [
+            { orderable: false, targets: 0 }
+        ],
+        columns: [
+            {
+                "data": null,
+                "render": function (data, type, row) {
+                    return '<i class="ik ik-check"></i>';
+                }
+            },
+            { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+            { "data": "OrderNumber", "name": "OrderNumber", "autoWidth": true },
+            { "data": "FGItemNumber", "name": "FGItemNumber", "autoWidth": true },
+            { "data": "CustomerName", "name": "CustomerName", "autoWidth": true },
+            { "data": "Qty", "name": "Qty", "autoWidth": true },
+            { "data": "ETA", "name": "ETA", "autoWidth": true },
+            { "data": "Remarks", "name": "Remarks", "autoWidth": true },
+        ]
+    });
+
+
+    $('#btnAdd').click(function () {
+        productType = $('#ProductType').val();
+        orderDataTable.draw();
+        $('#formPRFModal').modal('show');
+        orderDataTable.columns.adjust();
+    });
+
+    $('#orderDataTable tbody').on('click', 'tr', function () {
+        var data = orderDataTable.row(this).data();
+        let isValid = true;
+        var numItems = $('.OrderId').length;
+        if (numItems == 0) {
+            $('#detailTable tbody').empty();
+        } else {
+            $('.OrderId').each(function () {
+                if ($(this).val() == data.ID) {
+                    isValid = false;
+                    toastr.error('Order No. already exist.');
+                    return;
+                }
+            });
+        }
+
+        if (isValid) {
+            var html = '<tr>';
+            html += '<td>' + data.OrderNumber + '<input type="hidden" class="OrderId" value="' + data.ID + '"></td>';
+            html += '<td>' + data.FGItemNumber + '</td>';
+            html += '<td>' + data.CustomerName + '</td>';
+            html += '<td align="right">' + data.Qty + '</td>';
+            html += '<td>' + data.ETA + '</td>';
+            html += '<td>' + data.Remarks + '</td>';
+
+            html += '<td><button class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</button></td>';
+            html += '</tr>';
+
+            $('#detailTable tbody').append(html);
+            $('#formPRFModal').modal('hide');
+
+            $("#orderDataTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
+
+
+    });
+
+
+    $("#btnSave").click(function () {
+        isValid = true;
+        clearForm();
+        //if ($('#Code').val().length == 0) {
+        //    $('#Code').addClass('is-invalid');
+        //    $('#Code').next().html('This field is Required');
+        //    isValid = false;
+        //}
+        //if ($('#Name').val().length == 0) {
+        //    $('#Name').addClass('is-invalid');
+        //    $('#Name').next().html('This field is Required');
+        //    isValid = false;
+        //}
+        //if ($('#ProductNumber').val().length == 0) {
+        //    $('#ProductNumber').addClass('is-invalid');
+        //    $('#ProductNumber').next().html('This field is Required');
+        //    isValid = false;
+        //}
+
+        if (isValid) {
+            $('#saveModal').modal('show');
+        }
+    });
+
+    $('#btnYes').click(function () {
+        var date = $('#productionDate').val().split(' - ');
+        var startDate = moment(date[0], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+        var endDate = moment(date[1], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+
+        let i = 0;
+        let jsonObj = new Array();
+        $('.OrderId').each(function () {
+            jsonObj.push($('.OrderId').eq(i).val());
+            i++;
+        });
+
+        console.log(jsonObj);
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/ProductionPlan/Create',
+            data: {
+                ItemID: $('#ItemID').val(),
+                Qty: jsonObj.length > 0 ? 0 : $('#Qty').val().replace(/\,/g, ''),
+                StartDate: startDate,
+                FinishDate: endDate,
+                OrderIds: jsonObj
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (!isValid) {
+                    $.each(response.error_validation, function (index, value) {
+                        if (value.FieldName == 'ItemID') {
+                            $('#item_error').html(value.ErrorMessage);
+                        } else {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        }
+
+                    });
+                    toastr.error(response.message);
+                    dissmissDialog();
+                } else {
+                    clearValue();
+                    clearForm();
+                    toastr.success(response.message);
+                    dissmissDialog();
+                }
+            }
+        });
+    });
+
+    function dissmissDialog() {
+        $('#saveModal').modal('hide');
+    }
+
+    function clearValue() {
+        $('#detailTable tbody').empty();
+        $('#ItemNumber').val('');
+        $('#StockName').val('');
+
+    }
+
+    function clearForm() {
+        $('#productionDate').removeClass('is-invalid');
+        $('#productionDate').next().html('');
+        $('#productionDate').html('');
+
+        $('#Qty').removeClass('is-invalid');
+        $('#Qty').next().html('');
+        $('#Qty').html('');
+        $('#item_error').html('');
+
+        initProductType();
+    }
+
+
+</script>
+
+}

@@ -1,0 +1,471 @@
+﻿@{
+    ViewBag.Title = "Recipe";
+    ViewBag.Module = "Formula";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Recipe Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <input type="hidden" id="ID" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="ProductNumber" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-4 col-sm-8">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="IsActive" id="IsActive">
+                                    <label class="custom-control-label" for="IsActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="width: 100%;" id="btnAdd"><i class="ik ik-plus"></i>Add Detail</a>
+                        <br /><br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Raw Material Code</th>
+                                    <th>Qty</th>
+                                    <th>Full Bag</th>
+                                    <th>Remainder Qty</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Formula")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+<div class="modal" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Add Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive">
+                    <table class="table table-bordered table-striped nowrap display" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>RAWMATE ID</th>
+                                <th>RAWMATE CODE</th>
+                                <th>RAWMATE NAME</th>
+                                <th>QTY/FULL BAG</th>
+                                <th>UOM</th>
+                                <th>SELF LIFE</th>
+                                <th>ORDERED QTY</th>
+                                <th>TRANSPORTING MODE</th>
+                                <th>MIN PURCHASE QTY</th>
+                                <th>PLACE OF ORIGIN</th>
+                                <th>MAKER NAME</th>
+                                <th>SUPPLIER NAME</th>
+                                <th>MSDS</th>
+                                <th>SPECIFICATION</th>
+                                <th>PO RATE</th>
+                                <th>SPECGRAVITY</th>
+                                <th>FACTOR</th>
+                                <th>ONLINE</th>
+                                <th>HYGROSCOPIC</th>
+                                <th>START DATE</th>
+                                <th>UPDATE DATE</th>
+                                <th>SUPPLIER CODE</th>
+                                <th>TYPE</th>
+                                <th>AMAN</th>
+                                <th>SAFETY STOCK</th>
+                                <th>ARRIVAL DAYS</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">RawMate Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailCode" id="detailCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" class="form-control" name="detailIDHidden" id="detailIDHidden" />
+                <input type="hidden" class="form-control" name="detailCodeHidden" id="detailCodeHidden" />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Full Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailQtyFullBag" id="detailQtyFullBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" class="form-control" name="detailQtyFullBagHidden" id="detailQtyFullBagHidden" />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="detailQty" id="detailQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Full Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="detailFullBag" id="detailFullBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Remainder Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="detailRemainderQty" id="detailRemainderQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddDetail"><i class="ik ik-plus"></i>Add Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        initData();
+
+        function initData() {
+            $('#detailTable tbody').empty();
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Formula/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#ID').val(data.ID);
+                        $('#Code').val(data.Code);
+                        $('#ProductNumber').val(data.ProductNumber);
+                        $('#IsActive').prop('checked', data.IsActive);
+
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.RawMaterialCode + '<input type="hidden" class="rawMateCode" value="' + value.RawMaterialCode + '"></td>';
+                            html += '<input type="hidden" class="rawMateID" value="' + value.ID + '">';
+                            html += '<td>' + value.Qty + '<input type="hidden" class="qty" value="' + value.Qty + '"></td>';
+                            html += '<td>' + value.Fullbag + '<input type="hidden" class="fullBag" value="' + value.Fullbag + '"></td>';
+                            html += '<td>' + value.RemainderQty + '<input type="hidden" class="remainderQty" value="' + value.RemainderQty + '"></td>';
+                            html += '<td><a href="#" class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</a></td>';
+                            html += '</tr>';
+                        });
+                        $('#detailTable tbody').append(html);
+                    }
+                }
+            });
+        };
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "250px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/RawMaterial/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "visible" : false },
+                { "data": "Code" },
+                { "data": "Name" },
+                { "data": "Qty" },
+                { "data": "UoM" },
+                { "data": "ShelfLife" },
+                { "data": "OrderedQty" },
+                { "data": "TransportingMode" },
+                { "data": "MinPurchaseQty" },
+                { "data": "Origin" },
+                { "data": "Maker" },
+                { "data": "Vendor" },
+                { "data": "Msds" },
+                { "data": "Specification" },
+                { "data": "PoRate" },
+                { "data": "SpecGravity" },
+                { "data": "Factor" },
+                { "data": "Online" },
+                { "data": "Hygroscopic" },
+                { "data": "StartDate" },
+                { "data": "UpdateDate" },
+                { "data": "SupplierCode" },
+                { "data": "Type" },
+                { "data": "Aman" },
+                { "data": "SafetyStock" },
+                { "data": "ArrivalDays" }
+            ]
+        });
+
+        $('#btnAdd').click(function () {
+            $('#formModal').modal('show');
+            table.columns.adjust();
+            $('#data_table tbody tr').removeClass('row_selected');
+            $('#detailIDHidden').val('');
+            $('#detailCodeHidden').val('');
+            $('#detailCode').val('');
+            $('#detailQtyFullBagHidden').val('');
+            $('#detailQtyFullBag').val('');
+            $('#detailQty').val('0');
+            $('#detailFullBag').val('0');
+            $('#detailRemainderQty').val('0');
+        });
+
+        $('#data_table tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            $('#detailIDHidden').val(data.ID);
+            $('#detailCodeHidden').val(data.Code);
+            $('#detailCode').val(data.Code);
+            $('#detailQtyFullBagHidden').val(data.Qty);
+            $('#detailQtyFullBag').val(data.Qty);
+
+            $('#data_table tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        $('#detailQty').on('input', function () {
+            var qtyFullBag = $('#detailQtyFullBagHidden').val().replace(',', '.');
+            var fullBag = Math.floor($(this).val().replace(/\,/g, '') / qtyFullBag);
+            $('#detailFullBag').val(fullBag);
+            var remainder = $(this).val().replace(/\,/g, '') % qtyFullBag;
+            $('#detailRemainderQty').val(remainder);
+        });
+
+        $('#btnAddDetail').click(function () {
+            var rawMateCode = $('#detailCodeHidden').val();
+            var rawMateID = $('#detailIDHidden').val();
+            var qty = $('#detailQty').val();
+            var fullBag = $('#detailFullBag').val();
+            var remainderQty = $('#detailRemainderQty').val();
+            var html = '<tr>';
+            html += '<td>' + rawMateCode + '<input type="hidden" class="rawMateCode" value="' + rawMateCode + '"></td>';
+            html += '<input type="hidden" class="rawMateID" value="' + rawMateID + '">';
+            html += '<td>' + qty + '<input type="hidden" class="qty" value="' + qty.replace(/\,/g, '') + '"></td>';
+            html += '<td>' + fullBag + '<input type="hidden" class="fullBag" value="' + fullBag.replace(/\,/g, '') + '"></td>';
+            html += '<td>' + remainderQty + '<input type="hidden" class="remainderQty" value="' + remainderQty.replace(/\,/g, '') + '"></td>';
+            html += '<td><a href="#" class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</a></td>';
+            html += '</tr>';
+            $('#detailTable tbody').append(html);
+            $('#formModal').modal('hide');
+        });
+
+        $(document).on('click', '.deleteDetail', function () {
+            console.log('delete clicked');
+            var target = $(this).parent().parent().closest('tr');
+            $(target).remove();
+        });
+
+        $('#btnSave').click(function () {
+            isValid = true;
+            clearForm();
+            if ($('#Code').val().length == 0) {
+                $('#Code').addClass('is-invalid');
+                $('#Code').next().html('This field is Required');
+                isValid = false;
+            }
+            //if ($('#Name').val().length == 0) {
+            //    $('#Name').addClass('is-invalid');
+            //    $('#Name').next().html('This field is Required');
+            //    isValid = false;
+            //}
+            if ($('#ProductNumber').val().length == 0) {
+                $('#ProductNumber').addClass('is-invalid');
+                $('#ProductNumber').next().html('This field is Required');
+                isValid = false;
+            }
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        function clearForm() {
+            $('#Code').removeClass('is-invalid');
+            $('#Code').next().html('');
+            //$('#Name').removeClass('is-invalid');
+            //$('#Name').next().html('');
+            $('#ProductNumber').removeClass('is-invalid');
+            $('#ProductNumber').next().html('');
+        }
+
+        function clearValue() {
+            $('#Code').val('');
+            //$('#Name').val('');
+            $('#ProductNumber').val('');
+            $('#detailTable tbody').empty();
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('#btnYes').click(function () {
+            let isActive = 'false';
+            if ($('#IsActive').prop('checked')) {
+                isActive = 'true';
+            };
+            let i = 0;
+            let jsonObj = new Array();
+            $('.rawMateID').each(function () {
+                item = {}
+                item ["Code"] = $('.rawMateCode').eq(i).val();
+                item ["Qty"] = $('.qty').eq(i).val();
+                //item ["Fullbag"] = $('.fullBag').eq(i).val();
+                //item ["RemainderQty"] = $('.remainderQty').eq(i).val();
+                item ["RawMaterialID"] = $(this).val();
+
+                jsonObj.push(item);
+                i++;
+            });
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Formula/Update',
+                data: {
+                    ID: $('#ID').val(),
+                    Code: $('#Code').val(),
+                    ProductNumber: $('#ProductNumber').val(),
+                    IsActive: isActive,
+                    Details: jsonObj
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        clearValue();
+                        clearForm();
+                        dissmissDialog();
+                        showFlash();
+                    }
+                }
+            });
+        });
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+    </script>
+}

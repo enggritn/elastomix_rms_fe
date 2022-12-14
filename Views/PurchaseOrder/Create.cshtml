@@ -1,0 +1,408 @@
+﻿@{
+    ViewBag.Title = "Purchase Order";
+    ViewBag.Module = "PurchaseOrder";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PR Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailPRNumber" id="detailPRNumber" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+                                <label class="col-form-label col-sm-4">PO Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailPONumber" id="detailPONumber" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>*@
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">PO Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control datepicker" name="detailPODate" id="detailPODate" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ETA</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control datepicker" name="detailETA" id="detailETA" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+                                <label class="col-form-label col-sm-4">ATA</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailATA" id="detailATA" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>*@
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Supplier</label>
+                            <div class="col-sm-8"><u><a href="#" id="btnSelectSupplier"><i class="ik ik-eye"></i>&nbsp; Select Supplier</a></u></div>
+                        </div>
+                        <div id="supplierForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Supplier Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="supplierID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="detailSupplierCode" id="detailSupplierCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Supplier Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailSupplierName" id="detailSupplierName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Supplier Address</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailSupplierAddress" id="detailSupplierAddress" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4"><b>Material Request Item</b></label>
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                    <thead>
+                                        <tr>
+                                            <th>RM Code</th>
+                                            <th>RM Name</th>
+                                            <th>Requested QTY</th>
+                                            <th>Outstanding QTY</th>
+                                            <th>QTY/Full Bag</th>
+                                            <th>Order QTY</th>
+                                            <th>Full Bag</th>
+                                            <th>Remainder QTY</th>
+                                            @*<th>Subtotal</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@ViewBag.BaseUrl/MaterialRequest/Edit?id=@ViewBag.param" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <div class="float-right">
+                    <a href="#" class="btn btn-primary" id="btnSave"><i class="ik ik-save"></i>Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+<div class="modal" id="formSupplierModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Supplier</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="supplierDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>SUP CODE</th>
+                                <th>SUPPLIER NAME</th>
+                                <th>ABBREVIATION</th>
+                                <th>CLASSIFICATION</th>
+                                <th>ADDRESS</th>
+                                <th>TELEPHONE</th>
+                                <th>CONTACT</th>
+                                <th>CURRENCY</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        $('#supplierForm').hide();
+        initMaterialRequest();
+
+        var supplierDataTable = $('#supplierDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Supplier/Datatable"
+            },
+            columns: [
+                 {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Abbreviation", "name": "Abbreviation", "autoWidth": true },
+                { "data": "ClassificationName", "name": "ClassificationName", "autoWidth": true },
+                { "data": "Address", "name": "Address", "autoWidth": true },
+                { "data": "Telephone", "name": "Telephone", "autoWidth": true },
+                { "data": "Contact", "name": "Contact", "autoWidth": true },
+                { "data": "CurrencyName", "name": "CurrencyName", "autoWidth": true },
+            ]
+        });
+
+        $('#supplierDataTable tbody').on('click', 'tr', function () {
+            var data = supplierDataTable.row(this).data();
+            $('#supplierID').val(data.ID);
+            $('#detailSupplierCode').val(data.Code);
+            $('#detailSupplierName').val(data.Name);
+            $('#detailSupplierAddress').val(data.Address);
+            $('#supplierForm').show();
+            $('#formSupplierModal').modal('hide');
+
+            $("#orderDataTable tbody tr").removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+
+        $('#btnSelectSupplier').click(function () {
+            $('#formSupplierModal').modal('show');
+            supplierDataTable.columns.adjust();
+        });
+
+        $('#btnAddSupplier').click(function () {
+            $('#formSupplierModal').modal('hide');
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        $('#btnSave').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            let i = 0;
+            let jsonObj = new Array();
+            $('.OrderQty').each(function () {
+                item = {}
+                item ["RawMaterialID"] = $('.RawMaterialID').eq(i).val();
+                item ["RawMaterialCode"] = $('.RawMaterialCode').eq(i).val();
+                item ["OrderQty"] = $('.OrderQty').eq(i).val().replace(/\,/g, '');
+                //item ["Subtotal"] = $('.Subtotal').eq(i).val().replace(/\,/g, '');
+
+                jsonObj.push(item);
+                i++;
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/PurchaseOrder/Create',
+                data: {
+                    MaterialRequestID: '@ViewBag.Param',
+                    SupplierID: $('#supplierID').val(),
+                    PODate: moment($('#detailPODate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    ETA: moment($('#detailETA').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    Details: jsonObj
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        //clearValue();
+                        //clearForm();
+                        //showFlash();
+                        dissmissDialog();
+                        window.location.replace('@ViewBag.BaseUrl/MaterialRequest/Edit?id=@ViewBag.param');
+                    }
+                }
+            });
+        });
+
+        function initMaterialRequest() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.data;
+                        let body = '';
+                        $('#detailPRNumber').val(data.Code);
+                        $.each(data.Details, function (index, value) {
+                            body += '<tr>';
+                            body += '<td>' + value.RawMaterialCode + '<input type="hidden" class="RawMaterialCode" value="' + value.RawMaterialCode + '"></td>';
+                            body += '<td>' + value.RawMaterialName + '<input type="hidden" class="RawMaterialID" value="' + value.RawMaterialID + '"></td>';
+                            //body += '<td>' + value.UoM + '</td>';
+                            body += '<td>' + value.OrderQty + '</td>';
+                            body += '<td class="OutstandingQty">' + value.OutstandingQty + '</td><input type="hidden" class="OutstandingQtyHidden" value="' + value.OutstandingQty + '">';
+                            body += '<td>' + value.FullbagQty + '</td><input type="hidden" class="FullBagQty" value="' + value.FullbagQty + '">';
+                            body += '<td><input type="text" autocomplete="off" class="form-control OrderQty number" value="0"></td>';
+                            body += '<td class="FullBag">0</td>';
+                            body += '<td class="RemainderQty">0</td>';
+                            //body += '<td><input type="text" autocomplete="off" class="form-control Subtotal number" value="0"></td>';
+                            body += '</tr>';
+                        });
+                        $('#detailTable tbody').append(body);
+                    }
+                }
+            });
+        };
+
+        $('.OrderQty').on('input', function () {
+            var OrderQty = $(this).val().replace(/\,/g, '');
+
+            var QtyFullBag = $(this).parent().parent().find('.FullBagQty');
+            var QtyFullBagValue = QtyFullBag.val();
+            var FullBag = Math.floor(OrderQty / QtyFullBagValue);
+            console.log('FullBag : ' + FullBag);
+            $(this).parent().parent().find('.FullBag').html(FullBag);
+            
+            var RemainderQtyValue = OrderQty % QtyFullBagValue;
+            console.log('RemainderQtyValue : ' + RemainderQtyValue);
+            $(this).parent().parent().find('.RemainderQty').html(RemainderQtyValue);
+
+            //var OutstandingQtyHidden = $(this).parent().parent().find('.OutstandingQtyHidden');
+            //var OutstandingQtyValue = OutstandingQtyHidden.val();
+            //var OutstandingQty = OutstandingQtyValue - OrderQty;
+            //console.log('Outstanding Value : ' + OutstandingQtyValue);
+            //console.log('Outstanding : ' + OutstandingQty);
+            //$(this).parent().parent().find('.OutstandingQty').html(OutstandingQty);
+        });
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('.number').inputmask("9{*}", { "placeholder": "" });
+        //$('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+
+    </script>
+}

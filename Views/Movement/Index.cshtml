@@ -1,0 +1,574 @@
+﻿
+@{
+    ViewBag.Title = "Movement";
+    ViewBag.Module = "Movement";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Operation</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Material Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="MaterialNameFilter" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Material Code</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="MaterialCodeFilter" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Lot Number</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="LotNumberFilter" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">In Date</label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control datepicker" id="InDateFilter" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Expired Date</label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control datepicker" id="ExpDateFilter" />
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                            <button type="button" class="btn btn-warning" id="btnClearFilter">Clear Filter</button>
+                        </div>
+                    </div>
+                </div>
+                @*<a href="@Url.Action("Detail", "Movement")" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Create</a>*@
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row" id="movementStock">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Stock</b></label>
+                            </div>
+                            <br />
+                            <div class="dt-responsive col-md-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" id="tableStock" width="100%" cellspacing="0">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>WAREHOUSE</th>
+                                                <th>BIN RACK AREA</th>
+                                                <th>BIN RACK </th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>TYPE</th>
+                                                <th>QTY</th>
+                                                <th>QTY / BAG</th>
+                                                <th>BAG QTY</th>
+
+                                                <th>STATUS</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="movementLog">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Movement Log</b></label>
+
+                            </div>
+                            <br />
+                            <div class="dt-responsive col-md-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO</th>
+                                                <th>IN DATE</th>
+                                                <th>EXP DATE</th>
+                                                <th>Prev AREA</th>
+                                                <th>Prev BIN RACK</th>
+                                                <th>QTY / BAG</th>
+                                                <th>QTY TRANSFER</th>
+                                                <th>NEW AREA</th>
+                                                <th>NEW BIN RACK</th>
+                                                <th>CreatedBy</th>
+                                                <th>CreatedOn</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal" id="putawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Putaway Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="materialCode" readonly />
+
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="materialName" readonly />
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="areaOld" readonly />
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/Rack</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control" id="binRackOld" readonly />
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">New Area</label>
+                    <div class="col-sm-4">
+                        <select id="AreaList" class="form-control">
+                            <option value="" selected>Select Area</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_area"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">New Bin/Rack</label>
+                    <div class="col-sm-4">
+                        <select id="BinRackCode" class="form-control">
+                            <option value="" selected>Select Bin/Rack</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_binrack"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Bag Quantity</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number" id="QtyAvailabe" readonly />
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag Quantity</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number" id="putawayTxt" />
+                        <span class="help-block text-danger" id="error_putaway"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSaveDetail" onclick="PutawayMovementStock()"><i class="ik ik-plus"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        #form-transfer-view .dataTables_length,
+        #form-transfer-view .dataTables_filter,
+        #form-transfer-view .dataTables_paginate,
+        #form-transfer-view .dataTables_info {
+            display: none;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+    <script>
+    let server = '@ViewBag.server';
+    let token = '@Session["token"].ToString()';
+
+        $('.number1').inputmask("9{*}", { "placeholder": "" });
+        //$('.number').inputmask("9{*}", { "placeholder": "" });
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true });
+
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": URL_API + "api/movement/data-table"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "PrevArea", "name": "PrevArea", "autoWidth": true },
+                { "data": "PrevBinRackName", "name": "PrevBinRackName", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "Qty", "name": "Qty", "autoWidth": true },
+                { "data": "NewArea", "name": "NewArea", "autoWidth": true },
+                { "data": "NewBinRackName", "name": "NewBinRackName", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+
+            ]
+        });
+        var tableStock = $('#tableStock').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": URL_API + "api/movement/data-stock",
+                data: function (d) {
+                    d.MaterialName = $('#MaterialNameFilter').val();
+                    d.MaterialCode = $('#MaterialCodeFilter').val();
+                    d.LotNo = $('#LotNumberFilter').val();
+                    d.Indate = $('#InDateFilter').val();
+                    d.ExpDate = $('#ExpDateFilter').val();
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNumber", "name": "LotNumber", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpiredDate", "name": "ExpiredDate", "autoWidth": true },
+                { "data": "Type", "name": "Type", "autoWidth": true },
+                { "data": "Quantity", "name": "Quantity", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (!data.IsExpired) {
+                            badge = '<span class="badge badge-success"><i class="ik ik-check"></i></span>';
+                        } else {
+                            badge = '<span class="badge badge-danger"><i class="ik ik-x-circle"></i></span>';
+                        }
+                        return badge;
+                    },
+                    "name": "IsExpired"
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+                        button += '<button type="button" class="btn btn-primary" onclick="return ShowMovementForm(this)"><i class="ik ik-inbox"></i>Move Stock</button> ';
+                        return button;
+
+                    },
+                },
+            ]
+        });
+
+        function reloadTable() {
+            table.ajax.reload();
+            tableStock.ajax.reload();
+        }
+        var data_stock = "";
+        var data_rm = "";
+        //$('#tableStock tbody').on('click', 'tr', function () {
+
+        //    data_rm = tableStock.row(this).data();
+        //    setAreaList(data_rm.WarehouseCode);
+        //    $('#areaOld').val(data_rm.BinRackAreaName);
+        //    $('#binRackOld').val(data_rm.BinRackName);
+        //    $('#materialName').val(data_rm.MaterialName);
+        //    $('#putawayModal').modal({
+        //        backdrop: 'static',
+        //        keyboard: false
+        //    });
+
+        //    $('#tableStock tbody tr').removeClass('row_selected');
+        //    $(this).addClass('row_selected');
+        //});
+        //function setAreaList(warehouseId) {
+        //    $('#AreaList').select2();
+        //    $.ajax({
+        //        type: 'GET',
+        //        async: false,
+        //        dataType: "json",
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/BinRackArea/WarehouseArea?id=' + warehouseId,
+        //        success: function (response) {
+
+        //            $('#AreaList').empty();
+        //            var html = '';
+        //            html += '<option value="" selected>Select Area</option>';
+        //            $.each(response, function (index, value) {
+        //                html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+        //            });
+        //            $('#AreaList').append(html);
+        //            $('#AreaList').select2({ width: '100%' });
+        //        }
+        //    });
+        //}
+
+        function setAreaList(warehouseId) {
+            $('#AreaList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRackArea/WarehouseAreaByType?Type=EMIX',
+                success: function (response) {
+
+                    $('#AreaList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Area</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#AreaList').append(html);
+                    $('#AreaList').select2({ width: '100%' });
+                }
+            });
+        }
+
+        $('#AreaList').change(function () {
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRack/AreaRack?id=' + this.value,
+                success: function (response) {
+
+                    $('#BinRackCode').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Bin/Rack</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#BinRackCode').append(html);
+                    $('#BinRackCode').select2({ width: '100%' });
+                }
+            });
+        });
+        function PutawayMovementStock() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'api/movement/save',
+                data: getDataPost(),
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        notify("Success", "success", response.message);
+                        $('#data_table').DataTable().ajax.reload();
+                        $('#data_table').DataTable().columns.adjust();
+                        $('#tableStock').DataTable().ajax.reload();
+                        $('#tableStock').DataTable().columns.adjust();
+                        $('#putawayModal').modal('hide');
+                        //if (!response.IsSuccess) {
+                        //    notify("Warning", "warning", response.message);
+
+                        //} else {
+                        //    notify("Success", "success", response.message);
+                        //    $('#data_table').DataTable().ajax.reload();
+                        //    $('#tableStock').DataTable().ajax.reload();
+                        //}
+                    } else {
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == "BinRackCode") {
+                                $('#error_binrack').html(value.ErrorMessage);
+                                $('#error_binrack').addClass('is-invalid');
+                            } else if (value.FieldName == "AreaList") {
+                                $('#error_area').html(value.ErrorMessage);
+                                $('#error_area').addClass('is-invalid');
+                            } else if (value.FieldName == "putawayTxt") {
+                                $('#error_putaway').html(value.ErrorMessage);
+                                $('#error_putaway').addClass('is-invalid');
+                            } else {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+                        });
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+
+            });
+        }
+        function getDataPost() {
+            $("#error_area").html("");
+            $("#error_binrack").html("");
+            $("#error_putaway").html("");
+            var model = {
+                MaterialCode: data_rm.MaterialCode,
+                WarehouseCode: data_rm.WarehouseCode,
+                Details: []
+            }
+                model.Details.push({
+                    ID: data_rm.ID,
+                    NewArea: $('#AreaList').val(),
+                    PrevBinRackName: $('#binRackOld').val(),
+                    NewBinRackCode: $('#BinRackCode').val(),
+                    Qty: data_rm.Quantity,
+                    QtyAvailable : data_rm.BagQty,
+                    QtyTransfer: $('#putawayTxt').val()
+                })
+
+            // console.log(model);
+            return model;
+        }
+        function ShowMovementForm(row) {
+            var elementRow = $(row).closest('tr');
+            data_rm = $('#tableStock').DataTable().row($(elementRow)).data();
+            setAreaList(data_rm.WarehouseCode);
+            $('#areaOld').val(data_rm.BinRackAreaName);
+            $('#binRackOld').val(data_rm.BinRackName);
+            $('#QtyAvailabe').val(data_rm.BagQty);
+            $('#materialName').val(data_rm.MaterialName);
+            $('#materialCode').val(data_rm.MaterialCode);
+            $('#putawayTxt').val(0);
+            $('#putawayModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+        }
+
+        $('#btnRefreshDataTable').click(function () {
+            tableStock.ajax.reload();
+        });
+        $('#btnClearFilter').click(function () {
+            $('#MaterialNameFilter').val('');
+            $('#MaterialCodeFilter').val('');
+            $('#LotNumberFilter').val('');
+            $('#InDateFilter').val('dd/mm/yyyy');
+            $('#ExpDateFilter').val('dd/mm/yyyy');
+            reloadTable();
+        });
+        $('#MaterialNameFilter').change(function () {
+            tableStock.ajax.reload();
+        });
+        $('#MaterialCodeFilter').change(function () {
+            tableStock.ajax.reload();
+        });
+        $('#LotNumberFilter').change(function () {
+            tableStock.ajax.reload();
+        });
+        $('#InDateFilter').change(function () {
+            tableStock.ajax.reload();
+        });
+        $('#ExpDateFilter').change(function () {
+            tableStock.ajax.reload();
+        });
+
+    </script>
+}

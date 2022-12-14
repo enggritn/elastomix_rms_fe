@@ -1,0 +1,245 @@
+﻿@{
+    ViewBag.Title = "Stock Opname";
+    ViewBag.Module = "StockOpname";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Warehouse" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Remarks</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Remarks" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="TransactionStatus"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Stock Opname Detail</b></label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                <thead>
+                                    <tr>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>MATERIAL TYPE</th>
+                                        <th>LOT NO</th>
+                                        <th>IN DATE</th>
+                                        <th>EXPIRED DATE</th>
+                                        <th>TOTAL BAG QTY</th>
+                                        <th>SCANNED BAG QTY</th>
+                                        <th>UNSCANNED BAG QTY</th>
+                                        <th>BIN RACK CODE</th>
+                                        <th>BIN RACK NAME</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "StockOpname")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                @*<button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        tr.row_expired td {
+            background-color: lightyellow !important;
+        }
+
+        tr.row_qc td {
+            background-color: lightblue !important;
+        }
+
+        /* Important part */
+        .modal-dialog-big {
+            overflow-y: initial !important
+        }
+
+        .modal-body-big {
+            height: 70vh;
+            overflow-y: auto;
+        }
+
+        #StockDataTable tbody tr {
+            cursor: pointer;
+        }
+
+        tr.row_scanned td {
+            background-color: lightgreen !important;
+        }
+
+        tr.row_unscanned td {
+            background-color: lightcoral !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+
+
+        initData();
+
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#Warehouse').val(data.WarehouseCode + " - " + data.WarehouseName);
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#Status').addClass('badge badge-info');
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            $('#Status').addClass('badge badge-warning');
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            $('#Status').addClass('badge badge-success');
+                        } else {
+                            $('#Status').addClass('badge badge-danger');
+                        }
+                        $('#Remarks').val(data.Remarks);
+                        $('#TransactionStatus').html(data.TransactionStatus);
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#TransactionStatus').addClass('badge badge-info');
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            $('#TransactionStatus').addClass('badge badge-warning');
+                        } else {
+                            $('#TransactionStatus').addClass('badge badge-success');
+                        }
+                        initList();
+                    } else {
+                        notify("Warning", "warning", response.message);
+                        setTimeout(function () { window.location = '@Url.Action("Index", "IssueSlip")'; }, 1000);
+                    }
+                }
+            });
+        }
+
+        let table_detail = null;
+
+        function initList() {
+            table_detail = $('#detailTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[0, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/StockOpname/DatatableDetail?HeaderID=@ViewBag.Param"
+            },
+            columnDefs: [
+
+            ],
+            columns: [
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "MaterialType", "name": "MaterialType", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "TotalBagQty", "name": "TotalBagQty", "autoWidth": true },
+                { "data": "ScannedBagQty", "name": "ScannedBagQty", "autoWidth": true },
+                { "data": "UnscannedBagQty", "name": "UnscannedBagQty", "autoWidth": true },
+                { "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+            ],
+                "createdRow": function (row, data, dataIndex) {
+                    if (data.IsScanned == true) {
+                        $(row).addClass('row_scanned');
+                    } else {
+                        $(row).addClass('row_unscanned');
+                    }
+                }
+        });
+    }
+
+
+
+</script>
+}

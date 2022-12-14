@@ -1,0 +1,914 @@
+﻿@{
+    ViewBag.Title = "Receiving";
+    ViewBag.Module = "Receiving";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Warehouse</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <input type="hidden" id="ID" />
+                        <input type="hidden" id="CodeHidden" />
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="Code" id="Code" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Reference Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="PONumber" id="PONumber" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Source Type</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="SourceType" id="SourceType" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div id="sourceForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceCodeLabel">Supplier Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="SourceID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceCode" id="SourceCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceNameLabel">Supplier Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceName" id="SourceName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4" id="SourceAddressLabel">Supplier Address</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="SourceAddress" id="SourceAddress" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="warehouseForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="WarehouseID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseCode" id="WarehouseCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseName" id="WarehouseName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Type</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseType" id="WarehouseType" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="Status"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Receiving Plan</b></label>
+                            </div>
+                        </div>
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="detailTable">
+                                <thead>
+                                    <tr>
+                                        <th>Print</th>
+                                        <th>Barcode</th>
+                                        <th>Raw Material Code</th>
+                                        <th>Raw Material Name</th>
+                                        <th>Qty</th>
+                                        <th>Request Date</th>
+                                        <th>Lot No</th>
+                                        <th>Actual Qty</th>
+                                        <th>Receive Qty</th>
+                                        <th>Inspection Qty</th>
+                                        <th>Judgement Qty</th>
+                                        <th>Location</th>
+                                        @*<th>ATA</th>*@
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Receiving")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <div class="float-right" id="buttonGroup">
+                    <button class="btn btn-primary" id="btnSave"><i class="ik ik-save"></i>Save</button>
+                    &nbsp;<button class="btn btn-success" id="btnConfirm"><i class="ik ik-check-circle"></i>Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formInspectionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Inspection Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Actual QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="InspectionActualQTY" id="InspectionActualQTY" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Input OK QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="InspectionQTY" id="InspectionQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" id="inspectionID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveInspection"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Judgement Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Inspection QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementGoodQTY" id="JudgementGoodQTY" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Input Good QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="JudgementQTY" id="JudgementQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" id="judgementID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select BinRack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="BinRackID" />
+                <input type="hidden" id="BinRackCode" />
+                <input type="hidden" id="BinRackName" />
+                <input type="hidden" id="putawayID" />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="BinRackDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>BARCODE</th>
+                                <th>BIN/RACK NAME</th>
+                                <th>WAREHOUSE</th>
+                                <th>AREA</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePutaway"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        var WarehouseID = '';
+        var detailTable = null;
+
+        //var detailTable = $('#detailTable').DataTable({
+        //    scrollX: true,
+        //    sScrollXInner: '150%',
+        //    scrollY: '500px',
+        //    searching: false,
+        //    paging: false,
+        //    ordering: false,
+        //    autoWidth: false
+        //});
+        //$('.number').inputmask("9{*}", { "placeholder": "" });
+
+        initData();
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+
+        var myCallback = function () {
+            $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        };
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/GetDataById?id=@ViewBag.param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.data;
+                        $('#ID').val(data.ID);
+                        $('#Code').val(data.Code);
+                        $('#CodeHidden').val(data.Code);
+                        $('#PONumber').val(data.RefNumber);
+
+
+                        $('#SourceType').val(data.SourceType);
+                        $('#SourceID').val(data.SourceID);
+                        $('#SourceCode').val(data.SourceCode);
+                        $('#SourceName').val(data.SourceName);
+                        $('#SourceAddress').val(data.SourceAddress);
+
+                        $('#WarehouseID').val(data.WarehouseID);
+                        WarehouseID = data.WarehouseID;
+                        $('#WarehouseCode').val(data.WarehouseCode);
+                        $('#WarehouseName').val(data.WarehouseName);
+                        $('#WarehouseType').val(data.WarehouseType);
+
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#Status').addClass('badge badge-info');
+                            $('#actionHeader').hide();
+                            $('#inspectionQtyHeader').hide();
+                            $('#judgementQtyHeader').hide();
+                            $('#putawayQtyHeader').hide();
+                            $('#btnConfirm').hide();
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            $('#Status').addClass('badge badge-warning');
+                            $('#actionHeader').hide();
+                            $('#inspectionQtyHeader').hide();
+                            $('#judgementQtyHeader').hide();
+                            $('#putawayQtyHeader').hide();
+                            $('#btnConfirm').show();
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            $('#btnConfirm').hide();
+                            $('#buttonGroup').hide();
+                            $('#Status').addClass('badge badge-success');
+                        } else {
+                            $('#actionHeader').hide();
+                            $('#buttonGroup').hide();
+                            $('#btnConfirm').hide();
+                            $('#Status').addClass('badge badge-danger');
+                        }
+                        $('#Status').html(data.TransactionStatus);
+
+                        var stype = data.SourceType;
+                        if (stype == 'VENDOR') {
+                            sourceID = 'Supplier';
+                            $('#SourceLabel').html('Supplier');
+                            $('#SourceCodeLabel').html('Supplier Code');
+                            $('#SourceNameLabel').html('Supplier Name');
+                            $('#SourceAddressLabel').html('Supplier Address');
+                            $('#SourceSelectLabel').html('Select Supplier');
+                            $('#sourceField').show();
+                            $('#CodeLabel').html('Supplier Code');
+                            $('#NameLabel').html('Supplier Name');
+                        } else if (stype == 'CUSTOMER') {
+                            sourceID = 'Customer';
+                            $('#SourceLabel').html('Customer');
+                            $('#SourceCodeLabel').html('Customer Code');
+                            $('#SourceNameLabel').html('Customer Name');
+                            $('#SourceAddressLabel').html('Customer Address');
+                            $('#SourceSelectLabel').html('Select Customer');
+                            $('#sourceField').show();
+                            $('#CodeLabel').html('Customer Code');
+                            $('#NameLabel').html('Customer Name');
+                        } else {
+                            $('#sourceForm').hide();
+                            $('#sourceField').hide();
+                            $('#SourceID').val('');
+                        }
+                        initDetailTable();
+
+                        //$('#detailTable tbody').empty();
+                        //var html = '';
+                        //$.each(data.Details, function (index, value) {
+                        //    html += '<tr>';
+                        //    html += '<td>' + value.RawMaterialCode + '<input type="hidden" class="rawMateCode" value="' + value.RawMaterialCode + '"></td>';
+                        //    html += '<input type="hidden" class="rawMateID" value="' + value.RawMaterialID + '">';
+                        //    html += '<td>' + value.RawMaterialName + '</td>';
+                        //    html += '<td>' + value.Qty + '<input type="hidden" class="qty" value="' + value.Qty + '"></td>';
+                        //    html += '<td>' + value.ETA + '<input type="hidden" class="eta" value="' + value.ETA + '"></td>';
+
+
+                        //    if (data.TransactionStatus != 'CONFIRMED' && data.TransactionStatus != 'CLOSED') {
+                        //        html += '<td><div class="form-group"><input type="text" class="form-control lotNo" value="' + value.LotNo + '"/></div></td>';
+                        //        html += '<td><div class="form-group"><input type="text" class="form-control actualQty" value="' + value.ActualQty + '"/></div></td>';
+                        //        //html += '<td><div class="form-group"><input type="text" class="form-control ATA datepicker" value="' + value.ATA + '"/></div></td>';
+                        //    } else {
+                        //        html += '<td>' + value.LotNo + '</td>';
+                        //        html += '<td>' + value.ActualQty + '</td>';
+                        //        //html += '<td>' + value.ATA + '</td>';
+                        //    }
+
+
+                        //    var FormattedBarcode = value.Barcode.replace(/\ /g, '_');
+
+                        //    if (data.TransactionStatus == 'CONFIRMED' || data.TransactionStatus == 'CLOSED') {
+                        //        html += '<td id="InspectionQTY' + FormattedBarcode + '">' + value.InspectionQty + '</td>';
+                        //        html += '<td id="JudgementQTY' + FormattedBarcode + '">' + value.JudgementQty + '</td>';
+                        //        html += '<td id="PutawayQTY' + FormattedBarcode + '">' + value.BinRackName + '</td>';
+                        //    }
+
+                        //    if (data.TransactionStatus == 'CONFIRMED') {
+                        //        html += '<td>';
+                        //        html += '<button ';
+                        //        if (value.JudgementOn != '-') {
+                        //            html += 'style="display:none;" ';
+                        //        }
+                        //        html += 'class="btn btn-primary" id="Inspection' + FormattedBarcode + '" onclick = "return ShowInspectionForm(\'' + value.Barcode + '\', \'' + value.ActualQty + '\')" > <i class="ik ik-search"></i>Inspection</button> ';
+
+                        //        html += '<button ';
+                        //        if (value.InspectedOn == '-' || value.PutOn != '-') {
+                        //            html += 'style="display:none;" ';
+                        //        }
+                        //        html += 'class="btn btn-primary" id="Judgement' + FormattedBarcode + '"  onclick="return ShowJudgementForm(\'' + value.Barcode + '\', \'' + value.InspectionQty + '\')"><i class="ik ik-list"></i>Judgement</button> ';
+
+                        //        html += '<button ';
+                        //        if (value.InspectedOn == '-' || value.PutOn != '-') {
+                        //            html += 'style="display:none;" ';
+                        //        }
+                        //        html += 'class="btn btn-primary" id="Putaway' + FormattedBarcode + '"  onclick="return ShowPutawayForm(\'' + value.Barcode + '\')"><i class="ik ik-inbox"></i>Putaway</button>&nbsp;';
+                        //        html += '</td>';
+                        //    }
+                        //    html += '</tr>';
+                        //});
+                        //$('#detailTable tbody').append(html);
+                        //detailTable.columns.adjust();
+                    }
+                }
+            });
+        };
+
+        function ShowInspectionForm(id, actualQTY, inspectionQTY) {
+            $('#inspectionID').val(id);
+            $('#InspectionActualQTY').val(actualQTY);
+            $('#InspectionQTY').val(inspectionQTY);
+            $('#formInspectionModal').modal('show');
+        };
+
+        function ShowJudgementForm(id, goodQTY, judgementQTY) {
+            $('#judgementID').val(id);
+            $('#JudgementGoodQTY').val(goodQTY);
+            $('#JudgementQTY').val(judgementQTY);
+            $('#formJudgementModal').modal('show');
+        };
+
+        function ShowPutawayForm(id) {
+            $('#putawayID').val(id);
+            $('#formPutawayModal').modal('show');
+            $('#BinRackDataTable tbody tr').removeClass('row_selected');
+        };
+
+        $('#btnSaveInspection').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/InspectionManual',
+                data: {
+                    HeaderID: '@ViewBag.param',
+                    Barcode: $('#inspectionID').val(),
+                    Qty: $('#InspectionQTY').val().replace(/\,/g, ''),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        detailTable.ajax.reload(myCallback);
+                        $('#formInspectionModal').modal('hide');
+                        //var FormattedBarcode = $('#inspectionID').val().replace(/\ /g, '_');
+                        //$('#Inspection' + FormattedBarcode).show();
+                        //$('#InspectionQTY' + FormattedBarcode).html($('#InspectionQTY').val());
+                        //$('#Judgement' + FormattedBarcode).show();
+                        //$('#Putaway' + FormattedBarcode).show();
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                    //detailTable.columns.adjust();
+                }
+            });
+        });
+
+        $('#btnSaveJudgement').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/JudgementManual',
+                data: {
+                    HeaderID: '@ViewBag.param',
+                    Barcode: $('#judgementID').val(),
+                    Qty: $('#JudgementQTY').val().replace(/\,/g, ''),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formJudgementModal').modal('hide');
+                        //var FormattedBarcode = $('#judgementID').val().replace(/\ /g, '_');
+                        //$('#Inspection' + FormattedBarcode).hide();
+                        //$('#JudgementQTY' + FormattedBarcode).html($('#JudgementQTY').val());
+                        detailTable.ajax.reload(myCallback);
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                    detailTable.columns.adjust();
+                }
+            });
+        });
+
+        $('#btnSavePutaway').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/PutawayManual',
+                data: {
+                    HeaderID: '@ViewBag.param',
+                    Barcode: $('#putawayID').val(),
+                    BinRackCode: $('#BinRackCode').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        detailTable.ajax.reload(myCallback);
+                        $('#formPutawayModal').modal('hide');
+
+                        //var FormattedBarcode = $('#putawayID').val().replace(/\ /g, '_');
+                        //$('#Inspection' + FormattedBarcode).hide();
+                        //$('#Judgement' + FormattedBarcode).hide();
+                        //$('#PutawayQTY' + FormattedBarcode).html($('#BinRackName').val());
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                    detailTable.columns.adjust();
+                }
+            });
+        });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        $('#btnSave').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            let i = 0;
+            let jsonObj = new Array();
+            $('.rawMateID').each(function () {
+                item = {}
+                item ["RawMaterialID"] = $('.rawMateID').eq(i).val();
+                item ["LotNo"] = $('.lotNo').eq(i).val();
+                item ["ActualQty"] = $('.actualQty').eq(i).val().replace(/\,/g, '');;
+                //item ["ATA"] = moment($('.ATA').eq(i).val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+                jsonObj.push(item);
+                i++;
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/Update',
+                data: {
+                    ID: '@ViewBag.param',
+                    Details: jsonObj
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        dissmissDialog();
+                        $('#Status').html('PROGRESS');
+                        $('#Status').removeClass();
+                        $('#Status').addClass('badge badge-warning');
+                        $('#btnConfirm').show();
+                        detailTable.ajax.reload(myCallback);
+                        toastr.success(response.message);
+                    }
+                }
+            });
+        });
+
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        var BinRackDataTable = $('#BinRackDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/DatatableByWarehouse?warehouseId=" + WarehouseID
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#BinRackDataTable tbody').on('click', 'tr', function () {
+            var data = BinRackDataTable.row(this).data();
+            $('#BinRackID').val(data.ID);
+            $('#BinRackCode').val(data.Code);
+            $('#BinRackName').val(data.Name);
+
+            $('#BinRackDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        $('#btnConfirm').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Receiving/Confirm?ID=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#Status').html('CONFIRMED');
+                        $('#Status').removeClass();
+                        $('#Status').addClass('badge badge-success');
+                        $('#btnSave').hide();
+                        $('#btnConfirm').hide();
+                        detailTable.ajax.reload(myCallback);
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('.modal').on('hidden.bs.modal', function () {
+            detailTable.columns.adjust();
+        });
+
+        function initDetailTable() {
+            detailTable = $('#detailTable').DataTable({
+                processing: true,
+                serverSide: true,
+                sScrollXInner: '150%',
+                scrollY: '500px',
+                scrollX: true,
+                scrollCollapse: true,
+                paging: true,
+                orderable: false,
+                searchable: false,
+                order: [[2, "asc"]],
+                ajax: {
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": server + "Api/Receiving/DatatableDetail?HeaderID=@ViewBag.param"
+                },
+                initComplete: function (settings, json) {
+                    $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+                },
+                columnDefs: [
+                    { orderable: false, targets: 0 },
+                    { orderable: false, targets: -1 },
+                ],
+                columns: [
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            let button = '';
+                            if ($('#Status').text() == 'CONFIRMED' || $('#Status').text() == 'CLOSED' ) {
+                                if (!detailTable.column(0).visible()) {
+                                    detailTable.column(0).visible(true)
+                                }
+                                button += '<button class="btn btn-info-outline" onclick = "return PrintBarcode(\'' + data.Barcode + '\')" > <i class="fas fa-barcode"></i>Print</button> ';
+                            } else {
+                                detailTable.column(0).visible(false);
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            if ($('#Status').text() == 'OPEN' || $('#Status').text() == 'PROGRESS') {
+                                detailTable.column(1).visible(false);
+                            } else {
+                                if (!detailTable.column(1).visible()) {
+                                    detailTable.column(1).visible(true)
+                                }
+                            }
+                            return data.Barcode;
+                        }
+                    },
+                    { "data": "RawMaterialCode", "name": "RawMaterialCode", "autoWidth": false },
+                    { "data": "RawMaterialName", "name": "RawMaterialName", "autoWidth": false },
+                    { "data": "Qty", "name": "Qty", "autoWidth": false },
+                    { "data": "ETA", "name": "ETA", "autoWidth": false },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            let button = '<input type="hidden" class="rawMateID" value="' + data.RawMaterialID + '">';
+                            if ($('#Status').text() != 'CONFIRMED' && $('#Status').text() != 'CLOSED') {
+                                button += '<div class="form-group"><input type="text" class="form-control lotNo" value="' + data.LotNo + '"/></div>';
+                                //html += '<td><div class="form-group"><input type="text" class="form-control ATA datepicker" value="' + value.ATA + '"/></div></td>';
+                            } else {
+                                button += data.LotNo ;
+                                //html += '<td>' + value.ATA + '</td>';
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            let button = '';
+                            if ($('#Status').text() != 'CONFIRMED' && $('#Status').text() != 'CLOSED') {
+                                button += '<div class="form-group"><input type="text" class="form-control number actualQty" value="' + data.ActualQty + '"/></div>';
+                                //html += '<td><div class="form-group"><input type="text" class="form-control ATA datepicker" value="' + value.ATA + '"/></div></td>';
+                            } else {
+                                detailTable.column(7).visible(false);
+                                //html += '<td>' + value.ATA + '</td>';
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            if ($('#Status').text() != 'CONFIRMED' && $('#Status').text() != 'CLOSED') {
+                                detailTable.column(8).visible(false);
+                            } else {
+                                if (!detailTable.column(8).visible()) {
+                                    detailTable.column(8).visible(true)
+                                }
+                            }
+                            return data.ReceiveQty;
+                        }
+                    },
+                     {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            if ($('#Status').text() == 'OPEN' || $('#Status').text() == 'PROGRESS') {
+                                detailTable.column(9).visible(false);
+                            } else {
+                                 if (!detailTable.column(9).visible()) {
+                                    detailTable.column(9).visible(true)
+                                }
+                             }
+                            return data.InspectionQty;
+                        }
+                    },
+                     {
+                        "data": null,
+                         "render": function (data, type, row) {
+                             if ($('#Status').text() == 'OPEN' || $('#Status').text() == 'PROGRESS') {
+                                 detailTable.column(10).visible(false);
+                             } else {
+                                 if (!detailTable.column(10).visible()) {
+                                    detailTable.column(10).visible(true)
+                                }
+                             }
+                            return data.JudgementQty;
+                        }
+                    },
+                     {
+                        "data": null,
+                         "render": function (data, type, row) {
+                             if ($('#Status').text() == 'OPEN' || $('#Status').text() == 'PROGRESS') {
+                                 detailTable.column(11).visible(false);
+                             } else {
+                                 if (!detailTable.column(11).visible()) {
+                                    detailTable.column(11).visible(true)
+                                }
+                             }
+                            return data.BinRackName;
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row) {
+                            let button = '';
+                            if ($('#Status').text() != 'CONFIRMED') {
+                                detailTable.column(12).visible(false);
+                            } else {
+                                if (!detailTable.column(12).visible()) {
+                                    detailTable.column(12).visible(true)
+                                }
+                                if (data.JudgementOn == '-' && data.PutOn == '-') {
+                                    button += '<button class="btn btn-primary" onclick = "return ShowInspectionForm(\'' + data.Barcode + '\', \'' + data.ActualQty + '\', \'' + data.InspectionQty + '\')" > <i class="ik ik-search"></i>Inspection</button> ';
+                                }
+
+                                if (data.InspectedOn != '-' && data.PutOn == '-') {
+                                    button += '<button class="btn btn-primary" onclick="return ShowJudgementForm(\'' + data.Barcode + '\', \'' + data.NGQty + '\', \'' + data.JudgementQty + '\')"><i class="ik ik-list"></i>Judgement</button> ';
+                                }
+
+                                if (data.InspectedOn != '-' && data.PutOn == '-') {
+                                    button += '<button class="btn btn-primary" onclick="return ShowPutawayForm(\'' + data.Barcode + '\')"><i class="ik ik-inbox"></i>Putaway</button>';
+                                }
+                            }
+                            return button;
+                        }
+                    },
+                ]
+            });
+        }
+    </script>
+}

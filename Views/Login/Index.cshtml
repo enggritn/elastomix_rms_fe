@@ -1,0 +1,301 @@
+﻿@{
+    Layout = "~/Views/Shared/_Auth.cshtml";
+    ViewBag.Title = "Login";
+    ViewBag.Module = "Login";
+}
+
+
+<div id="preloader" style="display:none;">
+    <div class="sk-cube-grid">
+        <div class="sk-cube sk-cube1"></div>
+        <div class="sk-cube sk-cube2"></div>
+        <div class="sk-cube sk-cube3"></div>
+        <div class="sk-cube sk-cube4"></div>
+        <div class="sk-cube sk-cube5"></div>
+        <div class="sk-cube sk-cube6"></div>
+        <div class="sk-cube sk-cube7"></div>
+        <div class="sk-cube sk-cube8"></div>
+        <div class="sk-cube sk-cube9"></div>
+    </div>
+</div>
+<div class="auth-wrapper">
+    <div class="container-fluid h-100">
+        <div class="row flex-row h-100 bg-white">
+            <div class="col-xl-8 col-lg-6 col-md-5 p-0 d-md-block d-lg-block d-sm-none d-none">
+                <div class="lavalite-bg" style="background-image: url('@Url.Content("~/Content/img/login_bg.jpg")')">
+                    <div class="lavalite-overlay"></div>
+                </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-7 my-auto p-0">
+                <div class="authentication-form mx-auto">
+                    <div class="text-center">
+                        <img style="height:100px;" src="@Url.Content("~/Content/img/logo.jpg")">
+                        <h3>Raw Material Inventory</h3>
+                        <h5 class="h6 text-black-50">Please sign in to start your session.</h5>
+                    </div>
+                    <form action="../index.html">
+                        <div id="form_login">
+                            <div class="form-group">
+                                <input type="text" autocomplete="off" class="form-control" id="Username" placeholder="Username">
+                                <i class="ik ik-user"></i>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="Password" placeholder="Password">
+                                <i class="ik ik-lock"></i>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" autocomplete="off" class="form-control datepicker" id="LoginDate" placeholder="Login Date">
+                                <i class="ik ik-clock"></i>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col text-left">
+                                    <label class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="RememberMe" name="RememberMe" value="1">
+                                        <span class="custom-control-label">Remember Me</span>
+                                    </label>
+                                </div>
+                                <div class="col text-right">
+                                    <a href="javascript:void(0)" onclick="forgotPass()">Forgot Password ?</a>
+                                </div>
+                            </div>
+                            <div class="sign-btn text-center">
+                                @*<button type="button" class="btn btn-primary"><i class="ik ik-log-in"></i>Sign In</button>*@
+                                <a href="javascript:void(0)" class="btn btn-primary" id="btnSignIn"><i class="ik ik-log-in"></i>Sign In</a>
+                            </div>
+                        </div>
+                        <div id="form_reset_pass" style="display:none;">
+                            <div class="form-group">
+                                <input type="text" autocomplete="off" class="form-control" id="ForgotUsername" placeholder="Username">
+                                <i class="ik ik-user"></i>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                            <div class="sign-btn text-center">
+                                <a href="javascript:void(0)" class="btn btn-warning" id="btnBack"><i class="ik ik-log-in"></i>Back to login</a>
+                                <a href="javascript:void(0)" class="btn btn-primary" id="btnResetPass"><i class="ik ik-lock"></i>Reset Password</a>
+                            </div>
+                        </div>
+                        <div class="row mt-20 mb-2">
+                            <div class="col-lg-12">
+                                <div class="text-center ml-3 mr-3">
+                                    <span class="text-primary-dark"> Copyright © @DateTime.Now.Year <b>PT. Elastomix Indonesia</b></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-12">
+                                <div class="text-center ml-3 mr-3">
+                                    <span class="text-info">Developed by PT. Duta Kalingga Pratama</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-12">
+                                <div class="text-center mt-5">
+                                    <a href="javascript:void(0)" class="text-sm-center btn btn-sm btn-outline-info" onclick="window.location.replace('@Url.Action("Index", "FloorPlan")')">Open Dashboard</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let isValid;
+    let signInTxt = $('#btnSignIn').html();
+
+    var PageForgotPass = window.location.toString().split('#');
+    if (PageForgotPass.length > 1) {
+        if (PageForgotPass[1] == "ForgotPassword") {
+            forgotPass();
+        }
+    }
+
+        function clearForm() {
+            $('#Username').removeClass('is-invalid');
+            $('#Username').next().html('');
+            $('#Password').removeClass('is-invalid');
+            $('#Password').next().html('');
+        }
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true
+        }).datepicker("setDate", new Date());
+
+
+
+        $('#btnSignIn').click(function () {
+            isValid = true;
+            clearForm();
+            if ($('#Username').val().length == 0) {
+                isValid = false;
+            }
+            if ($('#Password').val().length == 0) {
+                isValid = false;
+            }
+
+            if ($('#LoginDate').val().length == 0) {
+                isValid = false;
+            }
+            if (!isValid) {
+                toastr.error('Username, Password, or Login Date cannot empty');
+            }
+            if (isValid) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: server + 'Api/Login/Auth',
+                    data: {
+                        Username: $('#Username').val(),
+                        Password: $('#Password').val(),
+                        LoginDate : $('#LoginDate').val()
+                    },
+                    success: function (response) {
+                        //$("#Password").val('');
+                        isValid = response.status;
+                        if (!isValid) {
+                            //show error
+                            toastr.error(response.message);
+                        } else {
+                            let isRemember = $('#RememberMe').is(':checked');
+                            CreateSession(response, isRemember);
+                            //window.localStorage.setItem('token', response.token);
+                            //window.localStorage.setItem('username', response.username);
+                            //window.localStorage.setItem('rememberMe', $('#RememberMe').is(':checked'));
+
+                            ////call ajax to set token
+                            ////redirect
+                            ////if ($('#RememberMe').is(':checked')) {
+
+                            ////} else {
+
+                            ////}
+                            //window.location.replace(baseUrl + '/Dashboard?t=' + response.token + '&u=' + response.username + '&r=' + $('#RememberMe').is(':checked'));
+                        }
+                    }
+                });
+            }
+
+        });
+
+    function CreateSession(response, isRemember) {
+        let token = response.token, username = response.username, login_date = response.login_date, full_name = response.full_name
+            $('#btnSignIn').prop('disabled', true);
+            $('#btnSignIn').text("Please Wait ...");
+            //loading animation here
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + '/Login/SessionSetter',
+                data: {
+                    token: token,
+                    login_date: login_date,
+                    username: username,
+                    full_name: full_name,
+                    rememberMe: isRemember
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Index", "Dashboard")', 'Dashboard'); }, 1000);
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                    console.log(thrownError);
+                },
+                complete: function () {
+                    $('#btnSignIn').prop('disabled', false);
+                    $('#btnSignIn').html(signInTxt);
+                }
+            });
+        }
+
+        $("#Password").keypress(function (event) {
+            if (event.keyCode === 13) {
+                $("#btnSignIn").click();
+            }
+        });
+
+        $("#Username").keypress(function (event) {
+            if (event.keyCode === 13) {
+                $("#Password").focus();
+            }
+        });
+
+        function forgotPass() {
+            //$('#Username').next().html('');
+            //$('#Username').removeClass('is-invalid');
+            //$('#forgotPassModal').modal({
+            //    backdrop: 'static',
+            //    keyboard: false
+            //});
+            $('#form_login').hide();
+            $('#form_reset_pass').show();
+    }
+
+    $('#btnBack').click(function () {
+        $('#form_login').show();
+        $('#form_reset_pass').hide();
+    });
+
+    $('#btnResetPass').click(function () {
+        $('#btnResetPass').prop('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: server + 'Api/Login/ForgotPassword',
+            data: {
+                Username: $('#ForgotUsername').val(),
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (!isValid) {
+                    toastr.error(response.message);
+                } else {
+                    toastr.success(response.message);
+                }
+            }, complete: function () {
+                $('#btnResetPass').prop('disabled', false);
+                $('#ForgotUsername').val("");
+            }
+        });
+    });
+
+</script>
+    <script>
+        var preloader = $('#preloader');
+        $(document).ajaxStart(function () {
+            preloader.show();
+        }).ajaxStop(function () {
+            preloader.hide();
+        });
+    </script>
+}

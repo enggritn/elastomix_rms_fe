@@ -1,0 +1,242 @@
+﻿@{
+    ViewBag.Title = "Production Request Form";
+    ViewBag.Module = "PRF";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Sales</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedNumber" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedDate" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="Status"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Order No.</th>
+                                    <th>Product Name</th>
+                                    <th>Customer</th>
+                                    <th>Qty</th>
+                                    <th>ETA</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                <div id="buttonGroup" style="display:none;">
+                    <div class="float-right">
+                        <button type="button" class="btn btn-danger" id="btnCancel"><i class="ik ik-x-circle"></i>Cancel</button>
+                        <button type="button" class="btn btn-success" id="btnConfirm"><i class="ik ik-x-circle"></i>Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        let status = "";
+
+    $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "PRF")')
+        });
+
+
+        initData();
+
+        function initData() {
+            $('#detailTable tbody').empty();
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionRequest/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#IssuedNumber').val(data.IssuedNumber);
+                        $('#IssuedDate').val(data.IssuedDate);
+
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#Status').addClass('badge badge-info');
+                            $('#buttonGroup').show();
+                        } else if (data.TransactionStatus == "CONFIRMED") {
+                            $('#Status').addClass('badge badge-success');
+                            $('#buttonGroup').hide();
+                        }
+
+                        $('#Status').html(data.TransactionStatus);
+
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+
+                            let remarks = value.Remarks ? value.Remarks : "-";
+
+                            html += '<tr>';
+                            html += '<td>' + value.OrderNumber + '<input type="hidden" class="OrderNo" value="' + value.OrderNumber + '"></td>';
+                            html += '<td>' + value.MaterialName + '<input type="hidden" class="FG" value="' + value.FGID + '"></td>';
+                            html += '<td>' + value.CustomerName + '<input type="hidden" class="Customer" value="' + value.CustomerID + '"></td>';
+                            html += '<td align="right">' + value.Qty + '<input type="hidden" class="Qty" value="' + value.Qty + '"></td>';
+                            html += '<td>' + value.ETA + '<input type="hidden" class="ETA" value="' + value.ETA + '"></td>';
+                            //html += '<td>' + ATA + '<input type="hidden" class="ATA" value="' + ATA + '"></td>';
+                            html += '<td>' + remarks + '<input type="hidden" class="Remarks" value="' + remarks + '"></td>';
+                            //html += '<td><a href="#" class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</a></td>';
+                            html += '</tr>';
+                        });
+                        $('#detailTable tbody').append(html);
+
+                        //notify("Success", "success", response.message);;
+                    } else {
+                        notify("Warning", "warning", response.message);
+                        setTimeout(function () { window.location = '@Url.Action("Index", "PRF")'; }, 1000);
+
+                    }
+                }
+            });
+    }
+
+    $('#btnCancel').click(function () {
+        status = "Cancel";
+        $('#confirmationModalTitle').text("Cancel PRF ?");
+        $('#confirmationModal').modal('show');
+    });
+
+     $('#btnConfirm').click(function () {
+         status = "Confirm";
+         $('#confirmationModalTitle').text("Confirm PRF ?");
+         $('#confirmationModal').modal('show');
+     });
+
+    $('#btnYes').click(function () {
+         $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionRequest/'+ status +'?id=@ViewBag.param',
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#confirmationModal').modal('hide');
+
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                        //setTimeout(function () { window.location.reload(); }, 1000);
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Index", "PRF")'); }, 1000);
+                    }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 notify("Error", "error", "Oops! Something went wrong.");
+             },
+             complete: function () {
+                 
+             }
+            });
+    });
+
+</script>
+}

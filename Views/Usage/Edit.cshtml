@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "Usage";
+    ViewBag.Module = "Usage";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Outbound</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issue Slip Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <input type="hidden" id="ID" class="form-control" />
+                                <input type="hidden" id="CodeHidden" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issue Slip Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="Name" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">WT Requested</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="TotalRequestedQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="TransactionStatus" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Issue Slip Detail</b></label>
+                            </div>
+                            <br />
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                    <thead>
+                                        <tr>
+                                            <th>RM Code</th>
+                                            <th>RM Name</th>
+                                            <th>Request Qty</th>
+                                            <th>Vendor Name</th>
+                                            <th>Supplier Qty</th>
+                                            <th>Form Rack NO</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Usage")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formInspectionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Inspection Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="offset-4 col-sm-8">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="QRLabel" id="QRLabel">
+                            <label class="custom-control-label" for="QRLabel">QR Label</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-4 col-sm-8">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="Package" id="Package">
+                            <label class="custom-control-label" for="Package">Package</label>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="inspectionID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveInspection"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Judgement Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="offset-4 col-sm-8">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="ExpDate" id="ExpDate">
+                            <label class="custom-control-label" for="ExpDate">Exp Date</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-4 col-sm-8">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" name="ApproveStamp" id="ApproveStamp">
+                            <label class="custom-control-label" for="ApproveStamp">Approve Stamp</label>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="judgementID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+        initData();
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/IssueSlip/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#Name').val(data.Name);
+                        $('#Code').val(data.Code);
+                        $('#TotalRequestedQty').val(data.TotalRequestedQty);
+                        $('#TransactionStatus').val(data.TransactionStatus);
+
+                        $('#detailTable tbody').empty();
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.RawMaterialCode + '<input type="hidden" class="rawMateCode" value="' + value.RawMaterialCode + '"></td>';
+                            html += '<input type="hidden" class="rawMateID" value="' + value.ID + '">';
+                            html += '<td>' + value.RawMaterialName + '</td>';
+                            html += '<td>' + value.RequestedQty + '</td>';
+                            html += '<td>' + value.VendorName + '</td>';
+                            html += '<td>' + value.Qty + '</td>';
+                            html += '<td>' + value.FromRackNo + '</td>';
+                            html += '<td>';
+                            html += '<a href="#" class="btn btn-primary" onclick="return ShowInspectionForm(\'' + value.RawMaterialCode + '\')"><i class="ik ik-search"></i>Inspection</a>&nbsp;';
+                            html += '<a href="#" class="btn btn-primary" onclick="return ShowJudgementForm(\'' + value.RawMaterialCode + '\')"><i class="ik ik-list"></i>Judgement</a>&nbsp;';
+                            html += '</td>';
+                            html += '</tr>';
+                        });
+                        $('#detailTable tbody').append(html);
+
+                    }
+                }
+            });
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        function ShowInspectionForm(id) {
+            $('#inspectionID').val(id);
+            $('#QRLabel').prop('checked', false);
+            $('#Package').prop('checked', false);
+            $('#formInspectionModal').modal('show');
+        };
+
+        function ShowJudgementForm(id) {
+            $('#judgementID').val(id);
+            $('#ExpDate').prop('checked', false);
+            $('#ApproveStamp').prop('checked', false);
+            $('#formJudgementModal').modal('show');
+        };
+
+        $('#btnSaveInspection').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Usage/InspectionManual',
+                data: {
+                    HeaderID: '@ViewBag.param',
+                    Barcode: $('#inspectionID').val(),
+                    QRLabel: $('#QRLabel').prop('checked'),
+                    Package: $('#Package').prop('checked'),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formInspectionModal').modal('hide');
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        $('#btnSaveJudgement').on('click', function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Usage/JudgementManual',
+                data: {
+                    HeaderID: '@ViewBag.param',
+                    Barcode: $('#judgementID').val(),
+                    ExpDate: $('#ExpDate').prop('checked'),
+                    ApproveStamp: $('#ApproveStamp').prop('checked'),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        $('#formJudgementModal').modal('hide');
+                        toastr.success(response.message);
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,555 @@
+﻿@{
+    ViewBag.Title = "Production Plan";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Order No.</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="orderNumber" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Item No.</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="itemNumber" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Stock Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="stockName" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Line Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="lineNumber" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Production Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="productionDate" />
+                            </div>
+                            <div class="col-sm-4">
+                                <button type="button" class="btn btn-primary" id="btnUpdateSchedule">Update</button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Delivery Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="deliveryDate" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Time</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="productionTime" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Remarks</label>
+                            <div class="col-sm-6">
+                                <input type="text" autocomplete="off" class="form-control" id="remark" />
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-primary" id="btnUpdateRemarks">Update</button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="Status"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Recipe Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="recipeNumber" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Batch Quantity</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number-non-decimal" name="BatchQty" id="BatchQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Total Production Quantity (KG)</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" name="TotalQty" id="TotalQty" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Total Production Quantity (TON)</label>
+                            <div class="col-sm-2">
+                                <input type="text" autocomplete="off" class="form-control number" name="TotalQty" id="TotalQtyTon" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <br /><br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>Material Code</th>
+                                    <th>Material Name</th>
+                                    <th>Qty</th>
+                                    <th>Total QTY</th>
+                                    <th>Qty/Bag</th>
+                                    <th>Full Bag</th>
+                                    <th>Remainder QTY</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                <div class="float-right">
+                    <button id="btnRemove" type="button" class="btn btn-danger"><i class="ik ik-x-circle"></i>Remove</button> &nbsp;
+                    <button type="button" class="btn btn-success" id="btnClose"><i class="ik ik-check-circle"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="updateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateModalTitle">Update Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesUpdate"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+<script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        initProductionPlan();
+
+        function initProductionPlan() {
+            $.ajax({
+                    type: 'GET',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/ProductionPlan/GetDataById?id=@ViewBag.Param',
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            let data = response.data;
+                            $('#orderNumber').val(data.OrderNumber);
+                            $('#itemNumber').val(data.ItemCode);
+                            $('#stockName').val(data.ItemName);
+                            $('#productionDate').val(data.ScheduleDate);
+                            $('#deliveryDate').val(data.ETA);
+                            $('#lineNumber').val(data.LineNumber);
+                            $('#recipeNumber').val(data.RecipeNumber);
+                            $('#BatchQty').val(data.BatchQty);
+                            $('#TotalQty').val(data.TotalQty);
+                            $('#TotalQtyTon').val(response.totalTon);
+                            $('#remark').val(data.Remarks);
+
+                            $('#productionTime').val(data.StartTime + " - " + data.FinishTime);
+
+                            $('#Status').text(data.TransactionStatus);
+                            $('#Status').addClass('badge');
+                            let color = "";
+
+                            switch (data.TransactionStatus) {
+                                case "OPEN":
+                                    color = "#ffea05";
+                                    break;
+                                case "POSTPONE":
+                                    color = "#28a745";
+                                    break;
+                                case "ADVANCE":
+                                    color = "#fb8f41";
+                                    break;
+                                case "OUTSTANDING":
+                                    color = "#ef2d2a";
+                                    break;
+                            }
+
+                            $("#Status").css("background-color", color);
+
+                            $('#detailTable tbody').empty();
+                            let body = '';
+                            $.each(data.Details, function (index, value) {
+                                body += '<tr>';
+                                body += '<td>' + value.MaterialCode + '</td>';
+                                body += '<td>' + value.MaterialName + '</td>';
+                                body += '<td>' + value.Qty + '</td>';
+                                body += '<td>' + value.TotalQty + '</td>';
+                                body += '<td>' + value.QtyPerBag + '</td>';
+                                body += '<td>' + value.BagQty + '</td>';
+                                body += '<td>' + value.RemainderQty + '</td>';
+                                body += '</tr>';
+                            });
+                            body += '<tr><td colspan="2" align="right"><b>TOTAL</b></td>' +
+                                '<td align="right"><b>' + response.ton + ' t</b></td>' +
+                                '<td align="right"><b>' + response.totalTon + ' t</b></td>' +
+                                '<td colspan="3"></td>' +
+                                '</tr>';
+                            $('#detailTable tbody').append(body);
+
+
+                        } else {
+                             notify("Warning", "warning", response.message);
+                            setTimeout(function () { window.location = '@Url.Action("Index", "ProductionPlan")'; }, 1000);
+                        }
+                    }
+                });
+        };
+
+        $("#productionDate").datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "right",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        //$('#actualProductionDate').daterangepicker({
+        //    timePicker: true,
+        //    timePicker24Hour: true,
+        //    timePickerIncrement: 5,
+        //});
+
+       $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "ProductionPlan")')
+        });
+
+        let updateAction = "";
+        $('#btnUpdateSchedule').click(function () {
+            $('#updateModalTitle').text("Update Schedule");
+            $('#updateModal').modal('show');
+            updateAction = "Schedule";
+        });
+
+        $('#btnUpdateRemarks').click(function () {
+            $('#updateModalTitle').text("Update Remarks");
+            $('#updateModal').modal('show');
+            updateAction = "Remarks";
+        });
+
+        $('#btnClose').click(function () {
+            $('#updateModalTitle').text("Close");
+            $('#updateModal').modal('show');
+            updateAction = "Close";
+        });
+
+        $('#btnRemove').click(function () {
+            $('#updateModalTitle').text("Remove");
+            $('#updateModal').modal('show');
+            updateAction = "Remove";
+        });
+
+        $('#btnYesUpdate').click(function () {
+            if (updateAction == "Schedule") {
+                updateSchedule();
+            } else if (updateAction == "Remarks") {
+                updateRemarks();
+            } else if (updateAction == "Close") {
+                close();
+            } else if (updateAction == "Remove") {
+                remove();
+            }
+        });
+
+        function updateSchedule() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/UpdateSchedule',
+                data: {
+                    ID: "@ViewBag.Param",
+                    ScheduleDate: $('#productionDate').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    $('#updateModal').modal('hide');
+
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                        //setTimeout(function () { window.location.reload(); }, 1000);
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Edit", "ProductionPlan")?id=@ViewBag.Param'); }, 1000);
+                    }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 notify("Error", "error", "Oops! Something went wrong.");
+             },
+             complete: function () {
+
+             }
+            });
+        }
+
+        function updateRemarks() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/UpdateRemarks',
+                data: {
+                    ID: "@ViewBag.Param",
+                    Remarks: $('#remark').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    $('#updateModal').modal('hide');
+
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                        //setTimeout(function () { window.location.reload(); }, 1000);
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Edit", "ProductionPlan")?id=@ViewBag.Param'); }, 1000);
+                    }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 notify("Error", "error", "Oops! Something went wrong.");
+             },
+             complete: function () {
+
+             }
+            });
+    }
+
+      function close() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/Close',
+                data: {
+                    ID: "@ViewBag.Param",
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    $('#updateModal').modal('hide');
+
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                        //setTimeout(function () { window.location.reload(); }, 1000);
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Edit", "ProductionPlan")?id=@ViewBag.Param'); }, 1000);
+                    }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 notify("Error", "error", "Oops! Something went wrong.");
+             },
+             complete: function () {
+
+             }
+            });
+    }
+
+    function remove() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/RemoveSchedule',
+                data: {
+                    ID: "@ViewBag.Param",
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    $('#updateModal').modal('hide');
+
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                        //setTimeout(function () { window.location.reload(); }, 1000);
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Edit", "ProductionPlan")?id=@ViewBag.Param'); }, 1000);
+                    }
+             },
+             error: function (xhr, ajaxOptions, thrownError) {
+                 notify("Error", "error", "Oops! Something went wrong.");
+             },
+             complete: function () {
+
+             }
+            });
+        }
+
+        @*let server = '@ViewBag.server';
+        var isValid = true;
+        $("#btnSave").click(function() {
+            clearForm();
+            if ($('#Username').val().length == 0) {
+                $('#Username').addClass('is-invalid');
+                $('#UsernameErrorMsg').html('This field is Required');
+                isValid = false;
+            }
+            if ($('#UserEmail').val().length == 0) {
+                $('#UserEmail').addClass('is-invalid');
+                $('#UserEmailErrorMsg').html('This field is Required');
+                isValid = false;
+            }
+            if ($('#Password').val().length == 0) {
+                $('#Password').addClass('is-invalid');
+                $('#PasswordErrorMsg').html('This field is Required');
+                isValid = false;
+            }
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        function clearForm() {
+            $('#Username').removeClass('is-invalid');
+            $('#UsernameErrorMsg').html('');
+            $('#UserEmail').removeClass('is-invalid');
+            $('#UserEmailErrorMsg').html('');
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', 'Naufal');
+                    },
+                    url: server + 'Api/@ViewBag.Title/Create',
+                    data: {
+                        Username: $('#Username').val(),
+                        Password: $('#Password').val(),
+		                UserEmail: $('#UserEmail').val()
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + + value.FieldName + 'ErrorMsg').html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            dissmissDialog();
+                        } else {
+                            clearForm();
+                            dissmissDialog();
+                            showFlash();
+                        }
+                    }
+                });
+        });*@
+</script>
+}

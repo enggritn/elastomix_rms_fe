@@ -1,0 +1,665 @@
+﻿@{
+    ViewBag.Title = "Bin/Rack";
+    ViewBag.Module = "BinRack";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="WarehouseName" name="WarehouseName" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Area Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" id="AreaName" name="AreaName" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+            <label class="col-form-label col-sm-4">Warehouse</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="WarehouseID">
+                </select>
+                <span class="help-block text-danger"></span>
+            </div>
+            <a class="btn btn-outline-primary" href="#" onclick="return showFormWarehouse('Update');"><i class="ik ik-edit"></i></a> &nbsp;
+            <a class="btn btn-primary" href="#" onclick="return showFormWarehouse('Create');"><i class="ik ik-plus"></i></a>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-4">Area</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="BinRackAreaID">
+                </select>
+                <span class="help-block text-danger"></span>
+            </div>
+            <a class="btn btn-outline-primary" href="#" onclick="return showFormArea('Update');"><i class="ik ik-edit"></i></a> &nbsp;
+            <a class="btn btn-primary" href="#" onclick="return showFormArea('Create');"><i class="ik ik-plus"></i></a>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-4">Rack</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" class="form-control" id="Rack" name="Rack"/>
+                <span class="help-block text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-4">Row</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" class="form-control" id="Row" name="Row"/>
+                <span class="help-block text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-4">Column</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" class="form-control" id="Column" name="Column"/>
+                <span class="help-block text-danger"></span>
+            </div>
+        </div>*@
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Bin Rack Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Name" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@ViewBag.BaseUrl/BinRackArea/Edit?id=@ViewBag.param&wid=@ViewBag.param2" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bin Rack Area Modal -->
+@*<div class="modal" id="binRackAreaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Bin Rack Area</h5>
+                <button type="button" id="closeArea" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-lg-12">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Area Code</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="AreaCode" class="form-control" />
+                                    <span class="help-block text-danger"></span>
+                                    <input type="hidden" id="AreaMethod" />
+                                    <input type="hidden" id="AreaID" />
+                                    <input type="hidden" id="AreaCodeHidden" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Area Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="AreaName" class="form-control" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="isActiveAreaForm">
+                                <div class="offset-4 col-sm-8">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="AreaIsActive" id="AreaIsActive">
+                                        <label class="custom-control-label" for="AreaIsActive">Is Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveArea" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<!-- Warehouse Modal -->
+@*<div class="modal" id="warehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Warehouse</h5>
+                <button type="button" id="closeWarehouse" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-lg-12">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Code</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="WarehouseCode" class="form-control" />
+                                    <span class="help-block text-danger"></span>
+                                    <input type="hidden" id="WarehouseMethod" />
+                                    <input type="hidden" id="WarehouseIDHidden" />
+                                    <input type="hidden" id="WarehouseCodeHidden" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="WarehouseName" class="form-control" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="isActiveWarehouseForm">
+                                <div class="offset-4 col-sm-8">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" name="WarehouseIsActive" id="WarehouseIsActive">
+                                        <label class="custom-control-label" for="WarehouseIsActive">Is Active</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSaveWarehouse" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@section custom_js
+{
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+        //getWarehouse(null);
+        //getBinRackArea(null);
+
+        initDataArea();
+
+        function initDataArea() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRackArea/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#WarehouseName').val(data.WarehouseName);
+                        $('#WarehouseID').val(data.WarehouseID);
+                        $('#WarehouseCode').val(data.WarehouseCode);
+                        $('#AreaName').val(data.Name);
+                        $('#AreaID').val(data.ID);
+                        $('#AreaCode').val(data.Code);
+                    }
+                }
+            });
+        }
+
+        //function getWarehouse(id) {
+        //    $('#WarehouseID').empty();
+        //    $.ajax({
+        //        type: 'GET',
+        //        dataType: 'json',
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/Warehouse/GetData',
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (isValid) {
+        //                var body = '';
+        //                $.each(response.list, function (index, value) {
+        //                    body += '<option value="' + value.ID + '">' + value.Name + '</option>';
+        //                });
+        //                $('#WarehouseID').append(body);
+        //                if (id != null) {
+        //                    $('#WarehouseID').val(id);
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
+
+        //function getBinRackArea(id) {
+        //    $('#BinRackAreaID').empty();
+        //    $.ajax({
+        //        type: 'GET',
+        //        dataType: 'json',
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/BinRackArea/GetData',
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (isValid) {
+        //                var body = '';
+        //                $.each(response.list, function (index, value) {
+        //                    body += '<option value="' + value.ID + '">' + value.Name + '</option>';
+        //                });
+        //                $('#BinRackAreaID').append(body);
+        //                if (id != null) {
+        //                    $('#BinRackAreaID').val(id);
+        //                }
+        //            }
+        //        }
+        //    });
+        //}
+
+        $("#btnSave").click(function () {
+            //isValid = true;
+            clearForm();
+            //if ($('#Rack').val().length == 0) {
+            //    $('#Rack').addClass('is-invalid');
+            //    $('#Rack').next().html('This field is Required');
+            //    isValid = false;
+            //}
+            //if ($('#Row').val().length == 0) {
+            //    $('#Row').addClass('is-invalid');
+            //    $('#Row').next().html('This field is Required');
+            //    isValid = false;
+            //}
+            //if ($('#Column').val().length == 0) {
+            //    $('#Column').addClass('is-invalid');
+            //    $('#Column').next().html('This field is Required');
+            //    isValid = false;
+            //}
+
+            //if (isValid) {
+                $('#saveModal').modal('show');
+            //}
+        });
+
+        function clearForm() {
+            //$('#WarehouseID').removeClass('is-invalid');
+            //$('#WarehouseID').next().html('');
+            //$('#BinRackAreaID').removeClass('is-invalid');
+            //$('#BinRackAreaID').next().html('');
+            //$('#Rack').removeClass('is-invalid');
+            //$('#Rack').next().html('');
+            //$('#Row').removeClass('is-invalid');
+            //$('#Row').next().html('');
+            //$('#Column').removeClass('is-invalid');
+            //$('#Column').next().html('');
+            $('#Name').removeClass('is-invalid');
+            $('#Name').next().html('');
+        }
+
+        function clearValue() {
+            //$('#Code').val('');
+            //$('#Rack').val('');
+            //$('#Row').val('');
+            //$('#Column').val('');
+            $('#Name').val('');
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        //$('#closeArea').click(function () {
+        //    $('#binRackAreaModal').modal('hide');
+        //});
+
+        //function showFormArea(method) {
+        //    clearAreaForm();
+        //    $('#AreaMethod').val(method);
+        //    $('#binRackAreaModal').modal('show');
+        //    if (method == 'Update') {
+        //        initAreaData();
+        //        $('#AreaCode').prop('readonly', true);
+        //        $('#isActiveAreaForm').show();
+        //    } else {
+        //        $('#AreaCode').prop('readonly', false);
+        //        clearAreaValue();
+        //        $('#isActiveAreaForm').hide();
+        //    }
+        //};
+
+        //function initAreaData() {
+        //    $.ajax({
+        //        type: 'GET',
+        //        dataType: 'json',
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/BinRackArea/GetDataById?id=' + $('#BinRackAreaID').val(),
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (isValid) {
+        //                var data = response.data;
+        //                $('#AreaName').val(data.Name);
+        //                $('#AreaID').val(data.ID);
+        //                $('#AreaCode').val(data.Code);
+        //                $('#AreaCodeHidden').val(data.Code);
+        //                $('#AreaIsActive').prop('checked', data.IsActive);
+        //            }
+        //        }
+        //    });
+        //};
+
+        //function showFormWarehouse(method) {
+        //    clearWarehouseForm();
+        //    $('#WarehouseMethod').val(method);
+        //    $('#warehouseModal').modal('show');
+        //    if (method == 'Update') {
+        //        $('#WarehouseCode').prop('readonly', true);
+        //        initWarehouseData();
+        //        $('#isActiveWarehouseForm').show();
+        //    } else {
+        //        $('#WarehouseCode').prop('readonly', false);
+        //        clearWarehouseValue();
+        //        $('#isActiveWarehouseForm').hide();
+        //    }
+        //};
+
+        //$('#closeWarehouse').click(function () {
+        //    $('#warehouseModal').modal('hide');
+        //});
+
+        //function initWarehouseData() {
+        //    $.ajax({
+        //        type: 'GET',
+        //        dataType: 'json',
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/Warehouse/GetDataById?id=' + $('#WarehouseID').val(),
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (isValid) {
+        //                var data = response.data;
+        //                $('#WarehouseName').val(data.Name);
+        //                $('#WarehouseIDHidden').val(data.ID);
+        //                $('#WarehouseCode').val(data.Code);
+        //                $('#WarehouseCodeHidden').val(data.Code);
+        //                $('#WarehouseIsActive').prop('checked', data.IsActive);
+        //            }
+        //        }
+        //    });
+        //};
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/Create',
+                data: {
+                    BinRackAreaID: '@ViewBag.Param',
+		            Name: $('#Name').val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        clearValue();
+                        clearForm();
+                        dissmissDialog();
+                        showFlash();
+                    }
+                }
+            });
+        });
+
+        //function clearAreaForm() {
+        //    $('#AreaName').removeClass('is-invalid');
+        //    $('#AreaName').next().html('');
+        //    $('#AreaCode').removeClass('is-invalid');
+        //    $('#AreaCode').next().html('');
+        //};
+
+        //function clearAreaValue() {
+        //    $('#AreaName').val('');
+        //    $('#AreaCode').val('');
+        //    $('#AreaCodeHidden').val('');
+        //    $('#AreaID').val('');
+        //};
+
+        //function clearWarehouseForm() {
+        //    $('#WarehouseName').removeClass('is-invalid');
+        //    $('#WarehouseName').next().html('');
+        //    $('#WarehouseCode').removeClass('is-invalid');
+        //    $('#WarehouseCode').next().html('');
+        //};
+
+        //function clearWarehouseValue() {
+        //    $('#WarehouseName').val('');
+        //    $('#WarehouseCode').val('');
+        //    $('#WarehouseCodeHidden').val('');
+        //    $('#WarehouseIDHidden').val('');
+        //};
+
+        //$('#btnSaveArea').click(function () {
+        //    if ($('#AreaMethod').val() == 'Update') {
+        //        updateArea();
+        //    } else {
+        //        createArea();
+        //    }
+        //});
+
+        //function createArea() {
+        //    $.ajax({
+        //        type: 'POST',
+        //        dataType: "json",
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/BinRackArea/Create',
+        //        data: {
+        //            Name: $('#AreaName').val(),
+        //            Code: $('#AreaCode').val()
+        //        },
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (!isValid) {
+        //                $.each(response.error_validation, function (index, value) {
+        //                    $('#Area' + value.FieldName).next().html(value.ErrorMessage);
+        //                    $('#Area' + value.FieldName).addClass('is-invalid');
+        //                });
+        //                toastr.error(response.message);
+        //            } else {
+        //                $('#binRackAreaModal').modal('hide');
+        //                clearAreaValue();
+        //                clearAreaForm();
+        //                showFlash();
+        //                getBinRackArea(response.areaID);
+        //            }
+        //        }
+        //    });
+        //};
+
+        //function updateArea() {
+        //    let isActive = 'false';
+        //    if ($('#AreaIsActive').prop('checked')) {
+        //        isActive = 'true';
+        //    };
+        //    $.ajax({
+        //        type: 'POST',
+        //        dataType: "json",
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/BinRackArea/Update',
+        //        data: {
+        //            ID: $('#AreaID').val(),
+        //            Code: $('#AreaCodeHidden').val(),
+        //            IsActive: isActive,
+        //            Name: $('#AreaName').val()
+        //        },
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (!isValid) {
+        //                $.each(response.error_validation, function (index, value) {
+        //                    $('#Area' + value.FieldName).next().html(value.ErrorMessage);
+        //                    $('#Area' + value.FieldName).addClass('is-invalid');
+        //                });
+        //                toastr.error(response.message);
+        //            } else {
+        //                $('#binRackAreaModal').modal('hide');
+        //                getBinRackArea($('#AreaID').val());
+        //                clearAreaValue();
+        //                clearAreaForm();
+        //                showFlash();
+        //            }
+        //        }
+        //    });
+        //};
+
+        //$('#btnSaveWarehouse').click(function () {
+        //    if ($('#WarehouseMethod').val() == 'Update') {
+        //        updateWarehouse();
+        //    } else {
+        //        createWarehouse();
+        //    }
+        //});
+
+        //function createWarehouse() {
+        //    $.ajax({
+        //        type: 'POST',
+        //        dataType: "json",
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/Warehouse/Create',
+        //        data: {
+        //            Name: $('#WarehouseName').val(),
+        //            Code: $('#WarehouseCode').val()
+        //        },
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (!isValid) {
+        //                $.each(response.error_validation, function (index, value) {
+        //                    $('#Warehouse' + value.FieldName).next().html(value.ErrorMessage);
+        //                    $('#Warehouse' + value.FieldName).addClass('is-invalid');
+        //                });
+        //                toastr.error(response.message);
+        //            } else {
+        //                $('#warehouseModal').modal('hide');
+        //                clearWarehouseValue();
+        //                clearWarehouseForm();
+        //                showFlash();
+        //                getWarehouse(response.warehouseID);
+        //            }
+        //        }
+        //    });
+        //};
+
+        //function updateWarehouse() {
+        //    let isActive = 'false';
+        //    if ($('#WarehouseIsActive').prop('checked')) {
+        //        isActive = 'true';
+        //    };
+        //    $.ajax({
+        //        type: 'POST',
+        //        dataType: "json",
+        //        beforeSend: function (request) {
+        //            request.setRequestHeader('Token', token);
+        //        },
+        //        url: server + 'Api/Warehouse/Update',
+        //        data: {
+        //            ID: $('#WarehouseIDHidden').val(),
+        //            Code: $('#WarehouseCodeHidden').val(),
+        //            IsActive: isActive,
+        //            Name: $('#WarehouseName').val()
+        //        },
+        //        success: function (response) {
+        //            isValid = response.status;
+        //            if (!isValid) {
+        //                $.each(response.error_validation, function (index, value) {
+        //                    $('#Warehouse' + value.FieldName).next().html(value.ErrorMessage);
+        //                    $('#Warehouse' + value.FieldName).addClass('is-invalid');
+        //                });
+        //                toastr.error(response.message);
+        //            } else {
+        //                $('#warehouseModal').modal('hide');
+        //                getWarehouse($('#WarehouseIDHidden').val());
+        //                clearWarehouseValue();
+        //                clearWarehouseForm();
+        //                showFlash();
+        //            }
+        //        }
+        //    });
+        //};
+    </script>
+}

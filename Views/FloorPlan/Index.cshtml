@@ -1,0 +1,666 @@
+﻿
+@{
+    ViewBag.Title = "Layout";
+    ViewBag.Module = "Floor Plan";
+
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+    int Rak5Row = 1;
+    int Rak5Col = 1;
+
+    int Rak6Row = 1;
+    int Rak7Row = 1;
+    int Rak8Row = 1;
+    int Rak9Row = 1;
+    int Rak10Row = 1;
+    int Rak11Row = 1;
+    int Rak12Row = 1;
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="pills-layout-raw-material-tab" data-toggle="pill" href="#layout-raw-material" role="tab" aria-controls="layout-raw-material" aria-selected="true">Layout Raw Material</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="layout-raw-material-tab" data-toggle="pill" href="#layout-raw-material-2" role="tab" aria-controls="layout-raw-material-2" aria-selected="false">Layout Raw Material - 2</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+    </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="layout-raw-material" role="tabpanel" aria-labelledby="layout-raw-material-tab">
+        <div class="border-area">
+            <div class="row">
+                <div class="col-lg-12">
+                    <table id="table-floor" class="table table-bordered table-sm" style="width: auto;">
+                        <tbody>
+                            <tr>
+                                @for (int iCol = 0; iCol < 35; iCol++)
+                                {
+                                    int width = 60;
+                                    if (iCol >= 30 && iCol <= 33)
+                                    {
+                                        width = 30;
+                                    }
+                                    else if (iCol == 11 || iCol == 16 || iCol == 25)
+                                    {
+                                        width = 10;
+                                    }
+
+                                    <td style="width: @(width)px;"><div class="display: block;">@(iCol+1)</div></td>
+                                }
+                            </tr>
+                            @for (int iRow = 0; iRow < 18; iRow++)
+                            {
+                                <tr>
+                                    <td style="height: 30px;"><div class="display: block;">@(iRow+1)</div></td>
+                                    @for (int iCol = 0; iCol < 35; iCol++)
+                                    {
+                                        // RAK 5
+                                        if (iRow >= 5 && iRow <= 7 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            if (iCol == 9)
+                                            {
+                                                <td><button class="btn btn-xs btn-primary btn-block text-white">@(Rak5Row++)</button></td>
+                                            }
+                                            else
+                                            {
+                                                bool isFirst = (iRow == 5 && iCol == 0);
+                                                <td style="@(isFirst ? "position: sticky;" : "")">
+                                                    @if (isFirst)
+                                                    {
+                                                        <h1 class="title-rak">RAK 5</h1>
+                                                    }
+                                                    <button class="btn btn-xs btn-primary btn-block">&nbsp;</button>
+                                                </td>
+                                            }
+                                        }
+                                        // RAK 6
+                                        else if (iRow >= 9 && iRow <= 11 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            if (iCol == 9)
+                                            {
+                                                <td><button class="btn btn-xs btn-primary btn-block text-white">@(4-(Rak6Row++))</button></td>
+                                            }
+                                            else
+                                            {
+                                                bool isFirst = (iRow == 9 && iCol == 0);
+                                                <td style="@(isFirst ? "position: sticky;" : "")">
+                                                    @if (isFirst)
+                                                    {
+                                                        <h1 class="title-rak">RAK 6</h1>
+                                                    }
+                                                    <button class="btn btn-xs btn-primary btn-block">&nbsp;</button>
+                                                </td>
+                                            }
+                                        }
+                                        // RAK 7
+                                        else if (iRow >= 14 && iRow <= 16 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            if (iCol == 9)
+                                            {
+                                                <td><button class="btn btn-xs btn-primary btn-block text-white">@(Rak7Row++)</button></td>
+                                            }
+                                            else
+                                            {
+                                                bool isFirst = (iRow == 14 && iCol == 0);
+                                                <td style="@(isFirst ? "position: sticky;" : "")">
+                                                    @if (isFirst)
+                                                    {
+                                                        <h1 class="title-rak text-white">RAK 7</h1>
+                                                    }
+                                                    <button class="btn btn-xs btn-primary btn-block">&nbsp;</button>
+                                                </td>
+                                            }
+                                        }
+
+
+                                        // RAK 10
+                                        else if (iRow >= 5 && iRow <= 7 && iCol >= 16 && iCol <= 23)
+                                        {
+                                            if (iRow == 5 && iCol == 16)
+                                            {
+                                                <td colspan="8" rowspan="3" style="position: sticky;">
+                                                    <h1 class="title-rak">RAK 10</h1>
+                                                    <table id="table-rak-10">
+                                                        @for (int iRowRak10 = 0; iRowRak10 < 4; iRowRak10++)
+                                                        {
+                                                            <tr>
+                                                                @for (int iColRak10 = 0; iColRak10 < 8; iColRak10++)
+                                                                {
+                                                                    if (iColRak10 == 7)
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-primary btn-block text-white">@(Rak10Row++)</button></td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-primary btn-block">&nbsp;</button></td>
+                                                                    }
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    </table>
+
+                                                </td>
+                                            }
+                                        }
+                                        // RAK 9
+                                        else if (iRow >= 9 && iRow <= 11 && iCol >= 16 && iCol <= 23)
+                                        {
+                                            if (iRow == 9 && iCol == 16)
+                                            {
+                                                <td colspan="8" rowspan="3" style="position:sticky;">
+                                                    <h1 class="title-rak">RAK 9</h1>
+                                                    <table id="table-rak-9">
+                                                        @for (int iRowRak9 = 0; iRowRak9 < 4; iRowRak9++)
+                                                        {
+                                                            <tr>
+                                                                @for (int iColRak9 = 0; iColRak9 < 8; iColRak9++)
+                                                                {
+                                                                    if (iColRak9 == 7)
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-primary btn-block text-white">@(5-(Rak9Row++))</button></td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-primary btn-block">&nbsp;</button></td>
+                                                                    }
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    </table>
+
+                                                </td>
+                                            }
+                                        }
+                                        // RAK 8
+                                        else if (iRow >= 14 && iRow <= 16 && iCol >= 16 && iCol <= 23)
+                                        {
+                                            if (iRow == 14 && iCol == 16)
+                                            {
+                                                <td colspan="8" rowspan="3" style="position: sticky;">
+                                                    <h1 class="title-rak text-white">RAK 8</h1>
+                                                    <table id="table-rak-8">
+                                                        @for (int iRowRak8 = 0; iRowRak8 < 4; iRowRak8++)
+                                                        {
+                                                            <tr>
+                                                                @for (int iColRak8 = 0; iColRak8 < 8; iColRak8++)
+                                                                {
+                                                                    if (iColRak8 == 7)
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-warning btn-block text-white">@(Rak8Row++)</button></td>
+                                                                    }
+                                                                    else if (iColRak8 == 6)
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-warning btn-block text-white">&nbsp;</button></td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td><button class="btn btn-xs btn-primary btn-block">&nbsp;</button></td>
+                                                                    }
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    </table>
+
+                                                </td>
+                                            }
+                                        }
+
+                                        // RAK 12
+                                        else if (iRow >= 1 && iRow <= 4 && iCol >= 25 && iCol <= 28)
+                                        {
+                                            if (iCol == 25)
+                                            {
+                                                <td><button class="btn btn-xs btn-warning btn-block text-white">@(5-(Rak12Row++))</button></td>
+                                            }
+                                            else
+                                            {
+                                                <td><button class="btn btn-xs btn-warning btn-block">&nbsp;</button></td>
+                                            }
+                                        }
+
+                                        // RAK 11
+                                        else if (iRow >= 5 && iRow <= 16 && iCol >= 29 && iCol <= 32)
+                                        {
+                                            if (new int[] { 5, 7, 9, 11, 13, 15 }.Contains(iRow))
+                                            {
+                                                if (iRow == 5)
+                                                {
+                                                    <td rowspan="2"><button class="btn btn-xs btn-warning btn-block" style="height: 60px;">@(Rak11Row++)</button></td>
+                                                }
+                                                else
+                                                {
+                                                    <td rowspan="2"><button class="btn btn-xs btn-warning btn-block" style="height: 60px;">&nbsp;</button></td>
+                                                }
+                                            }
+                                        }
+
+
+                                        // BLANK PURPLE DIATAS RAK 5
+                                        else if (iRow >= 1 && iRow <= 3 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            <td style="background : #cc66ff; border: 1px solid #cc66ff;"></td>
+                                        }
+
+                                        // BLANK PURPLE DITAS RAK 10
+                                        else if (iRow >= 1 && iRow <= 3 && iCol >= 16 && iCol <= 22)
+                                        {
+                                            <td style="background : #cc66ff; border: 1px solid #cc66ff;"></td>
+                                        }
+
+                                        // BLANK PURPLE DIANTARA RAK 5 dan 10
+                                        else if (iRow >= 1 && iRow <= 11 && iCol >= 12 && iCol <= 14)
+                                        {
+                                            <td style="background : #cc66ff; border: 1px solid #cc66ff;"></td>
+                                        }
+
+                                        // BLANK PURPLE DITAS RAK 7
+                                        else if (iRow >= 12 && iRow <= 13 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            <td style="background : #cc66ff; border: 1px solid #cc66ff;"></td>
+                                        }
+
+                                        // BLANK PURPLE DIATAS RAK TEMP
+                                        else if (iRow >= 14 && iRow <= 14 && iCol >= 11 && iCol <= 14)
+                                        {
+                                            <td style="background : #cc66ff; border: 1px solid #cc66ff;"></td>
+                                        }
+
+                                        // BLANK PINK
+                                        else if (iRow >= 12 && iRow <= 13 && iCol >= 16 && iCol <= 23)
+                                        {
+                                            <td style="background :#ffcccc; border: 1px solid #ffcccc;"></td>
+                                        }
+
+                                        // BLANK PINK
+                                        else if (iRow >= 5 && iRow <= 16 && iCol >= 25 && iCol <= 28)
+                                        {
+                                            <td style="background :#ffcccc; border: 1px solid #ffcccc;"></td>
+                                        }
+
+                                        // RAK TEMP
+                                        else if (iRow >= 15 && iRow <= 16 && iCol >= 11 && iCol <= 14)
+                                        {
+                                            <td><button class="btn btn-xs btn-block" style="background:#ed7d31;">&nbsp;</button></td>
+                                        }
+
+                                        /// Naming Rak
+                                        else if (iRow >= 17 && iRow <= 17 && iCol >= 0 && iCol <= 9)
+                                        {
+                                            <td><span>@alpha[9 - iCol]</span></td>
+                                        }
+
+                                        /// Naming Rak
+                                        else if (iRow >= 17 && iRow <= 17 && iCol >= 16 && iCol <= 23)
+                                        {
+                                            <td><span>@alpha[7 - (iCol - 16)]</span></td>
+                                        }
+
+                                        /// Naming Rak
+                                        else if (iRow >= 0 && iRow <= 0 && iCol >= 25 && iCol <= 28)
+                                        {
+                                            <td><span>@alpha[iCol - 25]</span></td>
+                                        }
+
+                                        /// Naming Rak
+                                        else if (iRow >= 5 && iRow <= 16 && iCol == 33)
+                                        {
+                                            if (new int[] { 5, 7, 9, 11, 13, 15 }.Contains(iRow))
+                                            {
+                                                <td rowspan="2"><span>@alpha[(Rak11Row++) - 5]</span></td>
+                                            }
+                                        }
+
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+
+                                    }
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 p-5">
+                    <table class="table table-sm table-borderless ml-10" style="width: 500px;">
+                        <tr>
+                            <td rowspan="5" style="vertical-align: top; width : 100px;">Note :</td>
+                            <td style="width: 50px;"><button class="btn btn-xs btn-primary btn-block" style="width: 30px; height: 30px;">&nbsp;</button></td>
+                            <td>POLYMER</td>
+                        </tr>
+                        <tr>
+
+                            <td><button class="btn btn-xs btn-warning btn-block" style="width: 30px; height: 30px;">&nbsp;</button></td>
+                            <td>CHEMICAL</td>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-xs btn-block" style="background:#ed7d31; width: 30px; height: 30px;">&nbsp;</button></td>
+                            <td>TEMPORARY RACK</td>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-xs btn-block" style="background:#cc66ff; width: 30px; height: 30px;">&nbsp;</button></td>
+                            <td>PREPARE/TEMPORARY AREA RM SUPPLY</td>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-xs btn-block" style="background: #ffcccc; width: 30px; height: 30px;">&nbsp;</button></td>
+                            <td>RECEIVING RM AREA</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="tab-pane fade" id="layout-raw-material-2" role="tabpanel" aria-labelledby="layout-raw-material-2-tab">...</div>
+    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">...</div>
+</div>
+
+
+<div class="container">
+
+
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="list-group">
+                <li class="list-group-item"><a href="@Url.Action("RawMaterial", "FloorPlan")" class="btn btn-sm btn-outline-secondary">Layout Raw Material</a></li>
+                <li class="list-group-item"><a href="@Url.Action("RawMaterial2", "FloorPlan")" class="btn btn-sm btn-outline-secondary">Layout Raw Material - 2</a></li>
+                <li class="list-group-item"><a href="@Url.Action("FinishGood", "FloorPlan")" class="btn btn-sm btn-outline-secondary">Layout Finish Good</a></li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section custom_css
+{
+    <style>
+        /* Sticky footer styles
+        -------------------------------------------------- */
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            /* Set the fixed height of the footer here */
+            height: 60px;
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+
+
+        /* Custom page CSS
+        -------------------------------------------------- */
+        /* Not required for template or sticky footer method. */
+
+        body > .container-fluid {
+            padding: 30px 10px;
+        }
+
+        .footer > .container {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        code {
+            font-size: 80%;
+        }
+
+        body {
+            padding-top: 2rem;
+            padding-bottom: 0;
+        }
+
+        h3 {
+            margin-top: 2rem;
+        }
+
+        .row {
+            margin-bottom: 1rem;
+        }
+
+            .row .row {
+                margin-top: 1rem;
+                margin-bottom: 0;
+            }
+
+
+        hr {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-bordered.table-rak td {
+            border: 1px solid #000;
+        }
+
+        .table-bordered.table-rak tbody tr td {
+            border: 1px solid rgba(86, 61, 124, .2);
+        }
+
+        .rak-temp {
+            width: 80%;
+            right: 0;
+            position: absolute;
+            bottom: 0;
+            height: 60px;
+            border: 2px solid #096b72;
+            background: repeating-linear-gradient(to right, transparent, #ed7d31 6px, rgba(9, 107, 114, 0.5) 6px, rgba(9, 107, 114, 0.5) 8px), repeating-linear-gradient(to bottom, transparent, #ed7d31 6px, rgba(9, 107, 114, 0.5) 6px, rgba(9, 107, 114, 0.5) 8px);
+        }
+
+
+        #rak-5,
+        #rak-6,
+        #rak-7,
+        #rak-8,
+        #rak-9,
+        #rak-10 {
+            background: #00b0f0;
+        }
+
+        #rak-11,
+        #rak-12 {
+            background: #ffff00;
+        }
+
+
+        .space-blank-purple {
+            position: absolute;
+            height: 70%;
+            background: #cc66ff;
+            width: 70%;
+            right: 5px;
+            top: 5px;
+        }
+
+        .label-info {
+            background: #fff;
+            border: 0;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+        #rak-11 tbody tr td {
+            height: 70px;
+        }
+
+        #rm-area,
+        #rm-area tbody tr td {
+            background: #ffcccc;
+            border-color: #ffcccc;
+        }
+
+            #rm-area tbody tr td {
+                height: 70px;
+            }
+
+        .rak-lookup tr td:hover {
+            box-shadow: 1px 1px 1px 1px;
+        }
+
+        .border-area {
+            padding: 10px;
+            border: 5px solid #ffc000;
+        }
+
+        tbody tr.row-label td,
+        tbody tr td.col-label {
+            border: 1px solid #fff !important;
+            font-weight: bold;
+            font-size: 10px;
+            background: #fff;
+        }
+
+        table#table-floor tbody tr td {
+            padding: 0;
+            border: 1px solid #F6F7FB;
+        }
+
+            table#table-floor tbody tr td div {
+                /*color: #fff;*/
+                display: none;
+            }
+
+            table#table-floor tbody tr td button.btn {
+                margin: 0;
+                font-size: 10px;
+                color: #fff;
+            }
+
+            table#table-floor tbody tr td span {
+                font-size: 10px;
+                text-align: center;
+                padding: 10px;
+            }
+
+        table#table-rak-10 tr td,
+        table#table-rak-9 tr td,
+        table#table-rak-8 tr td {
+            width: 50px;
+        }
+
+            table#table-rak-10 tr td button,
+            table#table-rak-9 tr td button,
+            table#table-rak-8 tr td button {
+                height: 21px;
+            }
+
+        .title-rak {
+            position: absolute;
+            top: -20px;
+            width: 200px;
+            font-size: 15px;
+            font-weight: bold;
+            left: 0;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    @Scripts.Render("~/Content/plugins/jquery/jquery.min.js")
+    <script src="~/Content/plugins/popper.js/dist/umd/popper.min.js"></script>
+    <script src="~/Content/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+
+
+
+    <script>
+        //$('#form-lookup').modal();
+
+
+        function ShowReceiveForm() {
+
+            $('#form-lookup').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        };
+
+        console.log(URL_API + "api/transfer/stock");
+
+        var table = $('#item-list').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: URL_API + "api/transfer/stock",
+            },
+            columns: [
+                { "data": "Barcode", "name": "Barcode", "autoWidth": false },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": false },
+                { "data": "BinRackArea", "name": "BinRackArea", "autoWidth": false },
+                { "data": "BinRack", "name": "BinRack", "autoWidth": false },
+                { "data": "Quantity", "name": "Quantity", "autoWidth": false }
+            ]
+        });
+
+
+        $('#table-floor tbody tr td button').click(function () {
+            $('#form-lookup').modal('show');
+            table.ajax.url(URL_API + "api/transfer/stock").load();
+        });
+
+    </script>
+}

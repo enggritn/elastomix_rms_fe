@@ -1,0 +1,609 @@
+﻿@{
+    ViewBag.Title = "Transform";
+    ViewBag.Module = "Transform";
+    Guid TransferID = (Guid)ViewBag.TransferID;
+}
+
+@section custom_css {
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+
+    <style>
+        #data_table_source_wrapper .row:nth-child(1) {
+            display: none !important;
+        }
+
+        #data_table_target_wrapper .row:nth-child(1) {
+            display: none !important;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+    </style>
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Form Input</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div id="app" class="row">
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div id="form-header" class="col-md-10">
+
+                    <input type="hidden" id="ID" name="ID" value="" />
+                    <input type="hidden" id="ItemSourceType" name="ItemSourceType" value="" />
+                    <input type="hidden" id="ItemTargetType" name="ItemTargetType" value="" />
+                    <input type="hidden" id="MaterialCodeSource" name="MaterialCodeSource" value="" />
+                    <input type="hidden" id="MaterialCodeTarget" name="MaterialCodeTarget" value="" />
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Transform No</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="TransferNo" readonly="" />
+                        </div>
+
+                        <label class="col-form-label col-sm-2">Material Source</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ItemSourceMaterialCode" value="" readonly="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Date</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control datepicker" id="CreatedOn" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly="" />
+                        </div>
+
+                        <label class="col-form-label col-sm-2">Material Target</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ItemTargetMaterialCode" value="" readonly="" />
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Total Qty Transfer</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="TotalTransfer" value="" readonly="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Total Qty Outstanding</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="TotalTransferOutstanding" value="0" readonly="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Status</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="TransformStatus" readonly="" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2"> </label>
+                        <div class="col-sm-4">
+                            <button type="button" id="btn-picking" class="btn btn-primary">Picking</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="card-body" style="padding: 20px;">
+                <h1>MATERIAL SOURCE</h1>
+                <hr />
+
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table_source" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>AREA</th>
+                                <th>BIN RACK</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>STOCK CODE</th>
+                                <th>LOT NO.</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>BAG QTY</th>
+                                <th>QTY/BAG</th>
+                                @*<th>TOTAL QTY<br />BEFORE</th>*@
+                                <th>TOTAL QTY</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="card-body" style="padding: 20px;">
+                <h1>MATERIAL TARGET</h1>
+                <hr />
+
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table_target" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>AREA</th>
+                                <th>BIN RACK</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>STOCK CODE</th>
+                                <th>LOT NO.</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>BAG QTY</th>
+                                <th>QTY/BAG</th>
+                                <th>QTY TRANSFER</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+
+
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Transfer")" class="btn btn-secondary float-right"><i class="fa fa-file"></i> Back to List</a>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal" id="formPickingModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalTitle">Picking</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Outstanding Qty</label>
+                        <div class="col-sm-4">
+                            <input type="text" autocomplete="off" class="form-control" id="OutstandingQty" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableFifo">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>STOCK CODE</th>
+                                            <th>LOT NO.</th>
+                                            <th>IN DATE</th>
+                                            <th>EXP DATE</th>
+                                            <th>BAG QTY</th>
+                                            <th>QTY/BAG</th>
+                                            <th>TOTAL QTY</th>
+                                            <th>WAREHOUSE CODE</th>
+                                            <th>WAREHOUSE NAME</th>
+                                            <th>AREA CODE</th>
+                                            <th>AREA NAME</th>
+                                            <th>BIN/RACK CODE</th>
+                                            <th>BIN/RACK NAME</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Available Qty</label>
+                        <div class="col-sm-4">
+                            <input type="hidden" id="StockIDTarget" value="" />
+                            <input type="hidden" id="QtyPerBag" value="" />
+                            <input type="text" autocomplete="off" class="form-control" id="AvailableQty" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Qty Transfer</label>
+                        <div class="col-sm-4">
+                            <input type="number" autocomplete="off" class="form-control number1" id="QtyTransfer" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                    <button type="button" class="btn btn-primary" id="btnPick"><i class="ik ik-save"></i>Pick</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+    @Scripts.Render("~/Content/plugins/sweetalert.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+
+    <script>
+    let server = '@ViewBag.server';
+    let module = '@ViewBag.Module';
+    let token = '@Session["token"].ToString()';
+        let url_list = '@Url.Action("Index", "Transfer")';
+        var TransferID = '@TransferID';
+
+
+        
+
+        //var table = $('#data_table').DataTable({
+        //    processing: true,
+        //    serverSide: true,
+        //    scrollY: "500px",
+        //    scrollX: true,
+        //    scrollCollapse: true,
+        //    paging: true,
+        //    order: [[1, "desc"]],
+        //    ajax: {
+        //        "dataType": "json",
+        //        "type": "POST",
+        //        "url": URL_API + "api/transfer/data-table-detail?ID=" + TransferID
+        //    },
+        //    columnDefs: [
+        //        { orderable: false, targets: -1 }
+        //    ],
+        //    columns: [
+        //        //{ "data": "TransferNo", "name": "TransferNo", "autoWidth": true },
+        //        { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+        //        { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+
+        //        { "data": "MaterialSource", "name": "MaterialSource", "autoWidth": true },
+        //        { "data": "BinRackSource", "name": "BinRackSource", "autoWidth": true },
+        //        { "data": "QtyStock", "name": "QtyStock", "autoWidth": true },
+
+        //        { "data": "MaterialTarget", "name": "MaterialTarget", "autoWidth": true },
+        //        { "data": "BinRackTarget", "name": "BinRackTarget", "autoWidth": true },
+        //        { "data": "QtyTransfer", "name": "QtyTransfer", "autoWidth": true },
+
+        //    ]
+        //});
+
+        var dataSetEmpty = [];
+        var table_source = $('#data_table_source').DataTable({
+            processing: true,
+            //serverSide: true,
+            sScrollXInner: '180%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            order: [[1, "desc"]],
+            data: dataSetEmpty,
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "Barcode", "name": "Barcode", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                //{ "data": "QtyBefore", "name": "QtyBefore", "autoWidth": true },
+                { "data": "QtyToBe", "name": "QtyToBe", "autoWidth": true }
+            ]
+        });
+
+        var table_target = $('#data_table_target').DataTable({
+            processing: true,
+            //serverSide: true,
+            sScrollXInner: '180%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            order: [[1, "desc"]],
+            data: dataSetEmpty,
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "Barcode", "name": "Barcode", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "QtyToBe", "name": "QtyToBe", "autoWidth": true }
+            ]
+        });
+
+
+        function reloadPage() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', TOKEN_USER);
+                },
+                url: URL_API + 'api/transfer/transform?ID=' + TransferID,
+                success: function (data) {
+                    console.log(data);
+
+                    var form = $('#form-header');
+                    form.find('#TransferNo').val(data.TransferNo);
+                    form.find('#CreatedOn').val(data.CreatedOnStr);
+                    form.find('#ItemSourceMaterialCode').val(data.ItemSourceMaterialCode);
+                    form.find('#ItemTargetMaterialCode').val(data.ItemTargetMaterialCode);
+                    form.find('#TotalTransfer').val(data.TotalTransfer);
+                    form.find('#TotalTransferOutstanding').val(data.TotalTransferOutstanding);
+                    if (data.TotalTransferOutstanding > 0) {
+                        $('#btn-picking').attr('disabled', false);
+                    } else {
+                        $('#btn-picking').attr('disabled', true);
+                    }
+
+                    var transformStatus = 'NEW';
+                    if (data.TotalTransferOutstanding === 0) {
+                        transformStatus = 'COMPLETED';
+                    } else {
+                        if (data.TotalTransferOutstanding > 0 && data.TotalTransferOutstanding < data.TotalTransfer) {
+                            transformStatus = 'IN PROGRESS';
+                        }
+                    }
+
+
+                    $('#TransformStatus').val(transformStatus);
+
+                    form.find('#ID').val(data.ID);
+                    form.find('#ItemSourceType').val(data.ItemSourceType);
+                    form.find('#ItemTargetType').val(data.ItemTargetType);
+
+                    var materialCode = data.ItemSourceMaterialCode.split('-');
+                    console.log(materialCode[0].trim());
+                    form.find('#MaterialCodeSource').val(materialCode[0].trim());
+
+                    materialCode = data.ItemTargetMaterialCode.split('-');
+                    console.log(materialCode[0].trim());
+                    form.find('#MaterialCodeTarget').val(materialCode[0].trim());
+
+
+                    table_source.clear().rows.add(dataSetEmpty).draw();
+                    if (data.TransformSources.length > 0) {
+                        table_source.clear().rows.add(data.TransformSources).draw();
+                    }
+
+                    table_target.clear().rows.add(dataSetEmpty).draw();
+                    if (data.TransformSources.length > 0) {
+                        table_target.clear().rows.add(data.TransformTarget).draw();
+                    }
+                }
+
+            });
+        }
+
+
+        reloadPage();
+        $('#btn-picking').click(function () {
+
+            $('#BagQty').val(0);
+            $('#AvailableBagQty').val(0);
+            $('#OutstandingQty').val(0);
+            $('#OutstandingBagQty').val(0);
+
+            $('#StockIDTarget').val('');
+            $('#AvailableQty').val(0);
+            $('#QtyPerBag').val(0);
+
+            $('#BagQty').next().html('');
+            $('#BagQty').removeClass('is-invalid');
+
+            //ajax get list fifo
+
+            var form = $('#form-header');
+            var ItemSourceType = form.find('#ItemSourceType').val();
+            var MaterialCodeSource = form.find('#MaterialCodeSource').val();
+
+            $('#OutstandingQty').val(form.find('#TotalTransferOutstanding').val());
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: URL_API + 'api/transfer/stocks-fifo?transfer-id=' + TransferID,
+                success: function (data) {
+                    console.log(data);
+
+                    $('#tableFifo tbody').empty();
+
+                    if (data !== undefined && data !== null && data.length > 0) {
+                        list_fifo = data;
+                        var html = "";
+
+                        if (list_fifo.length > 0) {
+                            $.each(list_fifo, function (index, value) {
+                                if (value.IsExpired) {
+                                    html += '<tr class="row_expired">';
+                                    html += '<td><button class="btn btn-primary" onclick ="event.stopPropagation(); createQC(this)"> <i class="ik ik-check"></i>QC</button></td>';
+                                } else if (value.QCInspected) {
+                                    html += '<tr class="row_qc">';
+                                    html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+                                } else {
+                                    html += '<tr>';
+                                    html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+                                }
+
+                                html += '<td>' + value.StockCode + '</td>';
+                                html += '<td>' + value.LotNo + '</td>';
+                                html += '<td>' + value.InDate + '</td>';
+                                html += '<td>' + value.ExpDate + '</td>';
+                                html += '<td>' + value.BagQty + '</td>';
+                                html += '<td>' + value.QtyPerBag + '</td>';
+                                html += '<td>' + value.TotalQty + '</td>';
+                                html += '<td>' + value.WarehouseCode + '</td>';
+                                html += '<td>' + value.WarehouseName + '</td>';
+                                html += '<td>' + value.BinRackAreaCode + '</td>';
+                                html += '<td>' + value.BinRackAreaName + '</td>';
+                                html += '<td>' + value.BinRackCode + '</td>';
+                                html += '<td>' + value.BinRackName + '</td>';
+                                html += '</tr>';
+                            });
+                        } else {
+                            html += '<tr><td colspan="13">No Data</td></tr>';
+                        }
+
+
+
+                        $('#tableFifo tbody').append(html);
+
+                        $('#formPickingModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+
+
+                }
+            });
+
+        })
+
+        function chooseStock(index) {
+            data_fifo = list_fifo[index];
+
+            $('#StockIDTarget').val(data_fifo.ID);
+            $('#AvailableQty').val(data_fifo.TotalQty);
+            $('#QtyPerBag').val(data_fifo.QtyPerBag);
+        }
+
+        $('#btnPick').click(function () {
+
+            var form = $('#form-header');
+            form.find('#QtyTransfer').val('');
+            var ID = form.find('#ID').val();
+            var MaterialCodeSource = form.find('#MaterialCodeSource').val();
+            var MaterialCodeTarget = form.find('#MaterialCodeTarget').val();
+            var ItemTargetType = form.find('#ItemTargetType').val();
+            var QtyPerBag = Number($('#QtyPerBag').val());
+
+
+
+            var dataForm = {
+                TransferID: ID,
+                QtyTransfer: Number($('#QtyTransfer').val()),
+                ProductIDSource: MaterialCodeSource,
+                ProductIDTarget: MaterialCodeTarget,
+                StockIDSource: $('#StockIDTarget').val(),
+                ProductTypeTarget: ItemTargetType
+            }
+
+            console.log(dataForm);
+
+            var isValid = true;
+
+            if (!(dataForm.QtyTransfer > 0)) {
+                isValid = false;
+                swal("Error Warning", "Qty Transfer must be input", "error");
+            } else {
+                if (dataForm.QtyTransfer > $('#AvailableQty').val()) {
+                    isValid = false;
+                    swal("Error Warning", "Qty Transfer cannot over from available Qty", "error");
+                }
+                //else {
+
+                //    var modulus = QtyPerBag % dataForm.QtyTransfer;
+                //    if (modulus > 0) {
+                //        isValid = false;
+                //        swal("Error Warning", "Qty quantity must match the quantity per bag", "error");
+                //    }
+                //}
+            }
+
+
+            if (isValid) {
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', TOKEN_USER);
+                    },
+                    url: URL_API + 'api/transfer/save-detail',
+                    data: dataForm,
+                    success: function (response) {
+
+                        swal((response.IsSuccess ? "Success " : "Warning ") + "Info", response.Message, response.IsSuccess ? "success" : "error")
+                            .then((value) => {
+                                if (response.IsSuccess) {
+                                    reloadPage();
+                                    //table.ajax.reload();
+                                    $('#formPickingModal').modal('toggle');
+                                }
+                            });
+
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        swal("Oops", textStatus, "error");
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                    }
+
+                });
+
+            }
+        });
+
+    </script>
+}

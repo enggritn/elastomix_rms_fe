@@ -1,0 +1,609 @@
+﻿@{
+    ViewBag.Title = "Stock Opname";
+    ViewBag.Module = "StockOpname";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @*<div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse</label>
+                                <div class="col-sm-8"><u><a href="#" id="btnSelectWarehouse"><i class="ik ik-eye"></i>&nbsp; Select Warehouse</a></u></div>
+                            </div>*@
+                        <div id="warehouseForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="WarehouseID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseCode" id="WarehouseCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseName" id="WarehouseName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Warehouse Type</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="WarehouseType" id="WarehouseType" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Area</label>
+                                    <div class="col-sm-8"><u><a href="#" id="btnSelectArea"><i class="ik ik-eye"></i>&nbsp; Select Area</a></u></div>
+                                </div>*@
+                            <div id="AreaForm">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Area Code</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="AreaID" />
+                                        <input type="text" autocomplete="off" class="form-control" name="AreaCode" id="AreaCode" readonly />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Area Name</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" autocomplete="off" class="form-control" name="AreaName" id="AreaName" readonly />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                @*<div class="form-group row">
+                                        <label class="col-form-label col-sm-4">Bin/Rack</label>
+                                        <div class="col-sm-8"><u><a href="#" id="btnSelectBinRack"><i class="ik ik-eye"></i>&nbsp; Select Bin/Rack</a></u></div>
+                                    </div>
+                                    <div id="BinRackForm">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-sm-4">BinRack Code</label>
+                                            <div class="col-sm-8">
+                                                <input type="hidden" id="BinRackID" />
+                                                <input type="text" autocomplete="off" class="form-control" name="BinRackCode" id="BinRackCode" readonly />
+                                                <span class="help-block text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-sm-4">BinRack Name</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" autocomplete="off" class="form-control" name="BinRackName" id="BinRackName" readonly />
+                                                <span class="help-block text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Remarks</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="Remarks" id="Remarks" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-8">
+                                <span id="TransactionStatus"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Stock Opname Detail</b></label>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                <thead>
+                                    <tr>
+                                        <th>Barcode</th>
+                                        <th>Raw Material Code</th>
+                                        <th>Raw Material Name</th>
+                                        <th>Bin/Rack Code</th>
+                                        <th>Bin/Rack Name</th>
+                                        <th>Qty</th>
+                                        <th>Actual Qty</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "StockOpname")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                @*<button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formWarehouseModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Warehouse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="WarehouseDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>WAREHOUSE CODE</th>
+                                <th>WAREHOUSE NAME</th>
+                                <th>WAREHOUSE TYPE</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formAreaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Area</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="AreaDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>AREA CODE</th>
+                                <th>AREA NAME</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formBinRackModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select BinRack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="BinRackDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>BIN/RACK CODE</th>
+                                <th>BIN/RACK NAME</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let server = '@ViewBag.Server';
+            let module = '@ViewBag.Module';
+            let token = '@Session["token"]';
+            var isValid = true;
+
+            //var detailTable = $('#detailTable').DataTable({
+            //    scrollX: true,
+            //    scrollY: '500px',
+            //    searching: false,
+            //    paging: false,
+            //    ordering: false
+            //});
+
+            var detailTable = $('#detailTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/" + module + "/DatatableDetail?HeaderID=@ViewBag.param",
+            },
+            columns: [
+                { "data": "Barcode", "name": "Code", "autoWidth": true },
+                { "data": "RawMaterialCode", "name": "RawMaterialCode", "autoWidth": true },
+                { "data": "RawMaterialName", "name": "RawMaterialName", "autoWidth": true },
+                { "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                { "data": "Qty", "name": "Qty", "autoWidth": true },
+                { "data": "ActualQty", "name": "ActualQty", "autoWidth": true },
+            ]
+        });
+
+            initData();
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/StockOpname/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#WarehouseName').val(data.WarehouseName);
+                        $('#WarehouseCode').val(data.WarehouseCode);
+                        $('#WarehouseID').val(data.WarehouseID);
+                        $('#Remarks').val(data.Remarks);
+
+                        if (data.BinRackAreaID !== null) {
+                            $('#AreaName').val(data.BinRackAreaName);
+                            $('#AreaCode').val(data.BinRackAreaCode);
+                            $('#AreaID').val(data.BinRackAreaID);
+                        } else {
+                            $('#AreaForm').hide();
+                        }
+
+                        $('#BinRackName').val(data.BinRackName);
+                        $('#BinRackCode').val(data.BinRackCode);
+                        $('#BinRackID').val(data.BinRackID);
+                        $('#TransactionStatus').html(data.TransactionStatus);
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#TransactionStatus').addClass('badge badge-info');
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            $('#TransactionStatus').addClass('badge badge-warning');
+                        } else {
+                            $('#TransactionStatus').addClass('badge badge-success');
+                        }
+
+                        //$('#detailTable tbody').empty();
+                        //var html = '';
+                        //$.each(data.Details, function (index, value) {
+                        //    html += '<tr>';
+                        //    html += '<td>' + value.Barcode + '</td>';
+                        //    html += '<td>' + value.RawMaterialName + '</td>';
+                        //    html += '<td>' + value.BinRackCode + '</td>';
+                        //    html += '<td>' + value.BinRackName + '</td>';
+                        //    html += '<td>' + value.Qty + '</td>';
+                        //    html += '<td>' + value.ActualQty + '</td>';
+                        //    html += '</tr>';
+                        //});
+                        //$('#detailTable tbody').append(html);
+                        //detailTable.columns.adjust();
+                    }
+                }
+            });
+        }
+
+            $('#btnSave').click(function() {
+                $('#saveModal').modal('show');
+            });
+
+            function showFlash() {
+                toastr.success('Data Successfully Saved')
+            }
+
+            function dissmissDialog() {
+                $('#saveModal').modal('hide');
+            }
+
+            $('#btnYes').click(function () {
+                $.ajax({
+                        type: 'POST',
+                        dataType: "json",
+                        beforeSend: function (request) {
+                            request.setRequestHeader('Token', token);
+                        },
+                        url: server + 'Api/@ViewBag.Module/Update',
+                        data: {
+                            WarehouseID: $('#WarehouseID').val(),
+                            WarehouseID: $('#WarehouseID').val(),
+                            BinRackAreaID: $('#AreaID').val(),
+                            BinRackAreaCode: $('#AreaCode').val(),
+                            BinRackID: $('#BinRackID').val(),
+                            BinRackCode: $('#BinRackCode').val(),
+                            Remarks: $('#Remarks').val(),
+                        },
+                        success: function (response) {
+                            isValid = response.status;
+                            if (!isValid) {
+                                $.each(response.error_validation, function (index, value) {
+                                    $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                    $('#' + value.FieldName).addClass('is-invalid');
+                                });
+                                toastr.error(response.message);
+                                dissmissDialog();
+                            } else {
+                                //clearForm();
+                                //clearValue();
+                                $('#warehouseForm').hide();
+                                $('#Remarks').val('');
+                                dissmissDialog();
+                                showFlash();
+                            }
+                        }
+                    });
+            });
+
+            function dissmissDialog() {
+                $('#saveModal').modal('hide');
+            }
+
+            var WarehouseDataTable = $('#WarehouseDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                scrollY: "500px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: true,
+                order: [[1, "desc"]],
+                ajax: {
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": server + "Api/Warehouse/Datatable"
+                },
+                columns: [
+                     {
+                        "data": null,
+                        "render" : function(data, type, row) {
+                            return '<i class="ik ik-check"></i>';
+                        }
+                    },
+                    { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                    { "data": "Code", "name": "Code", "autoWidth": true },
+                    { "data": "Name", "name": "Name", "autoWidth": true },
+                    { "data": "Type", "name": "Type", "autoWidth": true },
+                    { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                    { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                    { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                    { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                    { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                ]
+            });
+
+            $('#btnSelectWarehouse').click(function () {
+                $('#formWarehouseModal').modal('show');
+                WarehouseDataTable.columns.adjust();
+            });
+
+            $('#WarehouseDataTable tbody').on('click', 'tr', function () {
+                var data = WarehouseDataTable.row(this).data();
+                $('#WarehouseID').val(data.ID);
+                $('#WarehouseCode').val(data.Code);
+                $('#WarehouseName').val(data.Name);
+                $('#WarehouseType').val(data.Type);
+                $('#warehouseForm').show();
+                $('#formWarehouseModal').modal('hide');
+
+                $('#WarehouseDataTable tbody tr').removeClass('row_selected');
+                $(this).addClass('row_selected');
+                $('#AreaForm').hide();
+                $('#AreaID').val('');
+                $('#AreaCode').val('');
+                $('#AreaName').val('');
+
+                AreaDataTable.ajax.url(server + "Api/BinRackArea/Datatable?WarehouseID=" + $('#WarehouseID').val()).load();
+            });
+
+            var AreaDataTable = $('#AreaDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                scrollY: "500px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: true,
+                order: [[1, "desc"]],
+                ajax: {
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": server + "Api/BinRackArea/Datatable?WarehouseID=" + $('#WarehouseID').val()
+                },
+                columns: [
+                        {
+                        "data": null,
+                        "render" : function(data, type, row) {
+                            return '<i class="ik ik-check"></i>';
+                        }
+                    },
+                    { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                    { "data": "Code", "name": "Code", "autoWidth": true },
+                    { "data": "Name", "name": "Name", "autoWidth": true },
+                    { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                    { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                    { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                    { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                    { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                ]
+            });
+
+            $('#btnSelectArea').click(function () {
+                $('#formAreaModal').modal('show');
+                AreaDataTable.columns.adjust();
+            });
+
+            $('#AreaDataTable tbody').on('click', 'tr', function () {
+                var data = AreaDataTable.row(this).data();
+                $('#AreaID').val(data.ID);
+                $('#AreaCode').val(data.Code);
+                $('#AreaName').val(data.Name);
+                $('#AreaForm').show();
+                $('#formAreaModal').modal('hide');
+
+                $('#AreaDataTable tbody tr').removeClass('row_selected');
+		        $(this).addClass('row_selected');
+                $('#BinRackForm').hide();
+                $('#BinRackID').val('');
+                $('#BinRackCode').val('');
+                $('#BinRackName').val('');
+
+                BinRackDataTable.ajax.url(server + "Api/BinRack/Datatable?WarehouseID=" + $('#WarehouseID').val() + "&binRackAreaID=" + $('#AreaID').val()).load();
+            });
+
+            var BinRackDataTable = $('#BinRackDataTable').DataTable({
+                processing: true,
+                serverSide: true,
+                scrollY: "500px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: true,
+                order: [[1, "desc"]],
+                ajax: {
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": server + "Api/BinRack/Datatable?WarehouseID=" + $('#WarehouseID').val() + "&binRackAreaID=" + $('#AreaID').val()
+                },
+                columns: [
+                        {
+                        "data": null,
+                        "render" : function(data, type, row) {
+                            return '<i class="ik ik-check"></i>';
+                        }
+                    },
+                    { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                    { "data": "Code", "name": "Code", "autoWidth": true },
+                    { "data": "Name", "name": "Name", "autoWidth": true },
+                    { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                    { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                    { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                    { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                    { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                ]
+            });
+
+            $('#btnSelectBinRack').click(function () {
+                $('#formBinRackModal').modal('show');
+                BinRackDataTable.columns.adjust();
+            });
+
+            $('#BinRackDataTable tbody').on('click', 'tr', function () {
+                var data = BinRackDataTable.row(this).data();
+                $('#BinRackID').val(data.ID);
+                $('#BinRackCode').val(data.Code);
+                $('#BinRackName').val(data.Name);
+                $('#BinRackForm').show();
+                $('#formBinRackModal').modal('hide');
+
+                $('#BinRackDataTable tbody tr').removeClass('row_selected');
+		        $(this).addClass('row_selected');
+
+            });
+        });
+
+    </script>
+}

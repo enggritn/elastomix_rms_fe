@@ -1,0 +1,322 @@
+﻿<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Username</label>
+                            <div class="col-sm-8">
+                                @Html.TextBox("Username", null, new { @class = "form-control" })
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Full Name</label>
+                            <div class="col-sm-8">
+                                @Html.TextBox("FullName", null, new { @class = "form-control" })
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Password</label>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" name="Password" id="Password" value="">
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Password Confirmation</label>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" name="PasswordConfirmation" id="PasswordConfirmation" value="">
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Area Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="AreaType">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-4 col-sm-8">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="MobileUser">
+                                    <label class="custom-control-label" for="MobileUser">Mobile User</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Role</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="RoleID">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-group" id="UserRoleDetail">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "User")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let server = '@ViewBag.Server';
+            let token = '@Session["token"]';
+            var isValid = true;
+            getRole();
+
+            initType();
+            function initType() {
+                $.ajax({
+                    type: 'GET',
+                    async: false,
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/BinRackArea/GetAreaType',
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            let data = response.area_type;
+                            let body = '';
+                            $('#AreaType').empty();
+                            body += '<option value="">All</option>';
+                            $.each(data, function (index, value) {
+                                body += '<option value="' + value + '">' + value + '</option>';
+                            });
+                            $('#AreaType').append(body);
+
+
+                        }
+                    }
+                });
+            };
+
+            function getRole() {
+                $('#UserRole').empty();
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Role/GetData',
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            var body = '';
+                            body += '<option value="">Select</option>';
+                            $.each(response.list, function (index, value) {
+                                body += '<option value="' + value.ID + '">' + value.Name + '</option>';
+                            });
+                            $('#RoleID').append(body);
+                            GetRoleDetail();
+                        }
+                    }
+                });
+            }
+
+            $('#RoleID').change(function () {
+                GetRoleDetail();
+            });
+
+            function GetRoleDetail() {
+                $('#UserRoleDetail').empty();
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Role/GetDataById?id=' + $('#RoleID').val(),
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            var body = '';
+                            $.each(response.listMenu, function (index, value) {
+                                body += '<div class="col-md-4">';
+                                body += '<div class="card form-group row">';
+                                body += '<div class="card-header">';
+                                body += '<center><h6><b>' + value.Name + '</b></h6></center>';
+                                body += '</div>';
+                                body += '<div class="card-body">';
+                                body += '<div class="col-sm-12">';
+                                $.each(value.Controls, function (index2, value2) {
+                                    body += '<input type="checkbox" class="checkbox" name="' + value2.Name + '" value="' + value2.Name + '"';
+                                    if (value2.IsChecked) {
+                                        body += ' checked';
+                                    }
+                                    body += ' disabled = "" > ';
+                                    body += '<label for="' + value2.Name + '">' + value2.Name + '</label><br />';
+                                });
+                                body += '</div></div></div></div>';
+                            });
+                            $('#UserRoleDetail').append(body);
+                        }
+                    }
+                });
+            };
+
+            $('#btnSave').click(function() {
+                clearForm();
+                isValid = true;
+                //if ($('#Username').val().length == 0) {
+                //    $('#Username').addClass('is-invalid');
+                //    $('#Username').next().html('This field is Required');
+                //    isValid = false;
+                //}
+                //if ($('#FullName').val().length == 0) {
+                //    $('#FullName').addClass('is-invalid');
+                //    $('#FullName').next().html('This field is Required');
+                //    isValid = false;
+                //}
+                //if ($('#Password').val().length == 0) {
+                //    $('#Password').addClass('is-invalid');
+                //    $('#Password').next().html('This field is Required');
+                //    isValid = false;
+                //}
+                //if ($('#PasswordConfirmation').val().length == 0) {
+                //    $('#PasswordConfirmation').addClass('is-invalid');
+                //    $('#PasswordConfirmation').next().html('This field is Required');
+                //    isValid = false;
+                //}
+
+                if (isValid) {
+                    $('#saveModal').modal('show');
+                }
+            });
+
+            function clearForm() {
+                $('#Username').removeClass('is-invalid');
+                $('#Username').next().html('');
+                $('#FullName').removeClass('is-invalid');
+                $('#FullName').next().html('');
+                $('#Password').removeClass('is-invalid');
+                $('#Password').next().html('');
+                $('#PasswordConfirmation').removeClass('is-invalid');
+                $('#PasswordConfirmation').next().html('');
+            }
+
+            function clearValue() {
+                $('#Username').val('');
+                $('#FullName').val('');
+                $('#Password').val('');
+                $('#PasswordConfirmation').val('');
+                $('#RoleID').prop('selectedIndex', 0);
+                $('#AreaType').prop('selectedIndex', 0);
+                $('#MobileUser').prop('checked', false);
+            }
+
+            function showFlash() {
+                toastr.success('Data Successfully Saved')
+            }
+
+            function dissmissDialog() {
+                $('#saveModal').modal('hide');
+            }
+
+            $('#btnYes').click(function () {
+
+
+                 $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/@ViewBag.Module/Create',
+                    data: {
+                        Username: $('#Username').val(),
+                        FullName: $('#FullName').val(),
+                            Password: $('#Password').val(),
+                            RoleID: $('#RoleID').val(),
+                        PasswordConfirmation: $('#PasswordConfirmation').val(),
+                        MobileUser: $('#MobileUser').prop('checked'),
+                        AreaType: $('#AreaType').val(),
+                        },
+                        success: function (response) {
+                            isValid = response.status;
+                            if (!isValid) {
+                                $.each(response.error_validation, function (index, value) {
+                                    $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                    $('#' + value.FieldName).addClass('is-invalid');
+                                });
+                                toastr.error(response.message);
+                                dissmissDialog();
+                            } else {
+                                clearForm();
+                                clearValue();
+                                dissmissDialog();
+                                showFlash();
+                            }
+                        }
+                    });
+            });
+        });
+
+
+
+
+
+    </script>
+}

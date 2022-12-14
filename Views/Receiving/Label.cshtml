@@ -1,0 +1,102 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Code</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @*@page {
+          size: 5cm 5cm;
+        }*@
+
+        .txt_bold{
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+
+<body>
+    <table width='100%' style="margin-left:-35px;margin-top:-25px;margin-bottom:5px;">
+        <tbody>
+            <tr>
+                <td class="txt_bold" style="font-size:16px;">
+                    @ViewBag.Field8
+                </td>
+            </tr>
+            <tr style="height:10px;">
+                <td class="txt_bold" style="font-size:12px;">
+                    @ViewBag.Field7
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width='100%' style="margin-left:-50px;margin-top:-10px;">
+        <tbody>
+            <tr>
+                <td>
+                    <img style="width: 100px; height: 100px;" src="@ViewBag.Field6" />
+                </td>
+                <td>
+                    <table width='100%'>
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="middle" class="txt_bold" style="font-size:14px;">
+                                    <span>@ViewBag.Field9</span>
+                                    <span>@ViewBag.Field10</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table width='100%' style="font-size:15px;margin-left:-10px;">
+                                        <tbody>
+                                            <tr>
+                                                <td align="right">@ViewBag.Field12</td>
+                                                <td></td>
+                                                <td>@ViewBag.Field11</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="right">InDate</td>
+                                                <td>:</td>
+                                                <td>@ViewBag.Field13</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="right">MassDate</td>
+                                                <td>:</td>
+                                                <td>@ViewBag.Field14</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td>
+                    <img style="width: 100px; height: 100px;margin-right:-55px;" src="@ViewBag.Field3" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table width='100%' style="margin-left:-55px;margin-right:-55px;margin-top:0px;">
+        <tbody>
+            <tr>
+                <td align="center" valign="middle" class="txt_bold" style="font-size:12px;">
+                    @ViewBag.Field5
+                </td>
+            </tr>
+            <tr>
+                <td align="center" valign="middle" class="txt_bold" style="font-size:14px;">
+                    @ViewBag.Field4
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

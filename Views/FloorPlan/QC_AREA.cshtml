@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+
+
+
+    int Rak5Row = 7;
+    int Rak6Row = 11;
+    int Rak7Row = 16;
+    int Rak11Row = 0;
+    int Rak12Row = 5;
+
+    int total_row = 11;
+    int total_col = 21;
+}
+
+
+<table class="table-floor table table-bordered table-sm">
+    <tbody>
+        @for (int iRow = 1; iRow < total_row; iRow++)
+        {
+        <tr>
+            @for (int iCol = 0; iCol < total_col; iCol++)
+            {
+
+
+                // HOLD AREA
+                if (iRow >= 3 && iRow <= 10 && iCol >= 3 && iCol <= 10)
+                {
+                    if (iRow == 3 && iCol == 3)
+                    {
+                        <td class="" rowspan="8" colspan="8" style="border: 1px solid #808080; position:relative;">
+                            <button type="button" class="bg-blue btn-info-rak" id="AR007AREA 1" data-area="AR007" data-rak="AREA 1" style="display: block; height: 500px; background: #1da9ff; width: 500px; border: 1px solid #808080;">
+                                <h4 class="text-center text-white m-auto">HOLD AREA 1</h4>
+                            </button>
+                            <button type="button" class="bg-blue btn-info-rak" data-area="" data-rak="" style="display: block; height: 170px; background: #fff; width: 50%; border: 1px solid #808080;position: absolute; bottom: 0; right: 0;">
+                                Waste Rubber
+                            </button>
+                        </td>
+                    }
+                }
+
+
+                // HOLD AREA
+                else if (iRow >= 3 && iRow <= 10 && iCol >= 13 && iCol <= 20)
+                {
+                    if (iRow == 3 && iCol == 13)
+                    {
+                        <td class="" rowspan="8" colspan="8" style="border: 1px solid #808080;">
+                            <button type="button" class="bg-blue btn-info-rak" id="AR007AREA 2" data-area="AR007" data-rak="AREA 2" style="display: block; height: 500px; background: #52d600; width: 500px; border: 1px solid #808080;">
+                                <h4 class="text-center text-white m-auto">HOLD AREA 2</h4>
+                            </button>
+                        </td>
+                    }
+                }
+
+
+                else
+                {
+                    <td><button type="button" class="btn btn-xs btn-block text-center small bg-white text-white" disabled>@iRow:@iCol</button></td>
+                }
+
+
+
+            }
+
+            @{
+                Rak5Row--;
+                Rak6Row--;
+                Rak7Row--;
+                Rak12Row--;
+                if (new int[] { 5, 7, 9, 11, 13, 15 }.Contains(iRow))
+                {
+                    Rak11Row++;
+                }
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+
+<br />

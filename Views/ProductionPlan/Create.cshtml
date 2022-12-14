@@ -1,0 +1,936 @@
+﻿@{
+    ViewBag.Title = "Production Plan";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Line</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="LineType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Product Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="ProductType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="SourceLabel">Product</label>
+                            <div class="col-sm-8">
+                                <u><a href="#" id="btnSelectProduct"><i class="ik ik-eye"></i>&nbsp; <ins id="ProductSelectLabel">Select Product</ins></a></u>
+                                <br />
+                                <span class="help-block text-danger" id="item_error"></span>
+                                <input type="hidden" id="ItemID" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="MaterialCodeLabel">Item Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="MaterialCode" id="MaterialCode" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4" id="MaterialNameLabel">Stock Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="MaterialName" id="MaterialName" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Production Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control datepicker" id="productionDate" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" id="etaSection">
+                            <label class="col-form-label col-sm-4">Delivery Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control datepicker" id="deliveryDate" disabled />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row" id="recipeSection" style="display:none;">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4"><b>Recipe</b></label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Recipe Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" autocomplete="off" id="RecipeNumber" class="form-control" readonly />
+                                        <input type="hidden" id="ID" />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                <br />
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="recipeTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Material Code</th>
+                                            <th>Material Name</th>
+                                            <th>Qty</th>
+                                            <th>Full Bag</th>
+                                            <th>Remainder Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row" id="stockSection" style="display:none;">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4"><b>Stock SFG Calculation</b> | <span class="text-muted" id="stockDate"></span></label>
+                                </div>
+
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="stockTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Material Code</th>
+                                            <th>Material Name</th>
+                                            <th>Recipe Qty</th>
+                                            <th>Production Qty</th>
+                                            <th>Available Qty</th>
+                                            <th>Outstanding Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <a href="#" class="btn btn-primary" style="width: 100%;" id="btnAdd"><i class="ik ik-plus"></i>Add Order (PRF)</a>
+                        <br /><br />
+                        <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                            <thead>
+                                <tr>
+                                    <th>ORDER NO.</th>
+                                    <th>CUSTOMER</th>
+                                    <th>QTY</th>
+                                    <th>ETA</th>
+                                    <th>Remarks</th>
+                                    @*<th>Action</th>*@
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <div id="orderSection" style="display:none;">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Total Order Quantity</label>
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="form-control number" name="TotalOrderQty" id="TotalOrderQty" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="qtySection" style="display:none;">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Batch Quantity</label>
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="form-control number-non-decimal" name="BatchQty" id="BatchQty" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Total Production Quantity</label>
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="form-control number" name="TotalQty" id="TotalQty" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "ProductionPlan")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="formProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="productDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ITEM CODE</th>
+                                <th>ITEM NAME</th>
+                                <th>PRODUCT TYPE</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPRFModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="orderDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>ORDER NO.</th>
+                                <th>CUSTOMER</th>
+                                <th>ORDER QTY</th>
+                                <th>USED QTY</th>
+                                <th>AVAILABLE QTY</th>
+                                <th>ETA</th>
+                                <th>REMARKS</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="ik ik-check-square"></i>OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+<script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        initLineType();
+        let productType = "";
+        let itemCode = "";
+
+        //$('.datepicker').datepicker({
+        //    format: "dd/mm/yyyy",
+        //    todayBtn: "linked",
+        //    todayHighlight: true,
+        //    orientation: "bottom",
+        //    autoclose: true,
+        //    startDate: '+0d',
+        //});
+
+        $("#productionDate").datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "right",
+            autoclose: true,
+            startDate: '+0d',
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#deliveryDate').datepicker('setStartDate', minDate);
+            $('#deliveryDate').prop('disabled', false);
+
+            loadCalculation();
+        });
+
+    function loadCalculation() {
+        if (itemCode != "" && $('#productionDate').val() != "") {
+            //load ajax calculation by recipe id
+                $.ajax({
+                    type: 'GET',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/Formula/GetSFGCalculationByProduct',
+                    data: {
+                        itemCode: itemCode,
+                        stockDate: moment($('#productionDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                        batchQty: $('#BatchQty').val() != "" ? $('#BatchQty').val().replace(/\,/g, '') : 0
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (isValid) {
+                            var data = response.data;
+                           
+                            $('#stockTable tbody tr').remove();
+                            var html = '';
+                            $.each(data, function (index, value) {
+                                html += '<tr>';
+                                html += '<td>' + value.MaterialCode + '</td>';
+                                html += '<td>' + value.MaterialName + '</td>';
+                                html += '<td align="right">' + value.RecipeQty + '</td>';
+                                html += '<td align="right">' + value.ProductionQty + '</td>';
+                                html += '<td align="right">' + value.TotalQty + '</td>';
+                                html += '<td align="right">' + value.OutstandingQty + '</td>';
+                                html += '</tr>';
+                            });
+
+                            $('#stockTable tbody').append(html);
+                            $('#stockDate').html("Stock Date : " + $('#productionDate').val());
+                            $('#stockSection').show();
+
+                        } else {
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+               
+            } else {
+                $('#stockSection').hide();
+                $('#stockTable tbody tr').remove();
+            }
+        }
+
+        $("#deliveryDate").datepicker({
+            format: "dd/mm/yyyy",
+            todayHighlight: true,
+            orientation: "bottom",
+            autoclose: true,
+        })
+            .on('changeDate', function (selected) {
+                if (ProductType == "SFG") {
+                    var maxDate = new Date(selected.date.valueOf());
+
+                    $('#productionDate').datepicker('setEndDate', maxDate);
+                } else {
+
+                    $('#productionDate').datepicker('setEndDate', null);
+                }
+            
+        });
+
+
+
+        //$('#productionDate').daterangepicker({
+        //    timePicker: true,
+        //    timePicker24Hour: true,
+        //    timePickerIncrement: 5,
+        //    startDate: moment().startOf('hour'),
+        //    endDate: moment().startOf('hour').add(1, 'hour'),
+        //    locale: {
+        //        format: 'DD/MM/YYYY HH:mm'
+        //    }
+        //});
+
+     $('.number1').inputmask("9{*}", { "placeholder": "" });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': false });
+
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        function initLineType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/GetLineType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.line_type;
+                        let body = '';
+                        $('#LineType').empty();
+                        $.each(data, function (index, value) {
+                            body += '<option value="' + index + '">' + value + '</option>';
+                        });
+                        $('#LineType').append(body);
+
+                        initProductType();
+                    }
+                }
+            });
+        };
+
+        function initProductType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/GetProductType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.product_type;
+                        let body = '';
+                        $('#ProductType').empty();
+
+                        let lineNumber = $('#LineType').val();
+                        $.each(data, function (index, value) {
+                            if (lineNumber == 1) {
+                                if (value == "FG" || value == "SFG") {
+                                    body += '<option value="' + value + '">' + value + '</option>';
+                                }
+                            } else {
+                                if (value == "FG") {
+                                    body += '<option value="' + value + '">' + value + '</option>';
+                                }
+                            }
+
+                        });
+                        $('#ProductType').append(body);
+
+                        changeProduct();
+                    }
+                }
+            });
+        };
+
+
+        var productDataTable = $('#productDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/ProductionPlan/DatatableProduct",
+                "data": function (d) {
+                    d.ProductType = productType;
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "ProdType", "name": "ProdType", "autoWidth": true }
+            ]
+        });
+
+
+        $('#btnSelectProduct').click(function () {
+            productType = $('#ProductType').val();
+            productDataTable.draw();
+            $('#formProductModal').modal('show');
+            productDataTable.columns.adjust();
+        });
+
+    $('#productDataTable tbody').on('click', 'tr', function () {
+        var data = productDataTable.row(this).data();
+
+
+        loadRecipe(data);
+        $("#productDataTable tbody tr").removeClass('row_selected');
+        $(this).addClass('row_selected');
+
+    });
+
+        let totalRecipe = 0;
+    function loadRecipe(obj) {
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Formula/GetDataByProduct?itemCode=' + obj.MaterialCode,
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        itemCode = obj.MaterialCode;
+                        $('#RecipeNumber').val(data.RecipeNumber);
+                        $('#recipeTable tbody tr').remove();
+                        var html = '';
+                        $.each(data.Details, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.MaterialCode + '</td>';
+                            html += '<td>' + value.MaterialName + '</td>';
+                            html += '<td align="right">' + value.Qty + '</td>';
+                            html += '<td align="right">' + value.Fullbag + '</td>';
+                            html += '<td align="right">' + value.RemainderQty + '</td>';
+                            html += '</tr>';
+                        });
+                        html += '<tr><td colspan="2" align="right"><b>TOTAL</b></td>' +
+                            '<td align="right"><b>' + response.totalQty + '</b></td>' +
+                            '<td colspan="2"></td>' +
+                            '</tr>';
+                        $('#recipeTable tbody').append(html);
+                        $('#recipeSection').show();
+
+
+                        //$('#ItemID').val(obj.ID);
+                        $('#ItemID').val(obj.MaterialCode);
+                        $('#MaterialCode').val(obj.MaterialCode);
+                        $('#MaterialName').val(obj.MaterialName);
+                        $('#formProductModal').modal('hide');
+
+                        totalRecipe = response.totalQty;
+
+                        if (productType == "SFG") {
+                            $('#qtySection').show();
+                            $('#BatchQty').val(response.batch);
+
+                            calculateQty();
+                        }
+
+
+
+                        orderDataTable.draw();
+                      
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+
+        }
+
+    $('#BatchQty').keyup(function (ev) {
+        calculateQty();
+    });
+
+    function calculateQty() {
+        let qty = $('#BatchQty').val() != "" ? $('#BatchQty').val().replace(/\,/g, '') : 0;
+        let totalQty = totalRecipe * qty;
+        $('#TotalQty').val(totalQty);
+
+        loadCalculation();
+    }
+
+        $('#ProductType').change(function () {
+            changeProduct();
+        });
+
+    function changeProduct() {
+        clearValue();
+        if ($('#ProductType').val() == "FG") {
+            $('#btnAdd').show();
+            $('#detailTable').show();
+            $('#etaSection').hide();
+            $('#deliveryDate').prop('disabled', true);
+        } else if ($('#ProductType').val() == "SFG") {
+            $('#btnAdd').hide();
+            $('#detailTable').hide();
+            $('#etaSection').show();
+        } else {
+            notify("Warning", "warning", "Product Type not recognized.");
+            setTimeout(function () { window.location.reload(); }, 1000);
+        }
+    }
+
+    $('#LineType').change(function () {
+        initProductType();
+    });
+
+
+
+    var orderDataTable = $('#orderDataTable').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollY: "500px",
+        scrollX: true,
+        scrollCollapse: true,
+        paging: true,
+        order: [[2, "asc"]],
+        ajax: {
+            "dataType": "json",
+            "type": "POST",
+            "url": server + "Api/ProductionPlan/DatatableOrder",
+            "data": function (d) {
+                d.MaterialCode = $('#ItemID').val()
+            }
+        },
+        columnDefs: [
+            { orderable: false, targets: 0 }
+        ],
+        columns: [
+            {
+                "data": null,
+                "render": function (data, type, row) {
+                    return '<i class="ik ik-check"></i>';
+                }
+            },
+            { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+            { "data": "OrderNumber", "name": "OrderNumber", "autoWidth": true },
+            { "data": "CustomerName", "name": "CustomerName", "autoWidth": true },
+            { "data": "Qty", "name": "Qty", "autoWidth": true },
+            { "data": "UsedQty", "name": "UsedQty", "autoWidth": true },
+            { "data": "AvailableQty", "name": "AvailableQty", "autoWidth": true },
+            { "data": "ETA", "name": "ETA", "autoWidth": true },
+            { "data": "Remarks", "name": "Remarks", "autoWidth": true },
+        ]
+    });
+
+
+    $('#btnAdd').click(function () {
+        $('#formPRFModal').modal('show');
+        orderDataTable.columns.adjust();
+    });
+
+    $('#orderDataTable tbody').on('click', 'tr', function () {
+        var data = orderDataTable.row(this).data();
+
+            if ($(this).hasClass("row_selected")) {
+                $(this).removeClass('row_selected');
+
+                var numItems = $('.OrderId').length;
+                if (numItems == 0) {
+                    $('#detailTable tbody').empty();
+                } else {
+                    $('.OrderId').each(function (k) {
+                        if ($(this).val() == data.ID) {
+                            //remove row
+                            $('#detailTable tbody tr').eq(k).remove();
+                        }
+                    });
+                }
+
+            } else {
+                var html = '<tr>';
+                html += '<td>' + data.OrderNumber + '<input type="hidden" class="OrderId" value="' + data.ID + '"></td>';
+                html += '<td>' + data.CustomerName + '</td>';
+                html += '<td align="right">' + data.AvailableQty + '<input type="hidden" class="OrderQty" value="' + data.AvailableQty + '"></td>';
+                html += '<td>' + data.ETA + '</td>';
+                html += '<td>' + data.Remarks + '</td>';
+
+                //html += '<td><button class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</button></td>';
+                html += '</tr>';
+
+                $('#detailTable tbody').append(html);
+
+                $(this).addClass('row_selected');
+        }
+
+        var numItems = $('.OrderQty').length;
+        if (numItems > 0) {
+            let qtyTotal = 0;
+            $('.OrderQty').each(function (k) {
+                let qty = parseFloat($(this).val().replace(/\,/g, ''));
+                qtyTotal += qty;
+            });
+
+
+            let batchQty = Math.round(qtyTotal / totalRecipe);
+
+            if (batchQty == 0) {
+                batchQty += 1;
+            }
+
+            $('#BatchQty').val(batchQty);
+            $('#TotalQty').val(batchQty * totalRecipe);
+            $('#TotalOrderQty').val(qtyTotal);
+
+            loadCalculation();
+        }
+
+        $('#orderSection').show();
+        $('#qtySection').show();
+
+
+    });
+
+
+    //$('#orderDataTable tbody').on('click', 'tr', function () {
+    //    var data = orderDataTable.row(this).data();
+    //    let isValid = true;
+    //    var numItems = $('.OrderId').length;
+    //    if (numItems == 0) {
+    //        $('#detailTable tbody').empty();
+    //    } else {
+    //        $('.OrderId').each(function () {
+    //            if ($(this).val() == data.ID) {
+    //                isValid = false;
+    //                toastr.error('Order No. already exist.');
+    //                return;
+    //            }
+    //        });
+    //    }
+
+    //    if (isValid) {
+    //        var html = '<tr>';
+    //        html += '<td>' + data.OrderNumber + '<input type="hidden" class="OrderId" value="' + data.ID + '"></td>';
+    //        html += '<td>' + data.MaterialCode + '</td>';
+    //        html += '<td>' + data.CustomerName + '</td>';
+    //        html += '<td align="right">' + data.Qty + '</td>';
+    //        html += '<td>' + data.ETA + '</td>';
+    //        html += '<td>' + data.Remarks + '</td>';
+
+    //        html += '<td><button class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</button></td>';
+    //        html += '</tr>';
+
+    //        $('#detailTable tbody').append(html);
+    //        $('#formPRFModal').modal('hide');
+
+    //        $("#orderDataTable tbody tr").removeClass('row_selected');
+    //        $(this).addClass('row_selected');
+    //    }
+
+
+    //});
+
+
+    $("#btnSave").click(function () {
+        isValid = true;
+        //clearForm();
+        //if ($('#Code').val().length == 0) {
+        //    $('#Code').addClass('is-invalid');
+        //    $('#Code').next().html('This field is Required');
+        //    isValid = false;
+        //}
+        //if ($('#Name').val().length == 0) {
+        //    $('#Name').addClass('is-invalid');
+        //    $('#Name').next().html('This field is Required');
+        //    isValid = false;
+        //}
+        //if ($('#ProductNumber').val().length == 0) {
+        //    $('#ProductNumber').addClass('is-invalid');
+        //    $('#ProductNumber').next().html('This field is Required');
+        //    isValid = false;
+        //}
+
+        if (isValid) {
+            $('#saveModal').modal('show');
+        }
+    });
+
+    $('#btnYes').click(function () {
+        var date = $('#productionDate').val().split(' - ');
+        //var startDate = moment(date[0], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+        //var endDate = moment(date[1], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+
+        let i = 0;
+        let jsonObj = new Array();
+        $('.OrderId').each(function () {
+            jsonObj.push($('.OrderId').eq(i).val());
+            i++;
+        });
+
+        let productionDate = $('#productionDate').val();
+        let deliveryDate = $('#deliveryDate').val() == "" ? $('#productionDate').val() : $('#deliveryDate').val();
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/ProductionPlan/Create',
+            data: {
+                LineNumber : $('#LineType').val(),
+                ItemID: $('#ItemID').val(),
+                Qty: $('#BatchQty').val().replace(/\,/g, ''),
+                //Qty: jsonObj.length > 0 ? 0 : $('#BatchQty').val().replace(/\,/g, ''),
+                //StartDate: startDate,
+                //FinishDate: endDate,
+                ScheduleDate: productionDate != "" ? moment(productionDate, 'DD/MM/YYYY').format('YYYY-MM-DD') : "",
+                ETA: moment(deliveryDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                OrderIds: jsonObj
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (!isValid) {
+                    $.each(response.error_validation, function (index, value) {
+                        if (value.FieldName == 'ItemID') {
+                            $('#item_error').html(value.ErrorMessage);
+                        } else {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        }
+
+                    });
+                    notify("Warning", "warning", response.message);
+                    dissmissDialog();
+                } else {
+                    notify("Success", "success", response.message);
+                    clearValue();
+                    clearForm();
+                    dissmissDialog();
+                }
+            }
+        });
+    });
+
+    function dissmissDialog() {
+        $('#saveModal').modal('hide');
+    }
+
+    function clearValue() {
+        $('#detailTable tbody').empty();
+        $('#MaterialCode').val('');
+        $('#MaterialName').val('');
+        $('#ItemID').val("");
+        $('#MaterialCode').val("");
+        $('#MaterialName').val("");
+        $('#stockSection').hide();
+        $('#stockTable tbody tr').remove();
+        $('#BatchQty').val("");
+        $('#orderSection').hide();
+        $('#qtySection').hide();
+        $('#recipeSection').hide();
+        $('#recipeTable tbody tr').remove();
+        $('#deliveryDate').val("");
+        $('#productionDate').val("");
+    }
+
+    function clearForm() {
+        $('#productionDate').removeClass('is-invalid');
+        $('#productionDate').next().html('');
+        $('#productionDate').html('');
+
+        $('#BatchQty').removeClass('is-invalid');
+        $('#BatchQty').next().html('');
+        $('#BatchQty').html('');
+        $('#item_error').html('');
+        initLineType();
+
+        }
+
+        $(document).on('click', '.deleteDetail', function () {
+            var target = $(this).parent().parent().closest('tr');
+            $(target).remove();
+
+            var numItems = $('.OrderQty').length;
+            if (numItems > 0) {
+                let qtyTotal = 0;
+                $('.OrderQty').each(function (k) {
+                    let qty = parseFloat($(this).val().replace(/\,/g, ''));
+                    qtyTotal += qty;
+                });
+
+
+                let batchQty = Math.round(qtyTotal / totalRecipe);
+
+                if (batchQty == 0) {
+                    batchQty += 1;
+                }
+
+                $('#BatchQty').val(batchQty);
+
+                $('#TotalQty').val(batchQty * totalRecipe);
+                $('#TotalOrderQty').val(qtyTotal);
+            } else {
+                $('#orderSection').hide();
+                $('#qtySection').hide();
+                $('#BatchQty').val(0);
+                $('#TotalQty').val(0);
+            }
+        });
+
+
+</script>
+
+}

@@ -1,0 +1,714 @@
+﻿@{
+    ViewBag.Title = "Movement";
+    ViewBag.Module = "Movement";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered table-striped nowrap display" id="data_table" width="100%" cellspacing="0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>RAWMATE ID</th>
+                                        <th>RAWMATE CODE</th>
+                                        <th>RAWMATE NAME</th>
+                                        <th>QTY/FULL BAG</th>
+                                        <th>UOM</th>
+                                        <th>SELF LIFE</th>
+                                        <th>ORDERED QTY</th>
+                                        <th>TRANSPORTING MODE</th>
+                                        <th>MIN PURCHASE QTY</th>
+                                        <th>PLACE OF ORIGIN</th>
+                                        <th>MAKER NAME</th>
+                                        <th>SUPPLIER NAME</th>
+                                        <th>MSDS</th>
+                                        <th>SPECIFICATION</th>
+                                        <th>PO RATE</th>
+                                        <th>SPECGRAVITY</th>
+                                        <th>FACTOR</th>
+                                        <th>ONLINE</th>
+                                        <th>HYGROSCOPIC</th>
+                                        <th>START DATE</th>
+                                        <th>UPDATE DATE</th>
+                                        <th>SUPPLIER CODE</th>
+                                        <th>TYPE</th>
+                                        <th>AMAN</th>
+                                        <th>SAFETY STOCK</th>
+                                        <th>ARRIVAL DAYS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">RawMate Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailCode" id="detailCode" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <input type="hidden" class="form-control" name="detailIDHidden" id="detailIDHidden" />
+                        <input type="hidden" class="form-control" name="detailCodeHidden" id="detailCodeHidden" />
+                        <input type="hidden" class="form-control" name="detailNameHidden" id="detailNameHidden" />
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">RawMate Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailName" id="detailName" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Last Location</label>
+                            <div class="col-sm-8"><u><button id="btnSelectLastLocation"><i class="ik ik-eye"></i>&nbsp; Select Bin/Rack</button></u></div>
+                        </div>
+                        <div id="lastLocationForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Bin/Rack Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="LastLocationID" />
+                                    <input type="text" autocomplete="off" class="form-control" name="LastLocationCode" id="LastLocationCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Bin/Rack Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="LastLocationName" id="LastLocationName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Qty</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control number" name="detailQty" id="detailQty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+            <label class="col-form-label col-sm-4">Movement Name</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" class="form-control" name="Name" id="Name" />
+                <span class="help-block text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-form-label col-sm-4">Movement Description</label>
+            <div class="col-sm-8">
+                <input type="text" autocomplete="off" class="form-control" name="Description" id="Description" />
+                <span class="help-block text-danger"></span>
+            </div>
+        </div>
+        <br />
+        <br />*@
+                        @*<div class="form-group row">
+            <div class="col-md-12">
+                <label class="col-form-label"><b>Movement Details</b></label>
+                <button id="btnAdd" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Add Detail</button>
+            </div>
+            <br />
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                    <thead>
+                        <tr>
+                            <th>RM Code</th>
+                            <th>RM Name</th>
+                            <th>Qty</th>
+                            <th>Location</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5"><center><i>No Data</i></center></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "Movement")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <div class="float-right">
+                    <a href="#" class="btn btn-primary" id="btnSave"><i class="ik ik-save"></i>Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Form Modal -->
+@*<div class="modal" id="formModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Add Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive">
+                    <table class="table table-bordered table-striped nowrap display" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>RAWMATE ID</th>
+                                <th>RAWMATE CODE</th>
+                                <th>RAWMATE NAME</th>
+                                <th>QTY/FULL BAG</th>
+                                <th>UOM</th>
+                                <th>SELF LIFE</th>
+                                <th>ORDERED QTY</th>
+                                <th>TRANSPORTING MODE</th>
+                                <th>MIN PURCHASE QTY</th>
+                                <th>PLACE OF ORIGIN</th>
+                                <th>MAKER NAME</th>
+                                <th>SUPPLIER NAME</th>
+                                <th>MSDS</th>
+                                <th>SPECIFICATION</th>
+                                <th>PO RATE</th>
+                                <th>SPECGRAVITY</th>
+                                <th>FACTOR</th>
+                                <th>ONLINE</th>
+                                <th>HYGROSCOPIC</th>
+                                <th>START DATE</th>
+                                <th>UPDATE DATE</th>
+                                <th>SUPPLIER CODE</th>
+                                <th>TYPE</th>
+                                <th>AMAN</th>
+                                <th>SAFETY STOCK</th>
+                                <th>ARRIVAL DAYS</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">RawMate Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailCode" id="detailCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" class="form-control" name="detailIDHidden" id="detailIDHidden" />
+                <input type="hidden" class="form-control" name="detailCodeHidden" id="detailCodeHidden" />
+                <input type="hidden" class="form-control" name="detailNameHidden" id="detailNameHidden" />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">RawMate Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="detailName" id="detailName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number" name="detailQty" id="detailQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/Rack</label>
+                    <div class="col-sm-8"><u><a href="#" id="btnSelectBinRack"><i class="ik ik-eye"></i>&nbsp; Select Bin/Rack</a></u></div>
+                </div>
+                <div id="binRackForm">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Bin/Rack Code</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" id="BinRackID" />
+                            <input type="text" autocomplete="off" class="form-control" name="BinRackCode" id="BinRackCode" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Bin/Rack Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="BinRackName" id="BinRackName" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddDetail"><i class="ik ik-plus"></i>Add Detail</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="modal" id="formLastLocationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select BinRack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="LastLocationDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>BARCODE</th>
+                                <th>BIN/RACK NAME</th>
+                                <th>WAREHOUSE</th>
+                                <th>AREA</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveLastLocation"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formNewLocationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select BinRack</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="NewLocationDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>BARCODE</th>
+                                <th>BIN/RACK NAME</th>
+                                <th>WAREHOUSE</th>
+                                <th>AREA</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveNewLocation"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let sourceID = 'Supplier';
+        $('#lastLocationForm').hide();
+        $('#newLocationForm').hide();
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        $('#btnSave').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            let i = 0;
+            let jsonObj = new Array();
+            $('.rawMateID').each(function () {
+                item = {}
+                item ["RawMaterialID"] = $('.rawMateID').eq(i).val();
+                item ["NewLocation"] = $('.binRackID').eq(i).val();
+                item ["BinRackID"] = $('.binRackID').eq(i).val();
+                item ["Qty"] = $('.qty').eq(i).val().replace(/\,/g, '');
+
+                jsonObj.push(item);
+                i++;
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Movement/Create',
+                data: {
+                    Name: $('#Name').val(),
+                    Description: $('#Description').val(),
+                    Details: jsonObj
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        dissmissDialog();
+                        window.location.replace('@ViewBag.BaseUrl/Movement/Index');
+                    }
+                }
+            });
+        });
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "250px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/RawMaterial/Datatable"
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "visible" : false },
+                { "data": "Code", "name": "Code" },
+                { "data": "Name", "name": "Name" },
+                { "data": "Qty", "name": "Qty" },
+                { "data": "UoM", "name": "UoM" },
+                { "data": "ShelfLife", "name": "ShelfLife" },
+                { "data": "OrderedQty", "name": "OrderedQty" },
+                { "data": "TransportingMode", "name": "TransportingMode" },
+                { "data": "MinPurchaseQty", "name": "MinPurchasingQty" },
+                { "data": "Origin", "name": "Origin" },
+                { "data": "Maker", "name": "Maker" },
+                { "data": "Vendor", "name": "Vendor" },
+                { "data": "Msds", "name": "Msds" },
+                { "data": "Specification", "name": "Specification" },
+                { "data": "PoRate", "name": "PoRate" },
+                { "data": "SpecGravity", "name": "SpecGravity" },
+                { "data": "Factor", "name": "Factor" },
+                { "data": "Online", "name": "Online" },
+                { "data": "Hygroscopic", "name": "Hygroscopic" },
+                { "data": "StartDate", "name": "StartDate" },
+                { "data": "UpdateDate", "name": "UpdateDate" },
+                { "data": "SupplierCode", "name": "SupplierCode" },
+                { "data": "Type", "name": "Type" },
+                { "data": "Aman", "name": "Aman" },
+                { "data": "SafetyStock", "name": "SafetyStock" },
+                { "data": "ArrivalDays", "name": "ArrivalDays" }
+            ]
+        });
+
+        //$('#btnAdd').click(function () {
+        //    $('#formModal').modal('show');
+        //    table.columns.adjust();
+        //    $('#data_table tbody tr').removeClass('row_selected');
+        //    $('#detailIDHidden').val('');
+        //    $('#detailCodeHidden').val('');
+        //    $('#detailNameHidden').val('');
+        //    $('#detailName').val('');
+        //    $('#detailCode').val('');
+        //    $('#detailQty').val('0');
+        //    $('#detailETA').val('');
+
+        //    $('#detailQty').next().html('');
+        //    $('#detailQty').removeClass('is-invalid');
+        //    $('#detailETA').next().html('');
+        //    $('#detailETA').removeClass('is-invalid');
+        //});
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('.number').inputmask("9{*}", { "placeholder": "" });
+        //$('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+
+         $('#data_table tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            $('#detailIDHidden').val(data.ID);
+            $('#detailCodeHidden').val(data.Code);
+            $('#detailCode').val(data.Code);
+            $('#detailName').val(data.Name);
+            $('#detailNameHidden').val(data.Name);
+
+            $('#data_table tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        //$('#btnAddDetail').click(function () {
+        //    var rawMateCode = $('#detailCodeHidden').val();
+        //    var rawMateID = $('#detailIDHidden').val();
+        //    var rawMateName = $('#detailNameHidden').val();
+        //    var qty = $('#detailQty').val();
+        //    var binRackID = $('#BinRackID').val();
+        //    var binRackName = $('#BinRackName').val();
+
+        //    var isValid = true;
+        //    var numItems = $('.rawMateCode').length;
+        //    if (numItems == 0) {
+        //        $('#detailTable tbody').empty();
+        //    } else {
+        //        $('.rawMateID').each(function () {
+        //            if (rawMateID == $(this).val()) {
+        //                isValid = false;
+        //                toastr.error('Cannot Add Same Raw Material.');
+        //                return;
+        //            }
+        //        });
+        //    }
+
+        //    if (qty == '' || qty == '0') {
+        //        $('#detailQty').next().html('This field is Required');
+        //        $('#detailQty').addClass('is-invalid');
+        //        isValid = false;
+        //    } else {
+        //        $('#detailQty').next().html('');
+        //        $('#detailQty').removeClass('is-invalid');
+        //    }
+
+        //    if (binRackID == '') {
+        //        $('#BinRackID').next().html('This field is Required');
+        //        $('#BinRackID').addClass('is-invalid');
+        //        isValid = false;
+        //    } else {
+        //        $('#BinRackID').next().html('');
+        //        $('#BinRackID').removeClass('is-invalid');
+        //    }
+
+        //    if (isValid) {
+        //        var html = '<tr>';
+        //        html += '<td>' + rawMateCode + '<input type="hidden" class="rawMateCode" value="' + rawMateCode + '"></td>';
+        //        html += '<input type="hidden" class="rawMateID" value="' + rawMateID + '">';
+        //        html += '<td>' + rawMateName + '</td>';
+        //        html += '<td>' + qty + '<input type="hidden" class="qty" value="' + qty.replace(/\,/g, '') + '"></td>';
+        //        html += '<td>' + binRackName + '<input type="hidden" class="binRackID" value="' + binRackID + '"></td>';
+        //        html += '<td><button class="btn btn-danger deleteDetail"><i class="ik ik-trash"></i>Remove</button></td>';
+        //        html += '</tr>';
+        //        $('#detailTable tbody').append(html);
+        //        $('#formModal').modal('hide');
+        //    }
+        //});
+
+        //$(document).on('click', '.deleteDetail', function () {
+        //    console.log('delete clicked');
+        //    var target = $(this).parent().parent().closest('tr');
+        //    $(target).remove();
+
+        //    var numItems = $('.rawMateCode').length;
+        //    if (numItems == 0) {
+        //        $('#detailTable tbody').append('<tr><td colspan="5"><center><i>No Data</i></center></td></tr>');
+        //    }
+
+        //});
+
+        $('#btnSelectLastLocation').click(function () {
+            $('#LastLocationDataTable tbody tr').removeClass('row_selected');
+            $('#formLastLocationModal').modal('show');
+        });
+
+        $('#btnSelectNewLocation').click(function () {
+            $('#NewLocationDataTable tbody tr').removeClass('row_selected');
+            $('#formNewLocationModal').modal('show');
+        });
+
+        var LastLocationDatatable = $('#LastLocationDatatable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/DatatableByWarehouse?warehouseId=WHxd92dec7c36974cbb9c9d398a69d62052"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        var NewLocationDatatable = $('#NewLocationDatatable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/DatatableByWarehouse?warehouseId=WHxd92dec7c36974cbb9c9d398a69d62052"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#LastLocationDatatable tbody').on('click', 'tr', function () {
+            var data = LastLocationDatatable.row(this).data();
+            $('#LastLocationID').val(data.ID);
+            $('#LastLocationName').val(data.Name);
+            $('#LastLocationCode').val(data.Code);
+            $('#formLastLocationModal').modal('hide');
+            $('#LastLocationForm').show();
+
+            $('#LastLocationDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        $('#NewLocationDatatable tbody').on('click', 'tr', function () {
+            var data = NewLocationDatatable.row(this).data();
+            $('#NewLocationID').val(data.ID);
+            $('#NewLocationName').val(data.Name);
+            $('#NewLocationCode').val(data.Code);
+            $('#formNewLocationModal').modal('hide');
+            $('#NewLocationForm').show();
+
+            $('#NewLocationDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+    </script>
+}

@@ -1,0 +1,526 @@
+﻿@{
+    ViewBag.Title = "Transfer";
+    ViewBag.Module = "Transfer";
+}
+@section custom_css {
+    @Scripts.Render("~/Content/plugins/vue.min.js")
+    @Scripts.Render("~/Content/plugins/axios.min.js")
+
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+
+    <style>
+        table#table-transfer thead tr th {
+            font-size: 12px;
+        }
+
+        table#table-transfer tbody tr td button.btn-lookup-item {
+            padding: 6px 8px !important;
+        }
+
+            table#table-transfer tbody tr td button.btn-lookup-item i {
+                margin-right: 0 !important;
+            }
+
+        table#table-transfer tbody tr td.colom-qty {
+            width: 80px;
+            background: #fff !important;
+        }
+
+            table#table-transfer tbody tr td.colom-qty input {
+                width: 80px;
+                background: #fff !important;
+                border: 0;
+                border-bottom: 1px dashed #eee !important;
+                text-align: right;
+            }
+
+        table#table-transfer tbody tr td.colom-number {
+            text-align: right;
+        }
+
+        table#table-transfer tbody tr td {
+            padding: 5px;
+        }
+
+            table#table-transfer tbody tr td span.binrack-area {
+                font-weight: bold;
+            }
+
+            table#table-transfer tbody tr td span.material-code {
+                font-weight: bold;
+                font-size: 11px;
+            }
+
+            table#table-transfer tbody tr td span.material-name {
+                font-style: italic;
+                font-size: 10px;
+            }
+
+            table#table-transfer tbody tr td span.binrack-area {
+                font-weight: bold;
+                font-size: 11px;
+            }
+
+            table#table-transfer tbody tr td span.binrack-name {
+                font-style: italic;
+                font-size: 10px;
+            }
+    </style>
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Form Input</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div id="app" class="row">
+
+
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Transfer No</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" readonly="" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Date</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" readonly="" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Request By</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" readonly="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="padding: 10px;">
+                <div class="dt-responsive col-md-12" style="padding: 0;">
+                    <table id="table-transfer" class="table table-bordered table-striped nowrap" style="margin-bottom: 0;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th style="width: 50px;">NO</th>
+                                <th colspan="3">MATERIAL SOURCE</th>
+
+                                <th colspan="3">QTY</th>
+
+                                <th colspan="2">MATERIAL TARGET</th>
+
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th style="border-right: 0;">MATERIAL</th>
+                                <th style="width: 50px; border-left: 0;"></th>
+                                <th>BIN/RACK</th>
+
+                                <th>STOCK</th>
+                                <th>UOM</th>
+                                <th>TRANSFER</th>
+
+                                <th style="border-right: 0;">MATERIAL</th>
+                                <th style="width: 50px; border-left: 0;"></th>
+
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(detail, index) in form.Details">
+                                <td class="colom-number">{{ detail.SequenceNo }}</td>
+                                <td style="border-right: 0;">
+                                    <span class="material-code">{{ detail.ItemSource.Barcode }}</span><br />
+                                    <span class="material-name">{{ detail.ItemSource.MaterialCode }} - {{ detail.ItemSource.MaterialName }}</span>
+                                </td>
+                                <td style="border-left: 0;"><button type="button" v-on:click="openModalItem(detail.SequenceNo, 'FROM')" class="btn btn-xs btn-secondary btn-lookup-item"><i class="ik ik-plus"></i></button></td>
+                                <td>
+                                    <span class="binrack-area">{{ detail.ItemSource.BinRackArea }}</span>
+                                    <br />
+                                    <span class="binrack-name">{{ detail.ItemSource.BinRack }}</span>
+                                </td>
+                                <td class="colom-number">{{ detail.ItemSource.Quantity }}</td>
+                                <td>{{ detail.ItemSource.Uom }}</td>
+                                <td class="colom-qty"><input type="number" v-model="detail.QtyTransfer" class="form-control" /></td>
+                                <td style="border-right: 0;">
+                                    <span class="material-code">{{ detail.ItemTarget.MaterialCode }}</span><br />
+                                    <span class="material-name">{{ detail.ItemTarget.MaterialName }}</span>
+                                </td>
+                                <td style="border-left: 0;"><button type="button" v-on:click="openModalItemTarget(detail.SequenceNo, 'TO')" class="btn btn-xs btn-secondary btn-lookup-item"><i class="ik ik-plus"></i></button></td>
+                                <td style="width: 50px;" class="table-action"><button v-on:click="deleteRow(detail.SequenceNo)" class="btn btn-xs" data-row="0"><i class="fa fa-trash text-danger"></i></button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td colspan="9"><button type="button" v-on:click="newRow" id="btn-add-item-prbox" class="btn btn-xs btn-info"><i class="fa fa-plus"></i> Add New Row</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <button v-on:click="saveTransfer" class="btn btn-primary float-right"><i class="fa fa-file"></i> Save & Transfer</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="form-modal-items" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalTitle">Form List Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <select v-model="form_search.Source" class="form-control">
+                                <option value="">Select Source</option>
+                                <option value="RM">Raw Material</option>
+                                <option value="SFG">Semi Finish Good</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select v-model="form_search.BinRackAreaID" class="form-control">
+                                <option>Select Area</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <select v-model="form_search.BinRackID" class="form-control">
+                                <option>Select Bin/Rack</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input type="text" v-model="form_search.Name" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <button type="button" v-on:click="searchItems" class="btn btn-xs btn-outline-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <table class="table table-sm table-bordered table-striped nowrap" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Barcode</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>AREA</th>
+                                <th>RACK</th>
+                                <th>QTY</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in items">
+                                <td>{{ item.Barcode }}</td>
+                                <td>{{ item.MaterialCode }}</td>
+                                <td>{{ item.MaterialName }}</td>
+                                <td>{{ item.BinRackArea }}</td>
+                                <td>{{ item.BinRack }}</td>
+                                <td>{{ item.Quantity }}</td>
+                                <td><button v-on:click="selectItem(item)" type="button" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ik ik-x-circle"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="form-modal-target" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalTitle">Form List Item Target</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <select v-model="form_search.Source" class="form-control">
+                                <option value="">Select Source</option>
+                                <option value="RM">Raw Material</option>
+                                <option value="SFG">Semi Finish Good</option>
+                            </select>
+                        </div>
+                        <div class="col">
+                            <input type="text" v-model="form_search.Name" class="form-control" placeholder="search by name" />
+                        </div>
+                        <div class="col">
+                            <button type="button" v-on:click="searchItemsTarget" class="btn btn-xs btn-outline-primary">Search</button>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <table class="table table-sm table-bordered table-striped nowrap" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>QTY/Bag</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in itemsTarget">
+                                <td>{{ item.MaterialCode }}</td>
+                                <td>{{ item.MaterialName }}</td>
+                                <td>{{ item.QtyPerBag }}</td>
+                                <td><button v-on:click="selectItemTarget(item)" type="button" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="ik ik-x-circle"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+    @Scripts.Render("~/Content/plugins/sweetalert.min.js")
+
+    <script>
+
+
+
+
+        var uri_transfer_list = '@Url.Action("Index", "Transfer")';
+
+        var app = new Vue({
+
+            el: '#app',
+            data: {
+                dataList: [],
+                target_no: 0,
+                target_set: 'FROM', // FROM/TO
+                form_search: {
+                    Source: '',
+                    BinRackID: '',
+                    Name: '',
+                    ExcludeItems: [],
+                    current_page: 0,
+                    total_page: 0,
+                    data : []
+                },
+                items: [],
+                itemsTarget: [],
+                form: {
+                    is_open: false,
+                    PRBoxGroupCode: '',
+                    PRBoxGroupDescription: '',
+                    Details: []
+                },
+                is_can_delete: false
+            },
+            mounted: function () {
+                this.form.Details.push(
+                    {
+                        SequenceNo: this.form.Details.length + 1,
+                        ItemSource: { Barcode: '', MaterialName: '', MaterialCode: '', BinRackArea: '', BinRack: '', Quantity: 0 },
+                        ItemTarget: { Barcode: '', MaterialName: '', MaterialCode: '', BinRackArea: '', BinRack: '', Quantity: 0 },
+                        Qty: 0
+                    }
+                );
+            },
+            methods: {
+                openModalItem: function (no, target) {
+                    this.target_no = no;
+                    this.target_set = target;
+                    this.items = [];
+
+                    $('#form-modal-items').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                },
+                searchItems: function () {
+
+                    preloader.show();
+                    axios.post(URL_API + "api/transfer/items", this.form_search)
+                        .then(response => {
+                            this.items = response.data;
+                            preloader.hide();
+                        }).catch(error => {
+                            let message = error.message;
+                            if (error.response !== null && error.response.data != null && error.response.data.Message != null) {
+                                message = error.response.data.Message;
+                            }
+
+                            swal("Failed Save!", message, "error");
+                            preloader.hide();
+                        });
+                },
+                selectItem: function (item) {
+
+                    for (var i = 0; i < this.form.Details.length; i++) {
+                        var itemDetail = this.form.Details[i];
+                        if (itemDetail.SequenceNo == this.target_no) {
+
+                            if (this.target_set === "FROM") {
+                                this.form.Details[i].ItemSource = item;
+                            } else {
+                                this.form.Details[i].ItemTarget = item;
+                            }
+                            $('#form-modal-items').modal('hide');
+                        }
+                    }
+
+                },
+
+                // Item Target
+                openModalItemTarget: function (no, target) {
+                    this.target_no = no;
+                    this.target_set = target;
+                    this.itemsTarget = [];
+
+                    $('#form-modal-target').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                },
+                searchItemsTarget: function () {
+
+                    preloader.show();
+                    axios.post(URL_API + "api/transfer/items-target", this.form_search)
+                        .then(response => {
+                            this.itemsTarget = response.data;
+                            preloader.hide();
+                        }).catch(error => {
+                            let message = error.message;
+                            if (error.response !== null && error.response.data != null && error.response.data.Message != null) {
+                                message = error.response.data.Message;
+                            }
+
+                            swal("Failed Save!", message, "error");
+                            preloader.hide();
+                        });
+                },
+                selectItemTarget: function (item) {
+
+                    for (var i = 0; i < this.form.Details.length; i++) {
+                        var itemDetail = this.form.Details[i];
+                        if (itemDetail.SequenceNo == this.target_no) {
+
+                            if (this.target_set === "FROM") {
+                                this.form.Details[i].ItemSource = item;
+                                $('#form-modal-items').modal('hide');
+                            } else {
+                                this.form.Details[i].ItemTarget = item;
+                                $('#form-modal-target').modal('hide');
+                            }
+                            
+                        }
+                    }
+
+                },
+
+
+                newRow: function () {
+                    this.form.Details.push(
+                        {
+                            SequenceNo: this.form.Details.length + 1,
+                            ItemSource: { Barcode: '', MaterialName: '', MaterialCode: '', BinRackArea: '', BinRack: '', Quantity: 0 },
+                            ItemTarget: { Barcode: '', MaterialName: '', MaterialCode: '', BinRackArea: '', BinRack: '', Quantity: 0 },
+                            Qty: 0
+                        }
+                    );
+                },
+                deleteRow: function (no) {
+                    var newNo = 1;
+                    var details = [];
+                    for (var i = 0; i < this.form.Details.length; i++) {
+                        var item = this.form.Details[i];
+                        if (no !== item.SequenceNo) {
+                            item.SequenceNo = newNo;
+                            details.push(item);
+                            newNo++;
+                        }
+                    }
+                    this.form.Details = details;
+                },
+                saveTransfer: function () {
+                    const headers = {
+                        "Token": TOKEN_USER
+                    };
+                    preloader.show();
+                    axios.post(URL_API + 'api/transfer', this.form, { headers })
+                        .then(response => {
+                            preloader.hide();
+                            swal("Success Save!", response.data, "success").then((value) => {
+                                preloader.show();
+                                window.location.href = uri_transfer_list;
+                            });
+                        })
+                        .catch(error => {
+                            let message = error.message;
+                            if (error.response !== null && error.response.data != null && error.response.data.Message != null) {
+                                message = error.response.data.Message;
+                            }
+
+                            swal("Failed Save!", message, "error");
+                            preloader.hide();
+                        });
+                }
+            }
+        });
+
+
+    </script>
+}

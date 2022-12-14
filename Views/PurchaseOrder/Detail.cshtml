@@ -1,0 +1,246 @@
+﻿@{
+    ViewBag.Title = "Purchase Order";
+    ViewBag.Module = "PurchaseOrder";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card form-group row">
+            <div class="card-body">
+                <div class="col-sm-12">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">PO Number</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailPONumber" id="detailPONumber" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">PO Date</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailPODate" id="detailPODate" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">ETA</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailETA" id="detailETA" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">ATA</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailATA" id="detailATA" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Supplier Code</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailSupplierCode" id="detailSupplierCode" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Supplier Name</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailSupplierName" id="detailSupplierName" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Status</label>
+                        <div class="col-sm-8">
+                            <input type="text" autocomplete="off" class="form-control" name="detailStatus" id="detailStatus" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4"><b>Material Request Item</b></label>
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                <thead>
+                                    <tr>
+                                        <th>RM Code</th>
+                                        <th>RM Name</th>
+                                        <th>Requested QTY</th>
+                                        <th>Ordered QTY</th>
+                                        <th>QTY/Full Bag</th>
+                                        <th>Full Bag</th>
+                                        <th>Remainder Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@ViewBag.BaseUrl/MaterialRequest/Edit?id=@ViewBag.Param2" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <div class="float-right" id="actionForm">
+                    <a href="#" class="btn btn-danger" id="btnReject"><i class="ik ik-x"></i>Reject</a> &nbsp;
+                    <a href="#" class="btn btn-success" id="btnApprove"><i class="ik ik-check"></i>Approve</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+                <input type="hidden" id="method" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js
+{
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        $('#actionForm').hide();
+        initMaterialRequest();
+        function initMaterialRequest() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/PurchaseOrder/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.data;
+                        $('#detailPONumber').val(data.PONumber);
+                        $('#detailPODate').val(data.PODate);
+                        $('#detailSupplierCode').val(data.SupplierCode);
+                        $('#detailSupplierName').val(data.SupplierName);
+                        $('#detailETA').val(data.ETA);
+                        $('#detailStatus').val(data.TransactionStatus);
+
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#actionForm').show();
+                        } else {
+                            $('#actionForm').hide();
+                        }
+
+                        let body = '';
+                        $.each(data.Details, function (index, value) {
+                            body += '<tr>';
+                            body += '<td>' + value.RawMaterialCode + '</td>';
+                            body += '<td>' + value.RawMaterialName + '</td>';
+                            body += '<td>' + value.RequestedQty + '</td>';
+                            body += '<td>' + value.OrderQty + '</td>';
+                            body += '<td>' + value.FullbagQty + '</td>';
+                            body += '<td>' + value.Fullbag + '</td>';
+                            body += '<td>' + value.RemainderQty + '</td>';
+                            body += '</tr>';
+                        });
+                        $('#detailTable tbody').append(body);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        };
+
+        $('#btnReject').click(function () {
+            $('#method').val('Cancel');
+            $('#confirmationModalTitle').html('Reject Purchase Order');
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnApprove').click(function () {
+            $('#method').val('Approve');
+            $('#confirmationModalTitle').html('Approve Purchase Order');
+            $('#saveModal').modal('show');
+        });
+
+        $('#btnYes').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/PurchaseOrder/' + $('#method').val(),
+                data: {
+                    MaterialRequestID: '@ViewBag.Param2',
+                    PurchaseOrderID: '@ViewBag.Param',
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        dissmissDialog();
+                        toastr.success(response.message);
+                        var status = '';
+                        if ($('#method').val() == 'Cancel') {
+                            $('#detailStatus').val('CANCELLED');
+                        } else {
+                            $('#detailStatus').val('APPROVED');
+                        }
+                        $('#actionForm').hide();
+                    } else {
+                        dissmissDialog();
+                        toastr.error(response.message);
+                    }
+                }
+            });
+        });
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        };
+    </script>
+
+}

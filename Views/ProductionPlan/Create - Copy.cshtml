@@ -1,0 +1,769 @@
+﻿@{
+    ViewBag.Title = "Production Plan";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Create</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Create @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6><b>Please Choose Order</b></h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="dt-responsive col-md-12">
+                            <a class="btn btn-primary float-right" id="btnAddPRF" href="#"><i class="ik ik-plus"></i>Add Production Request Form</a>
+                            <table class="table table-bordered table-striped nowrap" id="orderDataTable" width="100%" cellspacing="0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>ID</th>
+                                        <th>ORDER NO</th>
+                                        <th>PRODUCT NO</th>
+                                        <th>CUSTOMER</th>
+                                        <th>QTY</th>
+                                        <th>HOPE SHIP DATE</th>
+                                        <th>REMARKS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div id="orderDetail">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Order No</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="orderDetailID" class="form-control" />
+                                    <input type="text" autocomplete="off" id="orderDetailNo" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Product No</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="orderDetailProductNo" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Customer</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="orderDetailCustomer" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Requested Qty</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="orderDetailQty" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Hope Ship Date</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="orderDetailETA" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Remarks</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="orderDetailRemarks" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Production Date</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" id="productionDate" />
+                                </div>
+                            </div>
+                            @*<div class="form-group row">
+                                    <label class="col-form-label col-sm-4">Attachment</label>
+                                    <div class="col-sm-8">
+                                        @Html.TextBox("Attachment", "09-07-2020 20:00", new { @class = "form-control" })
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-form-label col-sm-4"></label>
+                                    <div class="col-sm-8">
+                                        <input type="file" />
+                                        <span class="help-block text-danger"></span>
+                                    </div>
+                                </div>*@
+                            <br /><br />
+                            <div class="dt-responsive col-md-12">
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="rmTable">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th rowspan="2">RM Code</th>
+                                            <th rowspan="2">RM Name</th>
+                                            <th rowspan="2">UoM</th>
+                                            <th colspan="4"><center>Recipe</center></th>
+                                            <th rowspan="2">Total Batch</th>
+                                            <th colspan="4"><center>Calculation</center></th>
+                                            <th rowspan="2">Available Qty</th>
+                                            <th rowspan="2">Outstanding Qty</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Qty/FullBag</th>
+                                            <th>FullBag</th>
+                                            <th>Remainder</th>
+                                            <th>Qty</th>
+                                            <th>Qty/FullBag</th>
+                                            <th>FullBag</th>
+                                            <th>Remainder</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "ProductionPlan")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="prfModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-prf modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Add Production Request Form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body modal-prf-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedNumber" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Issued Date</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="IssuedDate" class="form-control datepicker" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Order No</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailOrderNo" id="detailOrderNo" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Formula</label>
+                            <div class="col-sm-8">
+                                <u><a href="#" id="btnSelectFormula"><i class="ik ik-eye"></i>&nbsp; Select Formula</a></u>
+                            </div>
+                        </div>
+                        <div id="formulaForm">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Recipe Code</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailRecipeCode" id="detailRecipeCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Product Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailProductNumber" id="detailProductNumber" readonly />
+                                    <input type="hidden"id="detailFormulaID" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Customer</label>
+                            <div class="col-sm-8">
+                                <u><a href="#" id="btnSelectCustomer"><i class="ik ik-eye"></i>&nbsp; Select Customer</a></u>
+                            </div>
+                        </div>
+                        <div id="customerForm">
+                            <input type="hidden" id="detailCustomerID" />
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Customer Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" class="form-control" name="detailCustomerName" id="detailCustomerName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Qty (KG)</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailQty" id="detailQty" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">ETA</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control datepicker" name="detailETA" id="detailETA" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Remarks</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" class="form-control" name="detailRemarks" id="detailRemarks" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSavePRF" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="formFormulaModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Formula</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="formulaDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>RECIPE CODE</th>
+                                <th>PRODUCT NUMBER</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Select Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="customerDataTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>CUS CODE</th>
+                                <th>CUSTOMER NAME</th>
+                                <th>ABBREVIATION</th>
+                                <th>CLASSIFICATION</th>
+                                <th>ADDRESS</th>
+                                <th>DEVELOPMENT DATE</th>
+                                <th>TELEPHONE</th>
+                                <th>CONTACT</th>
+                                <th>CURRENCY</th>
+                                <th>STATUS</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>MODIFIED BY</th>
+                                <th>MODIFIED ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/daterangepicker/daterangepicker.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        /* Important part */
+        .modal-prf{
+            overflow-y: initial !important
+        }
+        .modal-prf-body{
+            height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/daterangepicker.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        $('#orderDetail').hide();
+        $('#productionDate').daterangepicker({
+            timePicker: true,
+            timePicker24Hour: true,
+            timePickerIncrement: 5,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(1, 'hour'),
+            locale: {
+                format: 'DD/MM/YYYY HH:mm'
+            }
+        });
+
+        function showOrderDetail(id, orderNo, productNo, customer, qty, eta, remarks) {
+            $('#orderDetail').show();
+            $('#orderDetailID').val(orderNo);
+            $('#orderDetailNo').val(orderNo);
+            $('#orderDetailProductNo').val(productNo);
+            $('#orderDetailQty').val(qty);
+            $('#orderDetailCustomer').val(customer);
+            $('#orderDetailETA').val(eta);
+            $('#orderDetailRemarks').val(remarks);
+
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionPlan/GetOrderNumberDetail?id=' + id,
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#rmTable tbody').empty();
+                        let body = '';
+                        $.each(response.data, function (index, value) {
+                            body += '<tr>';
+                            body += '<td>' + value.RawMaterialCode + '</td>';
+                            body += '<td>' + value.RawMaterialName + '</td>';
+                            body += '<td>' + value.UoM + '</td>';
+                            body += '<td>' + value.RequestedQty + '</td>';
+                            body += '<td>' + value.FullBagQty + '</td>';
+                            body += '<td>' + value.FullBag + '</td>';
+                            body += '<td>' + value.RemainderQty + '</td>';
+                            body += '<td>' + value.ProductionQty + '</td>';
+                            body += '<td>' + value.TotalQty + '</td>';
+                            body += '<td>' + value.FullBagQty + '</td>';
+                            body += '<td>' + value.TotalFullBag + '</td>';
+                            body += '<td>' + value.TotalRemainderQty + '</td>';
+                            body += '<td>' + value.AvailableQty + '</td>';
+                            body += '<td>' + value.LackingQty + '</td>';
+                            body += '</tr>';
+                        });
+                        body += '<tr><th colspan="3">Total Ton</th><th>' + response.ton + ' t</th><th colspan="4"></th><th>' + response.totalTon + ' t</th><th colspan="6"></th></tr>';
+                        $('#rmTable tbody').append(body);
+                        rmTable.columns.adjust();
+                    }
+                }
+            });
+        }
+
+        var rmTable = $('#rmTable').DataTable({
+            processing: true,
+            scrollX: true,
+            searching: false,
+            paging: false,
+            info: false,
+            bSort: false,
+        });
+
+        var orderTable = $('#orderDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "250px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/ProductionPlan/DatatableOrderNumber"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", visible: false },
+                { "data": "OrderNumber" },
+                { "data": "ProductNumber" },
+                { "data": "CustomerName" },
+                { "data": "Qty" },
+                { "data": "ETA" },
+                { "data": "Remarks" }
+            ]
+        });
+        orderTable.columns.adjust();
+
+        $('#orderDataTable tbody').on('click', 'tr', function () {
+            var data = orderTable.row(this).data();
+            showOrderDetail(data.ID, data.OrderNumber, data.ProductNumber, data.CustomerName, data.Qty, data.ETA, data.Remarks);
+            $('#orderDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        $('#btnSave').click(function() {
+            clearForm();
+            isValid = true;
+            if ($('#productionDate').val().length == 0) {
+                $('#productionDate').addClass('is-invalid');
+                $('#productionDate').next().html('This field is Required');
+                isValid = false;
+            }
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        function clearForm() {
+            $('#productionDate').removeClass('is-invalid');
+            $('#productionDate').html('');
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('#btnYes').click(function () {
+            var date = $('#productionDate').val().split(' - ');
+            var startDate = moment(date[0], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+            var endDate = moment(date[1], 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm');
+
+            $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/@ViewBag.Module/Create',
+                    data: {
+                        OrderNumber: $('#detailDetailOrderNo').val(),
+                        Attachment: 'tes.txt',
+                        StartDate: startDate,
+                        ClosedDate: endDate,
+                        OrderNumber: $('#orderDetailID').val()
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                                toastr.error(value.ErrorMessage);
+                            });
+                            toastr.error(response.message);
+                            dissmissDialog();
+                        } else {
+                            clearValue();
+                            clearForm();
+                            dissmissDialog();
+                            showFlash();
+                        }
+                    }
+                });
+        });
+
+        function clearValue() {
+            orderTable.ajax.reload();
+            $('#rmTable tbody').empty();
+            $('#orderDetail').hide();
+        }
+
+        $('#btnAddPRF').click(function () {
+            clearValuePRF();
+            $('#prfModal').modal('show');
+        });
+
+        $('#formulaForm').hide();
+        $('#customerForm').hide();
+
+        $('#btnAddDetailPRF').click(function () {
+            $('#formModal').modal('show');
+        });
+
+        $(document).on('click', '.deleteDetail', function () {
+            console.log('delete clicked');
+            var target = $(this).parent().parent().closest('tr');
+            $(target).remove();
+        });
+
+        $("#btnSavePRF").click(function () {
+            let i = 0;
+            let jsonObj = new Array();
+            item = {}
+            item ["OrderNumber"] = $('#detailOrderNo').val();
+            item ["FormulaID"] = $('#detailFormulaID').val();
+            item ["CustomerID"] = $('#detailCustomerID').val();
+            item["Qty"] = $('#detailQty').val();
+            var eta = moment($('#detailETA').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+            item["ETA"] = eta;
+            item["Remarks"] = $('#detailRemarks').val();
+            jsonObj.push(item);
+
+            var issuedDate = moment($('#IssuedDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/ProductionRequest/Create',
+                data: {
+                    IssuedNumber: $('#IssuedNumber').val(),
+                    IssuedDate: issuedDate,
+                    Details: jsonObj
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        clearValuePRF();
+                        //clearForm();
+                        dissmissDialog();
+                        showFlash();
+                        $('#prfModal').modal('hide');
+                        orderTable.ajax.reload();
+                    }
+                }
+            });
+        });
+
+        function clearValuePRF() {
+            $('#IssuedNumber').val('');
+            $('#IssuedDate').val('');
+            $('#detailOrderNo').val('');
+            $('#detailQty').val('0');
+            $('#detailRemarks').val('');
+            $('#formulaForm').hide();
+            $('#detailProductNumber').val('');
+            $('#detailFormulaID').val('');
+            $('#detailRecipeCode').val('');
+            $('#customerForm').hide();
+            $('#detailCustomerName').val('');
+            $('#detailCustomerID').val('');
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            startDate: '+0d',
+        });
+
+        var formulaDataTable = $('#formulaDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Formula/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "ProductNumber", "name": "ProductNumber", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true }
+            ]
+        });
+
+        $('#btnSelectFormula').click(function () {
+            $('#formFormulaModal').modal('show');
+            formulaDataTable.columns.adjust();
+        });
+
+        $('#formulaDataTable tbody').on('click', 'tr', function () {
+            var data = formulaDataTable.row(this).data();
+            $('#detailProductNumber').val(data.ProductNumber);
+            $('#detailFormulaID').val(data.ID);
+            $('#detailRecipeCode').val(data.Code);
+            $('#formulaForm').show();
+            $('#formFormulaModal').modal('hide');
+        });
+
+        var customerDataTable = $('#customerDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Customer/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "ID", "name": "ID", "autoWidth": true, visible: false },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "Abbreviation", "name": "Abbreviation", "autoWidth": true },
+                { "data": "ClassificationName", "name": "ClassificationName", "autoWidth": true },
+                { "data": "Address", "name": "Address", "autoWidth": true },
+                { "data": "DevelopmentDate", "name": "DevelopmentDate", "autoWidth": true },
+                { "data": "Telephone", "name": "Telephone", "autoWidth": true },
+                { "data": "Contact", "name": "Contact", "autoWidth": true },
+                { "data": "CurrencyName", "name": "CurrencyName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+            ]
+        });
+
+        $('#btnSelectCustomer').click(function () {
+            $('#formCustomerModal').modal('show');
+            customerDataTable.columns.adjust();
+        });
+
+        $('#customerDataTable tbody').on('click', 'tr', function () {
+            var data = customerDataTable.row(this).data();
+            $('#detailCustomerName').val(data.Name);
+            $('#detailCustomerID').val(data.ID);
+            $('#customerForm').show();
+            $('#formCustomerModal').modal('hide');
+        });
+
+    </script>
+}

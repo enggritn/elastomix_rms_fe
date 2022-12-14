@@ -1,0 +1,1457 @@
+﻿
+@{
+    ViewBag.Title = "Inspection";
+    ViewBag.Module = "Inspection";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">QC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10" style="margin-top:10px;">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Filter</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="Filter1">
+                                <option value="ALL">EXPIRED/NON EXPIRED</option>
+                                <option value="EXPIRED">EXPIRED</option>
+                                <option value="NONEXPIRED">NON EXPIRED</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Filter Status</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="Filter">
+                                <option value="OPEN/PROGRESS">OPEN/PROGRESS</option>
+                                <option value="OPEN">OPEN</option>
+                                <option value="PROGRESS">PROGRESS</option>
+                                <option value="CONFIRMED">CONFIRMED</option>
+                                @*<option value="CLOSED">CLOSED</option>*@
+                                <option value="ALL">ALL</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Filtered By</label>
+                        <div class="col-sm-4 fa-pull-left">
+                            <span id="FilteredBy" class="badge badge-secondary">OPEN/PROGRESS</span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-tab1" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Expired</a>
+                <a class="nav-item nav-link" id="nav-tab2" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Abnormal</a>
+            </div>
+        </nav>
+    </div>
+    <div class="col-lg-12">
+        <div class="card" style="padding : 20px;">
+            <div class="card-body">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="">
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered table-striped nowrap" id="data_table_expired" width="100%" cellspacing="0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>CODE</th>
+                                        <th>MATERIAL TYPE</th>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>EXPIRATION DAY</th>
+                                        <th>CREATED BY</th>
+                                        <th>CREATED ON</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="">
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered table-striped nowrap" id="data_table_non_expired" width="100%" cellspacing="0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>CODE</th>
+                                        <th>MATERIAL TYPE</th>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>EXPIRATION DAY</th>
+                                        <th>CREATED BY</th>
+                                        <th>CREATED ON</th>
+                                        <th>STATUS</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal" id="formPickingModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Picking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Inspection Status</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="inspectionStatus" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Type</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="materialType" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="materialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="materialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="lotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="inDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Expired Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="expDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableDetail">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>AREA NAME</th>
+                                        <th>BIN/RACK NAME</th>
+                                        <th>BAG QTY</th>
+                                        <th>QTY/BAG</th>
+                                        <th>TOTAL QTY</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePicking"><i class="ik ik-check-circle"></i>Pick</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Judgement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Extend Duration</label>
+                    <div class="col-sm-3">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ExtendQty" id="ExtendQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ExtendRange">
+                            <option value="d">Day(s)</option>
+                            <option value="m">Month(s)</option>
+                            <option value="y">Year(s)</option>
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formDisposeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dispose</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Dispose Material ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveDispose"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="formReturnModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Return</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>BIN RACK CODE</th>
+                                        <th>BAG QTY</th>
+                                        <th>QTY/BAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Return Qty</label>
+                        <div class="col-sm-3">
+                            <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ReturnQty" id="ReturnQty" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="ReturnType">
+                                <option value="reminder">Reminder(s)</option>
+                                <option value="bag">Bag(s)</option>
+                            </select>
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveReturn"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPrintBarcode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Print</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="MaterialCode" id="MaterialCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="MaterialName" id="MaterialName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="LotNo" id="LotNo" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="InDate" id="InDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp. Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ExpDate" id="ExpDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">Print Qty</label>
+                        <div class="col-sm-4">
+                            <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PrintQty" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Use Series</label>
+                        <div class="col-sm-8">
+                            <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                                <input type="checkbox" class="custom-control-input checkbox" id="PrintSeries" checked />
+                                <label class="custom-control-label" for="PrintSeries">&nbsp;</label>
+                            </div>
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Select Printer</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ListPrinter">
+                            <option value="" selected>Select Printer</option>
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPrint" onclick="PrintBarcode()"><i class="ik ik-printer"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="formPrintBarcodeReturn" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Print</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="MaterialCode" id="MaterialCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="MaterialName" id="MaterialName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="LotNo" id="LotNo" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="InDate" id="InDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp. Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ExpDate" id="ExpDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">Print Qty</label>
+                        <div class="col-sm-4">
+                            <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PrintQty" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Use Series</label>
+                        <div class="col-sm-8">
+                            <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                                <input type="checkbox" class="custom-control-input checkbox" id="PrintSeries" checked />
+                                <label class="custom-control-label" for="PrintSeries">&nbsp;</label>
+                            </div>
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Select Printer</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ListPrinter">
+                            <option value="" selected>Select Printer</option>
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPrint" onclick="PrintBarcodeReturn()"><i class="ik ik-printer"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_priority td {
+            background-color: #FFFF38 !important;
+        }
+    </style>
+}
+
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+
+    <script>
+
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let token = '@Session["token"].ToString()';
+
+        var table_expired = $('#data_table_expired').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[0, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/QCInspection/DatatableExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "MaterialType", "name": "MaterialType", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "ExpirationDay", "name": "ExpirationDay", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (data.TransactionStatus == 'OPEN') {
+                            badge = 'badge badge-info';
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            badge = 'badge badge-primary';
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            badge = 'badge badge-success';
+                        } else if (data.TransactionStatus == 'ALL') {
+                            badge = 'badge badge-warning';
+                        }
+                        let button = '<span class="' + badge + '">' + data.TransactionStatus + '</span>';
+                        return button;
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+
+                        if (!data.ID) {
+                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>QC</button>';
+                        }
+
+                        if (!data.PickingAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingForm(this)"><i class="ik ik-check-circle"></i>Picking</button> ';
+                        }
+
+                        if (data.JudgementAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="qcExtend(this)"><i class="ik ik-check-circle"></i>Extend</button> ';
+                        }
+                        if (data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-danger" onclick="qcDispose(this)"><i class="ik ik-check-circle"></i>Dispose</button>';
+                        }
+
+                        if (data.InspectionStatus == 'EXTEND' && data.TransactionStatus == 'CONFIRMED') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeForm(this)"><i class="ik ik-check-circle"></i>Print</button> ';
+                        }
+
+                        //if (data.PutawayExtendAction) {
+                        //    button += '<button type="button" class="btn btn-primary" onclick="qcPutawayExtend(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
+                        //}
+                        //if (data.PickingDisposeAction) {
+                        //    button += '<button type="button" class="btn btn-warning" onclick="qcPickingDispose(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
+                        //}
+
+                        return button;
+                    }
+                },
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                if (data.Priority == true) {
+                    $(row).addClass('row_priority');
+                }
+                if (data.ExpirationDay <= -30) {
+                    $(row).addClass('row_priority');
+                }
+            }
+        });
+
+        var table_non_expired = $('#data_table_non_expired').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[0, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/QCInspection/DatatableNonExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "MaterialType", "name": "MaterialType", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "ExpirationDay", "name": "ExpirationDay", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (data.TransactionStatus == 'OPEN') {
+                            badge = 'badge badge-info';
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            badge = 'badge badge-primary';
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            badge = 'badge badge-success';
+                        } else if (data.TransactionStatus == 'ALL') {
+                            badge = 'badge badge-warning';
+                        }
+                        let button = '<span class="' + badge + '">' + data.TransactionStatus + '</span>';
+                        return button;
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+
+                        if (!data.ID) {
+                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>QC</button>';
+                        }
+
+                        if (!data.PickingAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingFormNonExpired(this)"><i class="ik ik-check-circle"></i>Picking</button> ';
+                        }
+
+                        if (data.ReturnAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="qcReturn(this)"><i class="ik ik-check-circle"></i>Return</button> ';
+                        }
+                        if (data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-danger" onclick="qcDispose(this)"><i class="ik ik-check-circle"></i>Dispose</button>';
+                        }
+
+                        if (data.InspectionStatus == 'RETURN' && data.TransactionStatus == 'CONFIRMED') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeFormReturn(this)"><i class="ik ik-check-circle"></i>Print</button> ';
+                        }
+
+                        //if (data.PutawayExtendAction) {
+                        //    button += '<button type="button" class="btn btn-primary" onclick="qcPutawayExtend(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
+                        //}
+                        //if (data.PickingDisposeAction) {
+                        //    button += '<button type="button" class="btn btn-warning" onclick="qcPickingDispose(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
+                        //}
+
+                        return button;
+                    }
+                },
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                if (data.Priority == true) {
+                    $(row).addClass('row_priority');
+                }
+            }
+        });
+
+
+        $('#btnRefreshDataTable').click(function () {
+            reloadTable();
+        });
+
+        function reloadTable() {
+            table_expired.ajax.reload();
+            table_non_expired.ajax.reload();
+    }
+
+    $('#Filter').change(function () {
+        var Filter = $('#Filter').val();
+        var Filter1 = $('#Filter1').val();
+        $('#FilteredBy').html(Filter);
+
+        var badge = 'badge ';
+        if (Filter == 'OPEN/PROGRESS') {
+            badge += 'badge-secondary';
+        } else if (Filter == 'OPEN') {
+            badge += 'badge-info';
+        } else if (Filter == 'PROGRESS') {
+            badge += 'badge-primary';
+        } else if (Filter == 'CONFIRMED') {
+            badge += 'badge-success';
+        } else if (Filter == 'ALL') {
+            badge += 'badge-warning';
+        } else {
+            badge += 'badge-dark';
+            Filter = "";
+        }
+        $('#FilteredBy').removeClass();
+        $('#FilteredBy').addClass(badge);
+        table_expired.ajax.url(server + "Api/QCInspection/DatatableExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+        table_non_expired.ajax.url(server + "Api/QCInspection/DatatableNonExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+    });
+
+        $('#Filter1').change(function () {
+            var Filter = $('#Filter').val();
+            var Filter1 = $('#Filter1').val();
+            $('#FilteredBy').html(Filter);
+
+            var badge = 'badge ';
+            if (Filter == 'OPEN/PROGRESS') {
+                badge += 'badge-secondary';
+            } else if (Filter == 'OPEN') {
+                badge += 'badge-info';
+            } else if (Filter == 'PROGRESS') {
+                badge += 'badge-primary';
+            } else if (Filter == 'CONFIRMED') {
+                badge += 'badge-success';
+            } else if (Filter == 'ALL') {
+                badge += 'badge-warning';
+            } else {
+                badge += 'badge-dark';
+                Filter = "";
+            }
+            $('#FilteredBy').removeClass();
+            $('#FilteredBy').addClass(badge);
+            table_expired.ajax.url(server + "Api/QCInspection/DatatableExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+            table_non_expired.ajax.url(server + "Api/QCInspection/DatatableNonExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+        });
+
+
+        function CreateQC(index) {
+
+            var elementRow = $(index).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+
+            let endpoint = "";
+
+            if (tableId == "data_table_expired") {
+                endpoint = "CreateExpired";
+            } else {
+                endpoint = "CreateNonExpired";
+            }
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/QCInspection/' + endpoint,
+            data: {
+                MaterialCode: dataRow.MaterialCode,
+                LotNumber: dataRow.LotNo,
+                InDate: dataRow.InDate,
+                ExpiredDate: dataRow.ExpDate,
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    reloadTable();
+                    notify("Success", "success", response.message);
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+            }
+        });
+    }
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        switch (e.target.id) {
+            case "nav-tab1": {
+                table_expired.ajax.reload();
+                table_expired.columns.adjust();
+                break;
+            }
+            case "nav-tab2": {
+                table_non_expired.ajax.reload();
+                table_non_expired.columns.adjust();
+                break;
+            }
+        }
+    })
+
+    let dataSummary = {};
+    let InspectionID = "";
+    function qcPicking(el) {
+        var elementRow = $(el).closest('tr');
+        var tableId = $(elementRow).closest('table').attr('id');
+        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+        InspectionID = dataTableRow.ID;
+        $('#formPickingModal #ExtendQty').val('0');
+        $('#formPickingModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    function qcExtend(el) {
+        var elementRow = $(el).closest('tr');
+        var tableId = $(elementRow).closest('table').attr('id');
+        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+        InspectionID = dataTableRow.ID;
+        $('#formJudgementModal #ExtendQty').val('0');
+        $('#formJudgementModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+    function qcDispose(el) {
+        var elementRow = $(el).closest('tr');
+        var tableId = $(elementRow).closest('table').attr('id');
+        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+        InspectionID = dataTableRow.ID;
+        $('#formDisposeModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+    function qcReturn(el) {
+        var elementRow = $(el).closest('tr');
+        var tableId = $(elementRow).closest('table').attr('id');
+        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+        InspectionID = dataTableRow.ID;
+        $('#formReturnModal #ReturnQty').val('0');
+
+        dataSummary = dataTableRow;
+        xMaterialCode = dataSummary.MaterialCode;
+        xLotNo = dataSummary.LotNo;
+        xInDate = dataSummary.InDate;
+        xExpDate = dataSummary.ExpDate;
+
+        GetListDataReturn();
+        $('#formReturnModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    }
+
+
+        let btnSaveJudgement = "";
+        $('#btnSaveJudgement').click(function () {
+            if (btnSaveJudgement == "") {
+                btnSaveJudgement = "confirmation";
+                $(this).html('<i class="ik ik-check-circle"></i>Proceed ?');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-success');
+            } else {
+                btnSaveJudgement = "";
+                $(this).html('<i class="ik ik-check-circle"></i>Save');
+                $(this).removeClass('btn-success');
+                $(this).addClass('btn-primary');
+                $('#ExtendQty').next().html("");
+                $('#ExtendQty').removeClass('is-invalid');
+
+                $('#ExtendRange').next().html("");
+                $('#ExtendRange').removeClass('is-invalid');
+
+
+                var ExtendQty = $('#ExtendQty').val() != "" ? $('#ExtendQty').val().replace(/\,/g, '') : 0
+                var param = {
+                    "InspectionID": InspectionID,
+                    "ExtendQty": ExtendQty,
+                    "ExtendRange": $('#ExtendRange').val()
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: param,
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/QCInspection/Judgement',
+                    success: function (response) {
+                        isValid = response.status;
+
+                        if (isValid) {
+                            $('#formJudgementModal').modal('hide');
+                            //initQC();
+                            //initJudgement();
+                            //initData();
+                            reloadTable();
+                            notify("Success", "success", response.message);
+                        } else {
+                            $.each(response.error_validation, function (index, value) {
+
+                                $('#formJudgementModal #' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#formJudgementModal #' + value.FieldName).addClass('is-invalid');
+                            });
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+            }
+        });
+
+        let btnSaveDispose = "";
+        let btnSaveReturn = "";
+        let btnSavePutaway = "";
+        let btnSavePicking = "";
+
+        $('#btnSavePicking').click(function () {
+            if (btnSavePicking == "") {
+                btnSavePicking = "confirmation";
+                $(this).html('<i class="ik ik-check-circle"></i>Proceed ?');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-success');
+            } else {
+                btnSavePicking = "";
+                $(this).html('<i class="ik ik-check-circle"></i>Save');
+                $(this).removeClass('btn-success');
+                $(this).addClass('btn-primary');
+
+                var param = {
+                    "InspectionID": InspectionID,
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: param,
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/QCInspection/PickingWaiting',
+                    success: function (response) {
+                        isValid = response.status;
+
+                        if (isValid) {
+                            $('#formPickingModal').modal('hide');
+                            reloadTable();
+                            notify("Success", "success", "Picking Success");
+                        } else {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#btnSaveDispose').click(function () {
+            if (btnSaveDispose == "") {
+                btnSaveDispose = "confirmation";
+                $(this).html('<i class="ik ik-check-circle"></i>Proceed ?');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-success');
+            } else {
+                btnSaveDispose = "";
+                $(this).html('<i class="ik ik-check-circle"></i>Save');
+                $(this).removeClass('btn-success');
+                $(this).addClass('btn-primary');
+
+                var param = {
+                    "InspectionID": InspectionID,
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: param,
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/QCInspection/Dispose',
+                    success: function (response) {
+                        isValid = response.status;
+
+                        if (isValid) {
+                            $('#formDisposeModal').modal('hide');
+                            reloadTable();
+                            notify("Success", "success", "Dispose Success");
+                        } else {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#btnSaveReturn').click(function () {
+            if (btnSaveReturn == "") {
+                btnSaveReturn = "confirmation";
+                $(this).html('<i class="ik ik-check-circle"></i>Proceed ?');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-success');
+            } else {
+                btnSaveReturn = "";
+                $(this).html('<i class="ik ik-check-circle"></i>Save');
+                $(this).removeClass('btn-success');
+                $(this).addClass('btn-primary');
+                $('#ReturnQty').next().html("");
+                $('#ReturnQty').removeClass('is-invalid');
+
+                $('#ReturnType').next().html("");
+                $('#ReturnType').removeClass('is-invalid');
+
+                var ReturnQty = $('#ReturnQty').val() != "" ? $('#ReturnQty').val().replace(/\,/g, '') : 0
+                var param = {
+                    "InspectionID": InspectionID,
+                    "ReturnQty": ReturnQty,
+                    "ReturnType": $('#ReturnType').val()
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: param,
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/QCInspection/Return',
+                    success: function (response) {
+                        isValid = response.status;
+
+                        if (isValid) {
+                            $('#formReturnModal').modal('hide');
+                            reloadTable();
+                            notify("Success", "success", "Return Success");
+                        } else {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#formReturnModal #' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#formReturnModal #' + value.FieldName).addClass('is-invalid');
+                            });
+
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+            }
+        });
+        $('#btnSavePutaway').click(function () {
+            if (btnSavePutaway == "") {
+                btnSavePutaway = "confirmation";
+                $(this).html('<i class="ik ik-check-circle"></i>Proceed ?');
+                $(this).removeClass('btn-primary');
+                $(this).addClass('btn-success');
+            } else {
+                btnSavePutaway = "";
+                $(this).html('<i class="ik ik-check-circle"></i>Save');
+                $(this).removeClass('btn-success');
+                $(this).addClass('btn-primary');
+
+                var param = {
+                    "InspectionID": InspectionID,
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: param,
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/QCInspection/Return',
+                    success: function (response) {
+                        isValid = response.status;
+
+                        if (isValid) {
+                            $('#formReturnModal').modal('hide');
+                            //initQC();
+                            //initDisposal();
+                            //initData();
+                            reloadTable();
+                            notify("Success", "success", "Return Success");
+                        } else {
+                            notify("Warning", "warning", response.message);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#btnPutawayReturn').click(function () {
+            var param = {
+                "PutawayId": StockId,
+                "InDate": $('#InDateEx').val(),
+                "ExpDate": $('#ExpDateEx').val(),
+                "LotNumber": $('#LotNoEx').val(),
+                "QtyPerBag": $('#LotNoEx').val(),
+                "BagQty": $('#LotNoEx').val(),
+                "BinRackCode": $('#BinRackCode').find(":selected").val(),
+            }
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: param,
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/PutawayExtend',
+                success: function (response) {
+                    isValid = response.status;
+
+                    if (isValid) {
+                        $('#formPutawayExtendModal').modal('hide');
+                        //initQC();
+                        //initDisposal();
+                        //initData();
+
+                        reloadTable();
+                        notify("Success", "success", "Return Success");
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        });
+
+        function ShowBarcodeForm(el) {
+            var elementRow = $(el).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#formPrintBarcode #MaterialCode').val(dataTableRow.MaterialCode);
+            $('#formPrintBarcode #MaterialName').val(dataTableRow.MaterialName);
+            $('#formPrintBarcode #LotNo').val(dataTableRow.LotNo);
+            $('#formPrintBarcode #InDate').val(dataTableRow.InDate);
+            $('#formPrintBarcode #ExpDate').val(dataTableRow.ExpDate);
+            //$('#formPrintBarcode #PrintQty').val(0);
+            //$('#formPrintBarcode #PrintSeries').prop('checked', true);
+            //$('#formPrintBarcode #PrintQty').next().html('');
+            //$('#formPrintBarcode #PrintQty').removeClass('is-invalid');
+            $('#formPrintBarcode').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            // get list printer
+            // call ajax here
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Control/ListPrinter',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#formPrintBarcode #ListPrinter').empty();
+                        $('#formPrintBarcode #ListPrinter').append('<option value="">Select Printer</option>');
+                        var html = '';
+                        $.each(response.printers, function (index, value) {
+                            html += '<option value="' + value.PrinterIP + '">' + value.PrinterName + '</option>';
+                        });
+                        $('#formPrintBarcode #ListPrinter').append(html);
+                    }
+                }
+            });
+        }
+
+
+        function ShowBarcodeFormReturn(el) {
+            var elementRow = $(el).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#formPrintBarcodeReturn #MaterialCode').val(dataTableRow.MaterialCode);
+            $('#formPrintBarcodeReturn #MaterialName').val(dataTableRow.MaterialName);
+            $('#formPrintBarcodeReturn #LotNo').val(dataTableRow.LotNo);
+            $('#formPrintBarcodeReturn #InDate').val(dataTableRow.InDate);
+            $('#formPrintBarcodeReturn #ExpDate').val(dataTableRow.ExpDate);
+            //$('#formPrintBarcodeReturn #PrintQty').val(0);
+            //$('#formPrintBarcodeReturn #PrintSeries').prop('checked', true);
+            //$('#formPrintBarcodeReturn #PrintQty').next().html('');
+            //$('#formPrintBarcodeReturn #PrintQty').removeClass('is-invalid');
+            $('#formPrintBarcodeReturn').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            // get list printer
+            // call ajax here
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Control/ListPrinter',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#formPrintBarcodeReturn #ListPrinter').empty();
+                        $('#formPrintBarcodeReturn #ListPrinter').append('<option value="">Select Printer</option>');
+                        var html = '';
+                        $.each(response.printers, function (index, value) {
+                            html += '<option value="' + value.PrinterIP + '">' + value.PrinterName + '</option>';
+                        });
+                        $('#formPrintBarcodeReturn #ListPrinter').append(html);
+                    }
+                }
+            });
+        }
+
+        function PrintBarcode() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MobileInspection/Print',
+                data: {
+                    InspectionId: InspectionID,
+                    //PrintQty: $('#formPrintBarcode #PrintQty').val() != "" ? $('#formPrintBarcode #PrintQty').val().replace(/\,/g, '') : 0,
+                    //UseSeries: $('#formPrintBarcode #PrintSeries').prop('checked'),
+                    Printer: $('#formPrintBarcode #ListPrinter').find(":selected").val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload() }, 1000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#formPrintBarcode').modal('hide');
+                    $('#btnPrint').prop('disabled', false);
+                }
+
+            });
+        }
+
+        function PrintBarcodeReturn() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MobileInspection/PrintReturn',
+                data: {
+                    InspectionId: InspectionID,
+                    //PrintQty: $('#formPrintBarcodeReturn #PrintQty').val() != "" ? $('#formPrintBarcodeReturn #PrintQty').val().replace(/\,/g, '') : 0,
+                    //UseSeries: $('#formPrintBarcodeReturn #PrintSeries').prop('checked'),
+                    Printer: $('#formPrintBarcodeReturn #ListPrinter').find(":selected").val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload() }, 1000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#formPrintBarcodeReturn').modal('hide');
+                    $('#btnPrint').prop('disabled', false);
+                }
+
+            });
+        }
+
+        function GetListDataReturn() {
+            $.ajax({
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/ListDataReturn',
+                data: {
+                    ExpDate: xExpDate,
+                    InDate: xInDate,
+                    LotNo: xLotNo,
+                    MaterialCode: xMaterialCode,
+                },
+
+                success: function (response) {
+                    $('#table tbody').empty();
+                    if (response.status) {
+                        list_fifo = response.data;
+                        var html = "";
+
+                        if (list_fifo.length > 0) {
+                            $.each(list_fifo, function (index, value) {
+                                html += '<tr>';
+                                html += '<td>' + value.MaterialCode + '</td>';
+                                html += '<td>' + value.MaterialName + '</td>';
+                                html += '<td>' + value.LotNo + '</td>';
+                                html += '<td>' + value.InDate + '</td>';
+                                html += '<td>' + value.ExpDate + '</td>';
+                                html += '<td>' + value.BinRackCode + '</td>';
+                                html += '<td>' + value.BagQty + '</td>';
+                                html += '<td>' + value.QtyPerBag + '</td>';
+                                html += '</tr>';
+                            });
+                        } else {
+                            html += '<tr><td colspan="13">No Data</td></tr>';
+                        }
+
+                        $('#table tbody').append(html);
+
+                        $('#formReturnModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        }
+
+        function ShowPickingForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = $('#data_table_expired').DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#inspectionStatus').val('Waiting');
+            $('#materialType').val(dataTableRow.MaterialType);
+            $('#materialCode').val(dataTableRow.MaterialCode);
+            $('#materialName').val(dataTableRow.MaterialName);
+            $('#lotNo').val(dataTableRow.LotNo);
+            $('#inDate').val(dataTableRow.InDate);
+            $('#expDate').val(dataTableRow.ExpDate);
+
+            loadDetail();
+
+            //$('#formPickingModal').modal({
+            //    backdrop: 'static',
+            //    keyboard: false
+            //});
+        }
+
+        function ShowPickingFormNonExpired(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = $('#data_table_non_expired').DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#inspectionStatus').val('Waiting');
+            $('#materialType').val(dataTableRow.MaterialType);
+            $('#materialCode').val(dataTableRow.MaterialCode);
+            $('#materialName').val(dataTableRow.MaterialName);
+            $('#lotNo').val(dataTableRow.LotNo);
+            $('#inDate').val(dataTableRow.InDate);
+            $('#expDate').val(dataTableRow.ExpDate);
+
+            loadDetail();
+
+            //$('#formPickingModal').modal({
+            //    backdrop: 'static',
+            //    keyboard: false
+            //});
+        }
+
+        let list_detail = [];
+        function loadDetail() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/GetPickingList?id=' + InspectionID,
+                success: function (response) {
+                    $('#tableDetail tbody').empty();
+                    if (response.status) {
+                        list_detail = response.list;
+                        var html = "";
+
+                        if (list_detail.length > 0) {
+                            $.each(list_detail, function (index, value) {
+                                html += '<td></td>';
+                                html += '<td>' + value.BinRackCode + '</td>';
+                                html += '<td>' + value.BinRackName + '</td>';
+                                html += '<td>' + value.BagQty + '</td>';
+                                html += '<td>' + value.QtyPerBag + '</td>';
+                                html += '<td>' + value.Qty + '</td>';
+                                html += '</tr>';
+                            });
+                        } else {
+                            html += '<tr><td colspan="13">No Data</td></tr>';
+                        }
+
+                        $('#tableDetail tbody').append(html);
+
+                        $('#formPickingModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        }
+    </script>
+}

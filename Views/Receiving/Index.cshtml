@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "Receiving";
+    ViewBag.Module = "Receiving";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Date</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Warehouse</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="WarehouseFilter">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Source Type</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="SourceType">
+                            </select>
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th rowspan="2">DOCUMENT NO.</th>
+                                <th colspan="3">ORIGIN</th>
+                                <th rowspan="2">REF NUMBER</th>
+                                <th rowspan="2">RECEIVING DATE</th>
+                                <th rowspan="2">MATERIAL CODE</th>
+                                <th rowspan="2">MATERIAL NAME</th>
+                                <th colspan="4">REQUEST QTY</th>
+                                <th rowspan="2">OUTSTANDING BAG QTY</th>
+                                <th rowspan="2">ACTION</th>
+                            </tr>
+                            <tr>
+                                <th>TYPE</th>
+                                <th>CODE</th>
+                                <th>NAME</th>
+                                <th>TOTAL</th>
+                                <th>UOM</th>
+                                <th>QTY/BAG</th>
+                                <th>QTY BAG</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+    <script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        initSourceType();
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true
+        });
+
+        $('#WarehouseFilter').select2();
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[5, "asc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/Datatable",
+                data: function (d){
+                    d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.WarehouseCode = $('#WarehouseFilter').val();
+                    d.sourceType = $('#SourceType').val();
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 },
+            ],
+            columns: [
+                { "data": "DocumentNo", "name": "DocumentNo", "autoWidth": false },
+                { "data": "SourceType", "name": "SourceType", "autoWidth": false },
+                { "data": "SourceCode", "name": "SourceCode", "autoWidth": false },
+                { "data": "SourceName", "name": "SourceName", "autoWidth": false },
+                { "data": "RefNumber", "name": "RefNumber", "autoWidth": false },
+                { "data": "ETA", "name": "ETA", "autoWidth": false },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": false },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": false },
+                { "data": "Qty", "name": "Qty", "autoWidth": false },
+                { "data": "UoM", "name": "UoM", "autoWidth": false },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": false },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": false },
+                { "data": "OutstandingQty", "name": "OutstandingQty", "autoWidth": false },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        if (data.RefNumber) {
+                            let button = '';
+                            button += '<button class="btn btn-primary" onclick= "ShowReceiveForm(this)"><i class="ik ik-check-circle" ></i>Detail</button>';
+                            return button;
+                        } else {
+                            return '<span>Please Input Ref Number in current Document.</span>';
+                        }
+
+                    }
+                },
+            ]
+        });
+
+        //new $.fn.dataTable.FixedColumns(table, {
+        //    leftColumns: 2 //specifies how many left columns should be fixed.
+        //});
+
+        $.ajax({
+            type: 'GET',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Warehouse/GetData',
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    $('#WarehouseFilter').empty();
+                    $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
+                    var html = '';
+                    $.each(response.list, function (index, value) {
+                        html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#WarehouseFilter').append(html);
+                }
+            }
+        });
+
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+    $('#DateFilter').change(function () {
+            table.ajax.reload();
+        });
+
+        $('#WarehouseFilter').change(function () {
+            table.ajax.reload();
+        });
+        $('#SourceType').change(function () {
+            table.ajax.reload();
+        });
+
+        function ShowReceiveForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+            let ReceivingID = dataTableRow.ID;
+            //open page detail
+
+            window.open('@Url.Action("Detail", "Receiving")?id=' + ReceivingID, '_blank').focus();
+        };
+
+    function PrintBarcode(id) {
+            //open page print label
+             //window.open('@Url.Action("GenerateLabel", "Receiving")' + '?id=' + id, "_blank");
+        }
+        function initSourceType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/GetSourceType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#SourceType').empty();
+                        $('#SourceType').append('<option value="">All</option>');
+                        var html = '';
+                        $.each(response.source_type, function (index, value) {
+                            html += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#SourceType').append(html);
+                    }
+                }
+            });
+        };
+    </script>
+}

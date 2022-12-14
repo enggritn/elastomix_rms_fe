@@ -1,0 +1,286 @@
+﻿@{
+    ViewBag.Title = "RM Calculation Simulation";
+    ViewBag.Module = "ProductionPlan";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Index</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">PPIC</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h6><b>Please Choose Formula</b></h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="dt-responsive col-md-12">
+                            <table class="table table-bordered table-striped nowrap" id="formulaDataTable" width="100%" cellspacing="0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>RECIPE CODE</th>
+                                        <th>PRODUCT NUMBER</th>
+                                        <th>STATUS</th>
+                                        <th>CREATED BY</th>
+                                        <th>CREATED ON</th>
+                                        <th>MODIFIED BY</th>
+                                        <th>MODIFIED ON</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div id="formulaDetail">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Recipe Code</label>
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="FormulaID" class="form-control" />
+                                    <input type="text" autocomplete="off" id="RecipeCode" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Product Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="ProductNumber" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Requested Qty (KG)</label>
+                                <div class="col-sm-8">
+                                    <input type="text" autocomplete="off" id="Qty" class="form-control" />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <a class="btn btn-primary col-md-12" id="btnRunSimulation" href="#">Run Calculation Simulation</a>
+                            <br /><br />
+                            <div class="dt-responsive col-md-12" id="detailView">
+                                <table class="table table-bordered table-striped nowrap" width="100%" cellspacing="0" id="detailTable">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th rowspan="2">RM Code</th>
+                                            <th rowspan="2">RM Name</th>
+                                            <th rowspan="2">UoM</th>
+                                            <th colspan="4"><center>Recipe</center></th>
+                                            <th rowspan="2">Total Batch</th>
+                                            <th colspan="4"><center>Calculation</center></th>
+                                            <th rowspan="2">Available Qty</th>
+                                            <th rowspan="2">Outstanding Qty</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Qty</th>
+                                            <th>Qty/FullBag</th>
+                                            <th>FullBag</th>
+                                            <th>Remainder</th>
+                                            <th>Qty</th>
+                                            <th>Qty/FullBag</th>
+                                            <th>FullBag</th>
+                                            <th>Remainder</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@Url.Action("Index", "ProductionPlan")" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/daterangepicker/daterangepicker.css")
+
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/daterangepicker.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+
+        $('#formulaDetail').hide();
+        $('#detailView').hide();
+
+        var formulaDataTable = $('#formulaDataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Formula/Datatable"
+            },
+            columns: [
+                {
+                    "data": null,
+                    "render" : function(data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "ProductNumber", "name": "ProductNumber", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true }
+            ]
+        });
+
+        $('#formulaDataTable tbody').on('click', 'tr', function () {
+            var data = formulaDataTable.row(this).data();
+            $('#ProductNumber').val(data.ProductNumber);
+            $('#RecipeCode').val(data.Code);
+            $('#FormulaID').val(data.ID);
+            $('#Qty').val('0');
+            $('#formulaDetail').show();
+            $('#detailView').hide();
+            $('#formulaDataTable tbody tr').removeClass('row_selected');
+		    $(this).addClass('row_selected');
+        });
+
+        var detailTable = $('#detailTable').DataTable({
+            processing: true,
+            scrollX: true,
+            searching: false,
+            paging: false,
+            info: false,
+            bSort: false,
+        });
+
+        $('#btnRunSimulation').click(function () {
+            isValid = true;
+            $('#Qty').removeClass('is-invalid');
+            $('#Qty').next().html('');
+            if ($('#Qty').val() == '0' || $('#Qty').val() == '') {
+                $('#Qty').addClass('is-invalid');
+                $('#Qty').next().html('This field is Required');
+                isValid = false;
+            }
+            if (isValid) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: "json",
+                    beforeSend: function (request) {
+                        request.setRequestHeader('Token', token);
+                    },
+                    url: server + 'Api/RMCalculator/Calculate',
+                    data: {
+                        FormulaID: $('#FormulaID').val(),
+                        Qty: $('#Qty').val(),
+                    },
+                    success: function (response) {
+                        isValid = response.status;
+                        if (!isValid) {
+                            $.each(response.error_validation, function (index, value) {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            });
+                            toastr.error(response.message);
+                        } else {
+                            $('#detailTable tbody').empty();
+                            let body = '';
+                            $.each(response.data, function (index, value) {
+                                body += '<tr>';
+                                body += '<td>' + value.RawMaterialCode + '</td>';
+                                body += '<td>' + value.RawMaterialName + '</td>';
+                                body += '<td>' + value.UoM + '</td>';
+                                body += '<td>' + value.RequestedQty + '</td>';
+                                body += '<td>' + value.FullBagQty + '</td>';
+                                body += '<td>' + value.FullBag + '</td>';
+                                body += '<td>' + value.RemainderQty + '</td>';
+                                body += '<td>' + value.ProductionQty + '</td>';
+                                body += '<td>' + value.TotalQty + '</td>';
+                                body += '<td>' + value.FullBagQty + '</td>';
+                                body += '<td>' + value.TotalFullBag + '</td>';
+                                body += '<td>' + value.TotalRemainderQty + '</td>';
+                                body += '<td>' + value.AvailableQty + '</td>';
+                                body += '<td>' + value.LackingQty + '</td>';
+                                body += '</tr>';
+                            });
+                            body += '<tr><th colspan="3">Total Ton</th><th>' + response.ton + ' t</th><th colspan="4"></th><th>' + response.totalTon + ' t</th><th colspan="6"></th></tr>';
+                            $('#detailTable tbody').append(body);
+                            $('#detailView').show();
+                            detailTable.columns.adjust();
+                        }
+                    }
+                });
+            }
+        });
+
+    </script>
+}

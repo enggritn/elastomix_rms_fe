@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WMS_FE.Models
+{
+    public class StockOpnameResponse
+    {
+        public List<StockOpnameDetailDTO> list { get; set; }
+    }
+}

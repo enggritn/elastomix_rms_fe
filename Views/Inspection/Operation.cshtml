@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "Inspection";
+    ViewBag.Module = "Inspection";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-user bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Operation</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="col-md-10" style="margin-top:10px;">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Filter</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="Filter">
+                                <option value="ALL">ALL</option>
+                                <option value="EXTEND">EXTEND</option>
+                                <option value="DISPOSE">DISPOSE</option>
+                                <option value="RETURN">RETURN</option>
+                                <option value="WAITING">WAITING</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2">Filtered By</label>
+                        <div class="col-sm-4 fa-pull-left">
+                            <span id="FilteredBy" class="badge badge-secondary"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="data_table" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>CODE</th>
+                                <th>MATERIAL TYPE</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>LOT NO.</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>TOTAL JUDGEMENT</th>
+                                <th>TOTAL DISPOSAL</th>
+                                <th>CREATED BY</th>
+                                <th>CREATED ON</th>
+                                <th>STATUS</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+
+    <style>
+        tr.row_priority td {
+            background-color: #f0d405 !important;
+        }
+    </style>
+}
+
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+
+
+    <script>
+
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let token = '@Session["token"].ToString()';
+
+        function reloadTable() {
+            table.ajax.reload();
+        }
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            "order": [],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/QCInspection/Datatable?transactionStatus=OPEN/PROGRESS/CONFIRMED"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "MaterialType", "name": "MaterialType", "autoWidth": true },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "TotalJudgementQty", "name": "TotalJudgementQty", "autoWidth": true },
+                { "data": "TotalDisposalQty", "name": "TotalDisposalQty", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (data.TransactionStatus == 'OPEN') {
+                            badge = 'badge badge-info';
+                        } else if (data.TransactionStatus == 'PROGRESS') {
+                            badge = 'badge badge-primary';
+                        } else if (data.TransactionStatus == 'CONFIRMED') {
+                            badge = 'badge badge-success';
+                        } else if (data.TransactionStatus == 'CLOSED') {
+                            badge = 'badge badge-warning';
+                        }
+                        let button = '<span class="' + badge + '">' + data.TransactionStatus + '</span>';
+                        return button;
+                    }
+                },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '<button class="btn btn-primary" onclick= "OpenDetail(this)"><i class="ik ik-check-circle"></i>Detail</button>';
+                        return button;
+                    }
+                },
+            ],
+            "createdRow": function( row, data, dataIndex){
+                if(data.Priority == true){
+                    $(row).addClass('row_priority');
+                }
+            }
+        });
+
+
+        function OpenDetail(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+            //open page detail
+            window.location.replace('@Url.Action("Detail", "Inspection")?id=' + dataTableRow.ID);
+        };
+
+        $('#Filter').change(function () {
+            var Filter = $('#Filter').val();
+            $('#FilteredBy').html(Filter);
+
+            var badge = 'badge ';
+            if (Filter == 'EXTEND') {
+                badge += 'badge-secondary';
+            } else if (Filter == 'DISPOSE') {
+                badge += 'badge-info';
+            } else if (Filter == 'RETURN') {
+                badge += 'badge-primary';
+            } else {
+                badge += 'badge-dark';
+            }
+            $('#FilteredBy').removeClass();
+            $('#FilteredBy').addClass(badge);
+            table.ajax.url(server + "Api/QCInspection/DatatableOperation?InspectionStatus=" + Filter).load();
+        });
+
+        $('#btnRefreshDataTable').click(function () {
+            table.ajax.reload();
+        });
+    </script>
+}

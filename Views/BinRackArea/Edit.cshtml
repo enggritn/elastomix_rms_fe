@@ -1,0 +1,293 @@
+﻿@{
+    ViewBag.Title = "Bin/Rack Area";
+    ViewBag.Module = "BinRackArea";
+
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Edit</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Master</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="WarehouseCode" class="form-control" readonly />
+                                <input type="hidden" id="WarehouseID" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Warehouse Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="WarehouseName" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Area Code</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Code" class="form-control" readonly />
+                                <input type="hidden" id="ID" class="form-control" readonly />
+                                <input type="hidden" id="CodeHidden" class="form-control" readonly />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Area Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" autocomplete="off" id="Name" class="form-control" />
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Type</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="AreaType">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-4 col-sm-8">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="IsActive" id="IsActive">
+                                    <label class="custom-control-label" for="IsActive">Is Active</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <a href="@ViewBag.BaseUrl/BinRack/Create?aid=@ViewBag.Param&wid=@ViewBag.Param2" class="btn btn-primary float-right"><i class="ik ik-plus"></i>Create Bin Rack</a>
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <div class="col-md-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" id="BinRackDatatable" width="100%" cellspacing="0">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>BARCODE</th>
+                                                <th>BIN RACK NAME</th>
+                                                <th>WAREHOUSE</th>
+                                                <th>AREA</th>
+                                                <th>STATUS</th>
+                                                <th>CREATED BY</th>
+                                                <th>CREATED ON</th>
+                                                <th>MODIFIED BY</th>
+                                                <th>MODIFIED ON</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="@ViewBag.BaseUrl/Warehouse/Edit?id=@ViewBag.param2" class="btn btn-outline-info float-left"><i class="ik ik-arrow-left"></i>Back</a>
+                <button id="btnSave" type="button" class="btn btn-primary float-right"><i class="ik ik-save"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_js
+{
+    <script type="text/javascript">
+        let server = '@ViewBag.server';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let token = '@Session["token"].ToString()';
+        var isValid = true;
+        initData();
+
+        function initData() {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/GetDataById?id=@ViewBag.Param',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        var data = response.data;
+                        $('#WarehouseID').val(data.WarehouseID);
+                        $('#WarehouseCode').val(data.WarehouseCode);
+                        $('#WarehouseName').val(data.WarehouseName);
+                        $('#Name').val(data.Name);
+                        $('#ID').val(data.ID);
+                        $('#Code').val(data.Code);
+                        $('#CodeHidden').val(data.Code);
+                        $('#IsActive').prop('checked', data.IsActive);
+
+                        let area_type = response.area_type;
+                        let body = '';
+                        $('#AreaType').empty();
+                        $.each(area_type, function (index, value) {
+                            body += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#AreaType').append(body);
+
+                        $('#AreaType').val(data.Type);
+                    }
+                }
+            });
+        }
+
+        $("#btnSave").click(function () {
+            isValid = true;
+            clearForm();
+            if ($('#Name').val().length == 0) {
+                $('#Name').addClass('is-invalid');
+                $('#Name').next().html('This field is Required');
+                isValid = false;
+            }
+
+            if (isValid) {
+                $('#saveModal').modal('show');
+            }
+        });
+
+        function clearForm() {
+            $('#Name').removeClass('is-invalid');
+            $('#Name').next().html('');
+        }
+
+        function showFlash() {
+            toastr.success('Data Successfully Saved')
+        }
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+        }
+
+        $('#btnYes').click(function () {
+            let isActive = 'false';
+            if ($('#IsActive').prop('checked')) {
+                isActive = 'true';
+            };
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/@ViewBag.Module/Update',
+                data: {
+                    ID: $('#ID').val(),
+                    Code: $('#CodeHidden').val(),
+                    WarehouseID: '@ViewBag.param2',
+                    IsActive: isActive,
+                    Name: $('#Name').val(),
+                    Type : $('#AreaType').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+                        toastr.error(response.message);
+                        dissmissDialog();
+                    } else {
+                        clearForm();
+                        dissmissDialog();
+                        showFlash();
+                    }
+                }
+            });
+        });
+
+        var BinRackDatatable = $('#BinRackDatatable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/BinRack/Datatable?binRackAreaID=@ViewBag.Param&WarehouseID=@ViewBag.Param2"
+            },
+            columnDefs: [
+                { orderable: false, targets: -1 }
+            ],
+            columns: [
+                { "data": "Code", "name": "Code", "autoWidth": true },
+                { "data": "Name", "name": "Name", "autoWidth": true },
+                { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
+                { "data": "ModifiedBy", "name": "ModifiedBy", "autoWidth": true },
+                { "data": "ModifiedOn", "name": "ModifiedOn", "autoWidth": true },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '<a class="btn btn-info" href="' + baseUrl + '/BinRack/Edit?id=' + row.ID + '&aid=@ViewBag.Param&wid=@ViewBag.Param2">';
+                        button += '<i class="ik ik-edit"></i>Edit</a>';
+                        return button;
+                    }
+                },
+            ]
+        });
+    </script>
+}

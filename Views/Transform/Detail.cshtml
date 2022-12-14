@@ -1,0 +1,1250 @@
+﻿@{
+    ViewBag.Title = "Transform";
+    ViewBag.Module = "Transform";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>Detail</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Operation</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Detail @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Code</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="codeTransform" readonly />
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Transform Quantity</label>
+                            <div class="col-sm-4">
+                                <input type="text" autocomplete="off" class="form-control" id="trfQty" readonly />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label"><b>Source Material</b></label>
+                            <br />
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Material Code</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="souceMatCode" readonly />
+
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Material Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="sourceMatName" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-form-label"><b>Target Material</b></label>
+                            <br />
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4">Material Code</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="targetMatCode" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-4"> Material Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="targetMatName" readonly />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-4">Status</label>
+                            <div class="col-sm-6">
+                                <span id="Status"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-10"></div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary float-right" onclick="ShowPickingForm()"><i class="ik ik-plus"></i>Picking</button>
+                            </div>
+
+                        </div>
+                        <!--<hr />
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label class="col-form-label"><b>Picking List</b></label>
+                            </div>
+                            <br />
+                            <div class="col-md-12">
+                                <div class="dt-responsive col-md-12">
+                                    <table class="table table-bordered table-striped nowrap" id="orderPickingTable" width="100%" cellspacing="0">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>WAREHOUSE</th>
+                                                <th>BIN RACK AREA</th>
+                                                <th>BIN RACK</th>
+                                                <th>MATERIAL CODE</th>
+                                                <th>MATERIAL NAME</th>
+                                                <th>LOT NO</th>
+                                                <th>IN DATE</th>
+                                                <th>EXPIRED DATE</th>
+                                                <th>BAG QTY</th>
+                                                <th>QTY PER BAG</th>
+                                                <th>TOTAL QTY</th>-->
+                        @*<th></th>*@
+                        <!--</tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div id="pickingLog" style="">
+                            <hr />
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label"><b>Transform Log</b></label>
+                                </div>
+                                <br />
+                                <div class="col-md-12">
+                                    <div class="dt-responsive col-md-12">
+                                        <table class="table table-bordered table-striped nowrap" id="transformTable" width="100%" cellspacing="0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>BIN/RACK CODE</th>
+                                                    <th>BIN/RACK NAME</th>
+                                                    <th>MATERIAL CODE</th>
+                                                    <th>MATERIAL NAME</th>
+                                                    <th>LOT NO.</th>
+                                                    <th>IN DATE</th>
+                                                    <th>EXP DATE</th>
+                                                    <th>QTY</th>
+                                                    <th>QTY/BAG</th>
+                                                    <th>BAG QTY</th>
+                                                    <th>PRINTED AT</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+                    <div class="float-right">
+                        <div id="buttonGroup">
+                            @*<button type="button" class="btn btn-danger" id="btnDelete"><i class="ik ik-x-circle"></i>Cancel</button>
+                                <button type="button" class="btn btn-success" id="btnConfirm"><i class="ik ik-x-circle"></i>Confirm</button>*@
+                        </div>
+                        <button type="button" class="btn btn-warning" style="display:none;" id="btnClose"><i class="ik ik-check-square"></i>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Save Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYes"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesDelete"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesConfirm"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="closeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Close Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnYesClose"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="productModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Detail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive">
+                    <table class="table table-bordered table-striped nowrap display" id="productTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>MATERIAL TYPE</th>
+                                <th>TOTAL QTY</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div id="materialInfo" style="display:none;">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Material Code</label>
+                        <div class="col-sm-6">
+                            <input type="text" autocomplete="off" class="form-control" id="MaterialCode" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Material Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" autocomplete="off" class="form-control" id="MaterialName" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Material Type</label>
+                        <div class="col-sm-6">
+                            <input type="text" autocomplete="off" class="form-control" id="MaterialType" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Available Qty</label>
+                        <div class="col-sm-6">
+                            <input type="text" autocomplete="off" class="form-control number" id="AvailableQty" readonly />
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="col-form-label"><b>KG</b></label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Request Qty</label>
+                        <div class="col-sm-6">
+                            <input type="text" autocomplete="off" class="form-control number" id="TotalQty" />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                        <div class="col-sm-1">
+                            <label class="col-form-label"><b>KG</b></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSaveDetail"><i class="ik ik-plus"></i>Save Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPickingModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Picking</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Outstanding Qty</label>
+                    <div class="col-sm-6">
+                        <input type="text" autocomplete="off" class="form-control" id="outstandingQty" readonly />
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                        <label class="col-form-label col-sm-4">Outstanding Qty</label>
+                        <div class="col-sm-4">
+                            <input type="text" autocomplete="off" class="form-control" id="OutstandingQty" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-4">Outstanding Bag Qty</label>
+                        <div class="col-sm-4">
+                            <input type="text" autocomplete="off" class="form-control" id="OutstandingBagQty" readonly />
+                            <span class="help-block text-danger"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableFifo">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>AREA NAME</th>
+                                        <th>BIN/RACK NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>BAG QTY</th>
+                                        <th>QTY/BAG</th>
+                                        <th>TOTAL QTY</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Bag Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number" id="AvailableBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Available Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number" id="TotalQtyE" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number3" id="BagQtyE" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                    <label class="col-form-label col-sm-2">Kg</label>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPick"><i class="ik ik-save"></i>Pick</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="printBarcodeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Barcode</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Printer</label>
+                    <div class="col-sm-8">
+                        <select id="PrinterList" class="form-control">
+                            <option value="" selected>Select Printer</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSaveDetail" onclick="PrintBarcode()"><i class="ik ik-plus"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+    </style>
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+
+    <script type="text/javascript">
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+    let ID = '@ViewBag.Param';
+
+    let WarehouseCode = "";
+
+    let pickingTable = null;
+
+    let productTable = null;
+
+    $('.number1').inputmask("9{*}", { "placeholder": "" });
+    //$('.number').inputmask("9{*}", { "placeholder": "" });
+    $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true });
+    $('.number3').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 3, 'digitsOptional': true });
+    $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+    $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "Transform")')
+    });
+
+            $('.number').inputmask({ "placeholder": "", 'alias': 'numeric', 'groupSeparator': ',', 'radixPoint': '.', 'autoGroup': true, 'digits': 2, 'digitsOptional': true });
+
+    initData();
+
+
+    function initData() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Transform/GetDataById?id=' + ID,
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        let data = response.data;
+                        ID = data.ID;
+
+                        let removeBtn = false;
+                        let pickedCol = true;
+
+                        $('#btnSave').hide();
+                        $('#btnAddDetail').hide();
+                        $('#buttonGroup').hide();
+                        $('#codeTransform').val(data.Code);
+                        $('#souceMatCode').val(data.MaterialCode);
+                        $('#sourceMatName').val(data.MaterialName);
+                        $('#targetMatCode').val(data.MaterialCodeTarget);
+                        $('#targetMatName').val(data.MaterialNameTarget);
+                        $('#trfQty').val(data.TotalQty);
+                        $('#Remarks').prop('readonly', true);
+
+                        if (data.TransactionStatus == 'OPEN') {
+                            $('#Status').addClass('badge badge-info');
+                            removeBtn = true;
+                            pickedCol = false;
+                            $('#Remarks').prop('readonly', false);
+                            $('#btnSave').show();
+                            $('#btnAddDetail').show();
+                            $('#buttonGroup').show();
+                        } else if (data.TransactionStatus == 'CLOSED') {
+                            $('#Status').addClass('badge badge-warning');
+                            $('#pickingLog').show();
+                        } else {
+                            $('#Status').addClass('badge badge-success');
+                            $('#pickingLog').show();
+                            $('#btnClose').show();
+                        }
+
+                        WarehouseCode = data.WarehouseCode;
+
+                        //init picking table
+
+                        //pickingTable = $('#orderPickingTable').DataTable({
+                        //    processing: true,
+                        //    serverSide: true,
+                        //    scrollY: "500px",
+                        //    scrollX: true,
+                        //    scrollCollapse: true,
+                        //    paging: true,
+                        //    //order: [[11, "desc"]],
+                        //    ajax: {
+                        //        "dataType": "json",
+                        //        "type": "POST",
+                        //        "url": server + "Api/Transform/DatatablePicking?HeaderID=" + ID
+                        //    },
+                        //    columns: [
+                        //        { "data": "WarehouseName", "name": "WarehouseName", "autoWidth": true },
+                        //        { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                        //        { "data": "BinRackAreaName", "name": "BinRackAreaName", "autoWidth": true },
+                        //        { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                        //        { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                        //        { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                        //        { "data": "InDate", "name": "InDate", "autoWidth": true },
+                        //        { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                        //        { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                        //        { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                        //        { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
+
+                        //       //{
+                        //       // "data": null,
+                        //       // "render": function (data, type, row) {
+                        //       //     let button = '';
+                        //       //     if (data.IsExpired) {
+                        //       //         button += '<button type="button" class="btn btn-primary" onclick="return ShowPickingForm(this)"><i class="ik ik-inbox"></i>QC Inspect</button> ';
+                        //       //     }
+                        //       //     else if(!data.QCInspected && !data.IsExpired){
+                        //       //         button += '<button type="button" class="btn btn-primary" onclick="return ShowPickingForm(this)"><i class="ik ik-inbox"></i>Picking</button> ';
+                        //       //     }
+                        //       //     return button;
+                        //       // },
+                        //       // },
+                        //    ]
+                        //});
+
+
+                        $('#Status').html(data.TransactionStatus);
+
+                        $('#Warehouse').val(data.WarehouseCode + ' - ' + data.WarehouseName);
+                        $('#Remarks').val(data.Remarks);
+
+
+                        $('#transformTable').DataTable({
+                            processing: true,
+                            serverSide: true,
+                            scrollY: "500px",
+                            scrollX: true,
+                            scrollCollapse: true,
+                            paging: true,
+                            order: [[0, "desc"]],
+                            ajax: {
+                                "dataType": "json",
+                                "type": "POST",
+                                "url": server + "Api/Transform/DatatableTransformDetail?HeaderID=" + data.ID
+                            },
+                            columnDefs: [
+                                { orderable: false, targets: -1 }
+                            ],
+                            columns: [
+                                { "data": "BinRackCode", "name": "BinRackCode", "autoWidth": true },
+                                { "data": "BinRackName", "name": "BinRackName", "autoWidth": true },
+                                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+                                { "data": "LotNo", "name": "LotNo", "autoWidth": true },
+                                { "data": "InDate", "name": "InDate", "autoWidth": true },
+                                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                                { "data": "BagQtyX", "name": "BagQtyX", "autoWidth": true },
+                                { "data": "PrintedAt", "name": "PrintedAt", "autoWidth": true },
+                                {
+                                    "data": null,
+                                    "render": function (data, type, row) {
+                                        let button = '';
+                                        //if (data.PrintBarcodeAction) {
+                                        //    button += '<button type="button" class="btn btn-primary" onclick="return ShowPrintBarcodeForm(this)"><i class="ik ik-inbox"></i>Print Barcode</button> ';
+                                        //}
+                                        button += '<button type="button" class="btn btn-primary" onclick="return ShowPrintBarcodeForm(this)"><i class="ik ik-inbox"></i>Print Barcode</button> ';
+                                        return button;
+                                    },
+                                },
+                            ]
+                        });
+
+
+                       //productTable = $('#productTable').DataTable({
+                       //     processing: true,
+                       //     serverSide: true,
+                       //     scrollY: "250px",
+                       //     scrollX: true,
+                       //     scrollCollapse: true,
+                       //     paging: true,
+                       //     order: [[1, "asc"]],
+                       //     ajax: {
+                       //         "dataType": "json",
+                       //         "type": "POST",
+                       //         "url": server + "Api/Outbound/DatatableProduct?WarehouseCode=" + WarehouseCode
+                       //     },
+                       //     columnDefs: [
+                       //         { orderable: false, targets: 0 }
+                       //     ],
+                       //     columns: [
+                       //         {
+                       //             "data": null,
+                       //             "render": function (data, type, row) {
+                       //                 return '<i class="ik ik-check"></i>';
+                       //             }
+                       //         },
+                       //         { "data": "MaterialCode", "name": "MaterialCode" },
+                       //         { "data": "MaterialName", "name": "MaterialName" },
+                       //         { "data": "MaterialType", "name": "MaterialType" },
+                       //         { "data": "TotalQty", "name": "TotalQty" }
+                       //     ]
+                       // });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                        @*setTimeout(function () { window.location = '@Url.Action("Index", "Outbound")'; }, 1000);*@
+                    }
+                }
+            });
+                      setPrinterList();
+    };
+
+
+        $('#btnSave').click(function () {
+            $('#saveModal').modal('show');
+        });
+
+    $('#btnDelete').click(function () {
+        $('#deleteModal').modal('show');
+    });
+
+
+    $('#btnYes').click(function () {
+        $('#btnSave').prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Outbound/Update',
+                data: {
+                    ID: ID,
+                    Remarks: $('#Remarks').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                         setTimeout(function () {  window.location.reload() }, 1000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#saveModal').modal('hide');
+                    $('#btnSave').prop('disabled', false);
+                }
+
+            });
+    });
+
+
+
+
+
+    $('#orderTable tbody').on('click', 'button', function () {
+        var dat = $('#orderTable').DataTable().row($(this).parents('tr')).data();
+
+    });
+
+    function RemoveData(row) {
+        var elementRow = $(row).closest('tr');
+        var dat = $('#orderTable').DataTable().row($(elementRow)).data();
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Outbound/RemoveOrder',
+            data: {
+                ID: dat.ID
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (!isValid) {
+                    notify("Warning", "warning", response.message);
+                } else {
+                    notify("Success", "success", response.message);
+                    $('#orderTable').DataTable().ajax.reload();
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                notify("Error", "error", "Oops! Something went wrong.");
+            }
+        });
+    }
+
+    let dataProduct = {};
+    let MaterialCode;
+    $('#productTable tbody').on('click', 'tr', function () {
+        dataProduct = productTable.row(this).data();
+
+        $('#materialInfo').show();
+
+
+        $('#btnSaveDetail').show();
+
+        $('#MaterialCode').next().html('');
+        $('#MaterialCode').removeClass('is-invalid');
+
+
+        $('#AvailableQty').val('');
+
+        $('#TotalQty').val('');
+        $('#TotalQty').next().html('');
+        $('#TotalQty').removeClass('is-invalid');
+
+        $('#MaterialCode').val(dataProduct.MaterialCode);
+        $('#MaterialName').val(dataProduct.MaterialName);
+        $('#MaterialType').val(dataProduct.MaterialType);
+        $('#AvailableQty').val(dataProduct.TotalQty);
+
+        MaterialCode = dataProduct.MaterialCode;
+
+
+        $('#productTable tbody tr').removeClass('row_selected');
+        $(this).addClass('row_selected');
+    });
+
+
+        function dissmissDialog() {
+            $('#saveModal').modal('hide');
+            }
+
+            $('#btnAddDetail').click(function () {
+
+                $('#btnSaveDetail').hide();
+                $('#materialInfo').hide();
+                productTable.search('').draw();
+                productTable.columns.adjust();
+                $('#productTable tbody tr').removeClass('row_selected');
+
+                $('#MaterialCode').val('');
+                $('#MaterilName').val('');
+                $('#MaterialType').val('');
+                $('#TotalQty').val('');
+
+
+                $('#productModal').modal({
+                    backdrop: 'static',
+                    keyboard: false
+                });
+
+            });
+
+
+    $('#btnSaveDetail').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Outbound/CreateOrder',
+                data: {
+                    HeaderID : ID,
+                    MaterialCode: MaterialCode,
+                    TotalQty: $('#TotalQty').val() != "" ? $('#TotalQty').val().replace(/\,/g, '') : 0
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+
+                        notify("Warning", "warning", response.message);
+                    } else {
+                          notify("Success", "success", response.message);
+                        $('#productModal').modal('hide');
+                        $('#orderTable').DataTable().ajax.reload();
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                }
+            });
+    });
+
+
+    $('#btnDelete').click(function (ev) {
+        $('#deleteModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+    });
+
+    $('#btnConfirm').click(function () {
+        $('#confirmModal').modal('show');
+    });
+
+    $('#btnClose').click(function () {
+        $('#closeModal').modal('show');
+    });
+
+
+     $('#btnYesClose').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Outbound/Close?id=' + ID,
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#closeModal').modal('hide');
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Index", "Outbound")'); }, 1000);
+                    }
+                }
+            });
+     });
+
+        $('#btnYesDelete').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Outbound/Cancel?id=' + ID,
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#deleteModal').modal('hide');
+                    if (!isValid) {
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.replace('@Url.Action("Index", "Outbound")'); }, 1000);
+                    }
+                }
+            });
+        });
+
+    $('#btnYesConfirm').click(function () {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Outbound/Confirm?id=' + ID,
+                data: {},
+                success: function (response) {
+                    isValid = response.status;
+                    $('#confirmModal').modal('hide');
+
+                    if (!isValid) {
+                        //toastr.error(response.message);
+                        notify("Warning", "warning", response.message);
+                    } else {
+                         notify("Success", "success", response.message);
+                       setTimeout(function () {  window.location.reload() }, 1000);
+                    }
+                }
+            });
+    });
+
+
+        let OrderId = "";
+        let BinrackCode = "";
+        let TransformId = "";
+    let list_fifo = [];
+    let data_fifo = {};
+    function ShowPickingForm() {
+
+        //var elementRow = $(row).closest('tr');
+        //var dataTableRow = $('#orderPickingTable').DataTable().row($(elementRow)).data();
+        //console.log(dataTableRow);
+        //TransformId = dataTableRow.TransformID;
+        //BinrackCode = dataTableRow.BinRackCode;
+        //OrderId = dataTableRow.ID;
+        //$('#BagQty').val(0);
+        //$('#AvailableBagQty').val(dataTableRow.BagQty);
+        ////$('#OutstandingQty').val(dataTableRow.OutstandingQty);
+        ////$('#OutstandingBagQty').val(dataTableRow.OutstandingBagQty);
+        //$('#TotalQtyE').val(dataTableRow.TotalQty);
+
+        //$('#BagQty').next().html('');
+        //$('#BagQty').removeClass('is-invalid');
+        //$('#BagQtyE').val('0');
+
+        $('#BagQtyE').val(0);
+        $('#formPickingModal').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+        //ajax get list fifo
+
+        loadFifo();
+
+    }
+
+    function loadFifo() {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + "Api/Transform/GetFifo",
+            data: {
+                OrderId: ID
+            },
+            success: function (response) {
+
+                $('#tableFifo tbody').empty();
+                if (response.status) {
+                    list_fifo = response.data;
+                    var html = "";
+
+                    if (list_fifo.length > 0) {
+                        $.each(list_fifo, function (index, value) {
+
+                            if (value.IsExpired && !value.QCInspected) {
+                                html += '<tr class="row_expired">';
+                                html += '<td><button class="btn btn-primary" onclick ="event.stopPropagation(); createQC(\'' + index + '\')"> <i class="ik ik-check"></i>QC</button></td>';
+                            } else if (value.QCInspected) {
+                                html += '<tr class="row_qc">';
+                                html += '<td><span class="badge badge-warning">On Inspection</span></td>';
+                            } else {
+                                html += '<tr>';
+                                html += '<td><input type="radio" name="id" onchange="chooseStock(\'' + index + '\')"></td>';
+                            }
+                            html += '<td>' + value.BinRackAreaName + '</td>';
+                            html += '<td>' + value.BinRackName + '</td>';
+                            html += '<td>' + value.LotNo + '</td>';
+                            html += '<td>' + value.InDate + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.BagQty + '</td>';
+                            html += '<td>' + value.QtyPerBag + '</td>';
+                            html += '<td>' + value.TotalQty + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+                    $('.MaterialCode').val(list_fifo[0].MaterialCode);
+                    $('.MaterialName').val(list_fifo[0].MaterialName);
+                    $('#outstandingQty').val(response.outstandingQty);
+
+                    $('#tableFifo tbody').append(html);
+
+                    $('#formPickingModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+
+
+            }
+        });
+
+    }
+
+    function chooseStock(index) {
+        data_fifo = list_fifo[index];
+        $('#AvailableBagQty').val(data_fifo.BagQty);
+        $('#TotalQtyE').val(data_fifo.TotalQty);
+        StockId = data_fifo.ID;
+        TransformId = data_fifo.TransformID;
+        BinrackCode = data_fifo.BinRackCode;
+        OrderId = data_fifo.ID;
+    }
+
+    let StockId = "";
+
+    $('#btnPick').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Transform/Picking',
+            data: {
+                HeaderId: ID,
+                BinRackCode: BinrackCode,
+                StockId : OrderId,
+                Qty: $('#BagQtyE').val()
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    let data = response.data;
+                    OrderId = OrderId;
+                    $('#BagQty').val(0);
+                    $('#AvailableBagQty').val(0);
+                    //$('#OutstandingQty').val(data.OutstandingQty);
+                    //$('#OutstandingBagQty').val(data.OutstandingBagQty);
+
+                    //$('.MaterialCode').val(data.MaterialCode);
+                    //$('.MaterialName').val(data.MaterialName);
+
+                    $('#BagQty').next().html('');
+                    $('#BagQty').removeClass('is-invalid');
+                    loadFifo();
+                    $('#listTable').DataTable().ajax.reload();
+                    $('#listTable').DataTable().columns.adjust();
+                    $('#formPickingModal').modal('hide');
+
+
+                    //$('#orderPickingTable').DataTable().ajax.reload();
+                    //$('#orderPickingTable').DataTable().columns.adjust();
+
+                    $('#transformTable').DataTable().ajax.reload();
+                    $('#transformTable').DataTable().columns.adjust();
+                    notify("Success", "success", response.message);
+
+
+
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+
+    });
+        let TransformDetailId = "";
+    function createQC(index) {
+        data_fifo = list_fifo[index];
+        let idStock = data_fifo.ID;
+
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/QCInspection/Create',
+            data: {
+                StockID: idStock,
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    notify("Success", "success", response.message);
+                    $('#formPickingModal').modal('hide')
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+    }
+        function ShowPrintBarcodeForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = $('#transformTable').DataTable().row($(elementRow)).data();
+            TransformDetailId = dataTableRow.ID;
+            $('#printBarcodeModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
+
+        function PrintBarcode() {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Transform/Print',
+                data: {
+                    TransformDetailId: TransformDetailId,
+                    Printer: $('#PrinterList').find(":selected").val(),
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (!isValid) {
+                        $.each(response.error_validation, function (index, value) {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        });
+
+                        notify("Warning", "warning", response.message);
+
+                    } else {
+                        notify("Success", "success", response.message);
+                        setTimeout(function () { window.location.reload() }, 1000);
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    notify("Error", "error", "Oops! Something went wrong.");
+                },
+                complete: function () {
+                    $('#saveModal').modal('hide');
+                    $('#btnSave').prop('disabled', false);
+                }
+
+            });
+        }
+
+        function setPrinterList() {
+            $('#PrinterList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/Control/ListPrinter',
+                success: function (response) {
+
+                    $('#PrinterList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Printer</option>';
+                    $.each(response.printers, function (index, value) {
+                        html += '<option value="' + value.PrinterIP + '">' + value.PrinterName + '</option>';
+                    });
+                    $('#PrinterList').append(html);
+                    $('#PrinterList').select2({ width: '100%' });
+                }
+            });
+        }
+        function createQC(index) {
+            data_fifo = list_fifo[index];
+            let idStock = data_fifo.ID;
+
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/Create',
+                data: {
+                    StockID: idStock,
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        notify("Success", "success", response.message);
+                        $('#formPickingModal').modal('hide')
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+
+                }
+            });
+        }
+
+    </script>
+}

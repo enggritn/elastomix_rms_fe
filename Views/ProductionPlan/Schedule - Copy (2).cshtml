@@ -1,0 +1,336 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>RMI - @ViewBag.Title</title>
+    <link rel="icon" href="@Url.Content("~/Content/img/logo.png")">
+
+    @Styles.Render("~/bundles/css")
+    @Styles.Render("~/Content/plugins/fontawesome-free/css/all.min.css")
+    @Styles.Render("~/Content/plugins/icon-kit/dist/css/iconkit.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/fullcalendar/lib/main.css")
+
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
+
+    <style>
+        #preloader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            z-index: 999999999;
+            background-color: rgba(0,0,0,0.5) !important;
+        }
+
+        .sk-cube-grid {
+            width: 40px;
+            height: 40px;
+            margin: 250px auto;
+        }
+
+            .sk-cube-grid .sk-cube {
+                width: 33%;
+                height: 33%;
+                background-color: #007bff;
+                float: left;
+                -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+                animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+            }
+
+            .sk-cube-grid .sk-cube1 {
+                -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s;
+            }
+
+            .sk-cube-grid .sk-cube2 {
+                -webkit-animation-delay: 0.3s;
+                animation-delay: 0.3s;
+            }
+
+            .sk-cube-grid .sk-cube3 {
+                -webkit-animation-delay: 0.4s;
+                animation-delay: 0.4s;
+            }
+
+            .sk-cube-grid .sk-cube4 {
+                -webkit-animation-delay: 0.1s;
+                animation-delay: 0.1s;
+            }
+
+            .sk-cube-grid .sk-cube5 {
+                -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s;
+            }
+
+            .sk-cube-grid .sk-cube6 {
+                -webkit-animation-delay: 0.3s;
+                animation-delay: 0.3s;
+            }
+
+            .sk-cube-grid .sk-cube7 {
+                -webkit-animation-delay: 0s;
+                animation-delay: 0s;
+            }
+
+            .sk-cube-grid .sk-cube8 {
+                -webkit-animation-delay: 0.1s;
+                animation-delay: 0.1s;
+            }
+
+            .sk-cube-grid .sk-cube9 {
+                -webkit-animation-delay: 0.2s;
+                animation-delay: 0.2s;
+            }
+
+        @@-webkit-keyframes sk-cubeGridScaleDelay {
+            0%, 70%, 100% {
+                -webkit-transform: scale3D(1, 1, 1);
+                transform: scale3D(1, 1, 1);
+            }
+
+            35% {
+                -webkit-transform: scale3D(0, 0, 1);
+                transform: scale3D(0, 0, 1);
+            }
+        }
+
+        @@keyframes sk-cubeGridScaleDelay {
+            0%, 70%, 100% {
+                -webkit-transform: scale3D(1, 1, 1);
+                transform: scale3D(1, 1, 1);
+            }
+
+            35% {
+                -webkit-transform: scale3D(0, 0, 1);
+                transform: scale3D(0, 0, 1);
+            }
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        #calendar {
+            padding: 10px;
+        }
+
+        .fc-view > table {
+/*            min-width: 300%;*/
+/*            width: 300%;*/
+        }
+
+        /*.fc-time-grid .fc-slats {
+            z-index: 4;
+            pointer-events: none;
+        }*/
+
+      /*  .fc-scroller.fc-time-grid-container {
+            overflow: scroll !important;
+        }*/
+
+       /* .fc-axis {
+            position: sticky;
+            left: 0;
+            background: white;
+        }
+
+*/
+        .fc-scrollgrid-shrink {
+            position: absolute !important;
+        }
+
+
+        body{
+            overflow-y : hidden;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+    <div id="preloader" style="display:none;">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <p style='text-align:center' class="mt-5">
+            <h2 class="text-center">@ViewBag.Title</h2>
+        </p>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="calendar">
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+
+
+    @Scripts.Render("~/bundles/js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/fullcalendar/lib/main.js")
+    <script>
+        getPermission('@ViewBag.Module', '@ViewBag.Method');
+        function getPermission(module, method) {
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', '@Session["token"]');
+                },
+                url: '@ViewBag.Server' + 'Api/Permission/CheckPermission',
+                data: {
+                    MenuName: module,
+                    ControlName: method,
+                },
+                success: function (response) {
+                    isValid = response.status;
+                }
+            });
+        };
+    </script>
+    <script>
+        var preloader = $('#preloader');
+        $(document).ajaxStart(function () {
+            preloader.show();
+        }).ajaxStop(function () {
+            preloader.hide();
+        });
+    </script>
+
+    <script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let baseUrl = '@ViewBag.BaseUrl';
+        var calendar = null;
+        let year = "@ViewBag.Year";
+        let month = "@ViewBag.Month";
+        let line = "@ViewBag.LineNumber";
+        let currentMoment = moment(year + '-' + month, 'YYYY-MM');
+        //document.body.style.overflow = 'hidden';
+
+        renderCalendar();
+
+      $('#btnBack').click(function () {
+        window.location.replace('@Url.Action("Index", "ProductionPlan")')
+        });
+
+        function renderCalendar() {
+
+            var calendarEl = document.getElementById('calendar');
+            currentMoment.add(0, 'M')
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                duration: { days: currentMoment.daysInMonth() },
+                initialDate: currentMoment.startOf('month').format('YYYY-MM-DD'),
+                allDaySlot: false,
+                slotDuration: '00:05:00',
+                scrollTime: '07:00:00',
+                slotMinTime: '00:00:00',
+                slotLabelInterval: '01:00:00',
+                dayHeaderFormat: { weekday: 'short', day: 'numeric', omitCommas: true },
+                slotLabelFormat: { hour: 'numeric', minute: '2-digit', hour12: false },
+                dayHeaderContent: (args) => {
+                    return moment(args.date).format('ddd') + " / " + args.date.getDate();
+                },
+                 slotLaneContent: function (arg) {
+                },
+                events: [
+                    {
+                        "title": "BREAK",
+                        "start": "2020-11-23T11:30:00",
+                        "end": "2020-11-23T12:30:00",
+                        "allDay": false,
+                        "backgroundColor": "#4f4f4f",
+                        "textColor": "#fff"}
+                ],
+                eventColor: '#FFFF99',
+                eventTextColor: '#000',
+                eventSources: [
+                    {
+                        url: server + 'Api/ProductionPlan/GetSchedule?year=' + year + '&month=' + month + '&line=' + line,
+                        type: 'GET',
+                        cache: false,
+                    }
+                ],
+                eventContent: function (arg) {
+                    return {
+                        html: '<b>' + arg.timeText + '<br/><br/>' + arg.event.title + '</b>'
+                    }
+                },
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault(); // don't let the browser navigate
+                    let id = info.event.id;
+                    
+                },
+                stickyHeaderDates: true,
+                stickyFooterScrollbar: true,
+                customButtons: {
+                    CloseButton: {
+                        text: 'Close',
+                        click: function () {
+                            window.close();
+                        }
+
+                    }
+                },
+                headerToolbar: {
+                    left: 'CloseButton',
+                    center: 'title',
+                    right: 'prev,next',
+                },
+                validRange: {
+                    start: currentMoment.startOf('month').format('YYYY-MM-DD'),
+                    end: currentMoment.endOf('month').format('YYYY-MM-DD')
+                },
+                height: 650,
+                //eventClick: function (event) {
+                //    if (event.headerId) {
+                //        alert(headerId);
+                //    }
+                //}
+            });
+
+            calendar.render();
+
+        }
+    </script>
+
+
+</body>
+
+</html>
