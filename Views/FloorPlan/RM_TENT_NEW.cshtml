@@ -1,0 +1,828 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = null;
+
+    Char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    Char[] alpha1 = "ZYXWVUTSRQPONMLKJIHGFEDCBA".ToCharArray();
+    Char[] alpha2 = "GFEDCBAZYXWVUTSRQPONMLKJIHGFEDCBA".ToCharArray();
+
+    int total_row = 54;
+    int total_col = 40;
+    int count1 = 0;
+
+    int irow_total_rem3 = 5;
+    int icol_total_rem3 = 20;
+
+    int irow_total_16 = 5;
+    int icol_total_16 = 14;
+}
+
+<table class="table-layout-info table table-sm table-borderless ml-10">
+    <tr>
+        <td style="vertical-align: top; width : 100px;">Note :</td>
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-warning btn-block btn-info-rak" style="width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>OIL</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-primary btn-block" style="width: 2px; height: 20px; background-color: #00ffff;">&nbsp;</button>
+        </td>
+        <td>POLYMER</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-primary btn-block" style="width: 2px; height: 20px; background-color: #2e6b23;">&nbsp;</button>
+        </td>
+        <td>CARBON</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>CHEMICAL</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-warning btn-block" style="width: 2px; height: 20px; background-color: #ffff00;">&nbsp;</button>
+        </td>
+        <td>CUST. SUPPLIES</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-block" style="background-color: #ff89b8; width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>OTHER</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-block" style="background: #00FF00; width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>REMAINING</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-block" style="background: #cc66ff; width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>PREPARE AREA</td>
+
+        <td style="width: 30px;">
+            <button class="btn btn-xs btn-block" style="background: #ffcccc; width: 2px; height: 20px;">&nbsp;</button>
+        </td>
+        <td>RECEIVING AREA</td>
+    </tr>
+</table>
+
+<table id="table-rm-tent-new" class="table-floor table table-bordered table-sm">
+    <tbody>
+        @for (int iRow = 1; iRow < total_row; iRow++)
+        {
+        <tr>
+            @for (int iCol = 0; iCol < total_col; iCol++)
+            {
+
+                @* Area RAK - 7*@
+                if (iRow >= 1 && iRow <= 2 && iCol >= 0 && iCol <= 32)
+                {
+                    if (iRow == 1 && iCol == 1)
+                    {
+                        <td colspan="32" rowspan="4" style="position:sticky;">
+                            <table id="table-rak-7">
+                                @for (int iRowRak7 = 4; iRowRak7 > 0; iRowRak7--)
+                                {
+                                    <tr>
+                                        @for (int iColRak7 = 0; iColRak7 < 32; iColRak7++)
+                                        {
+                                            if (iColRak7 < 26)
+                                            {
+                                                <td>
+                                                    <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" id="AR00207@(alpha1[25- iColRak7])@(iRowRak7)" data-area="AR002" data-rak="07@(alpha1[25- iColRak7])@(iRowRak7)">07<br />@(alpha1[25- iColRak7])@(iRowRak7)</button>
+                                                </td>
+                                            }
+                                            if (iColRak7 > 25)
+                                            {
+                                                <td>
+                                                    <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" id="AR00207A@(alpha2[32- iColRak7])@(iRowRak7)" data-area="AR002" data-rak="07A@(alpha2[32- iColRak7])@(iRowRak7)">07<br />A@(alpha2[32- iColRak7])@(iRowRak7)</button>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DIATAS RAK 6
+                else if (iRow >= 6 && iRow <= 8 && iCol >= 1 && iCol <= 14)
+                {
+                    if (iRow == 6 && iCol == 14)
+                    {
+                        <td class="p-1" colspan="1" style="border-left: 1px solid #fff;">
+                            <button class="btn-info-rak" id="AR030AREA3" data-area="AR030" data-rak="AREA3" style="">
+                                AREA 3
+                            </button>
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DITAS RAK 8
+                else if (iRow >= 6 && iRow <= 8 && iCol >= 15 && iCol <= 19)
+                {
+                    if (iRow == 6 && iCol == 15)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 1px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 6 && iCol == 16)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 6 && iCol == 17)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 6 && iCol == 18)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff; border-right: 35px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 6 && iCol == 19)
+                    {
+                        <td class="p-1" colspan="10" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA4" data-area="AR030" data-rak="AREA4" style="">
+                                AREA 4
+                            </button>
+                        </td>
+                    }
+                }
+
+                // RAK 6
+                else if (iRow >= 7 && iRow <= 9 && iCol >= 0 && iCol <= 13)
+                {
+                    if (iRow == 7 && iCol == 0)
+                    {
+                        int irow_total_6 = 5;
+                        int icol_total_6 = 14;
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-2" class="table-floor">
+                                @for (int i = 1; i < irow_total_6; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_6; ii++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #00ffff;" id="AR00206@(alpha[13 - ii])@i" data-area="AR002" data-rak="06@(alpha[13 - ii])@i">06<br />@(alpha[13 - ii])@i</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 8
+                else if (iRow >= 7 && iRow <= 9 && iCol >= 18 && iCol <= 31)
+                {
+                    if (iRow == 9 && iCol == 18)
+                    {
+                        int irow_total_8 = 5;
+                        int icol_total_8 = 14;
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 20px solid #fff;">
+                        </td>
+                        <td class="" rowspan="4" colspan="8" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-8">
+                                @for (int i = 1; i < irow_total_8; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_8; ii++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" id="AR00208@(alpha1[25 - ii])@i" data-area="AR002" data-rak="08@(alpha1[25 - ii])@i">08<br />@(alpha1[25 - ii])@i</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 5
+                else if (iRow >= 11 && iRow <= 13 && iCol >= 0 && iCol <= 13)
+                {
+                    if (iRow == 11 && iCol == 0)
+                    {
+                        <td class="" rowspan="4" colspan="1" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-5">
+                                @for (int iRowRak5 = 4; iRowRak5 > 0; iRowRak5--)
+                                {
+                                    <tr>
+                                        @for (int iColRak5 = 0; iColRak5 < 14; iColRak5++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00ffff;" id="AR00205@(alpha[13- iColRak5])@(iRowRak5)" data-area="AR002" data-rak="05@(alpha[13- iColRak5])@(iRowRak5)">05<br />@(alpha[13- iColRak5])@(iRowRak5)</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 4
+                else if (iRow >= 18 && iRow <= 20 && iCol >= 0 && iCol <= 13)
+                {
+                    if (iRow == 18 && iCol == 0)
+                    {
+                        int irow_total_4 = 5;
+                        int icol_total_4 = 14;
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-4" class="table-floor">
+                                @for (int i = 1; i < irow_total_4; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_4; ii++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #00ffff;" id="AR00204@(alpha[13 - ii])@i" data-area="AR002" data-rak="04@(alpha[13 - ii])@i">04<br />@(alpha[13 - ii])@i</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 3
+                else if (iRow >= 22 && iRow <= 24 && iCol >= 0 && iCol <= 13)
+                {
+                    if (iRow == 22 && iCol == 0)
+                    {
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-3">
+                                @for (int iRowRak3 = 4; iRowRak3 > 0; iRowRak3--)
+                                {
+                                    <tr>
+                                        @for (int iColRak3 = 0; iColRak3 < 14; iColRak3++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00ffff;" id="AR00203@(alpha[13- iColRak3])@(iRowRak3)" data-area="AR002" data-rak="03@(alpha[13- iColRak3])@(iRowRak3)">03<br />@(alpha[13- iColRak3])@(iRowRak3)</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 2
+                else if (iRow >= 28 && iRow <= 30 && iCol >= 0 && iCol <= 9)
+                {
+                    if (iRow == 28 && iCol == 4)
+                    {
+                        int irow_total_2 = 5;
+                        int icol_total_2 = 14;
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-2" class="table-floor">
+                                @for (int i = 1; i < irow_total_2; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_2; ii++)
+                                        {
+                                            if (ii < 4)
+                                            {
+                                                <td class="p-1" rowspan="1" colspan="1" style="border-left: 50px solid #fff;">
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #00ffff;" id="AR00202@(alpha[13 - ii])@i" data-area="AR002" data-rak="02@(alpha[13 - ii])@i">02<br />@(alpha[13 - ii])@i</button>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+
+                // RAK 1
+                else if (iRow >= 32 && iRow <= 34 && iCol >= 0 && iCol <= 13)
+                {
+                    if (iRow == 32 && iCol == 0)
+                    {
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-1">
+                                @for (int iRowRak1 = 4; iRowRak1 > 0; iRowRak1--)
+                                {
+                                    <tr>
+                                        @for (int iColRak1 = 0; iColRak1 < 14; iColRak1++)
+                                        {
+                                            if (iColRak1 < 4)
+                                            {
+                                                <td class="p-1" rowspan="1" colspan="1" style="border-left: 50px solid #fff;">
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00ffff;" id="AR00201@(alpha[13 - iColRak1])@(iRowRak1)" data-area="AR002" data-rak="01@(alpha[13 - iColRak1])@(iRowRak1)">01<br />@(alpha[13 - iColRak1])@(iRowRak1)</button>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+
+                // RAK 9
+                else if (iRow >= 11 && iRow <= 13 && iCol >= 14 && iCol <= 27)
+                {
+                    if (iRow == 11 && iCol == 14)
+                    {
+                        <td colspan="14" rowspan="4" style="position:sticky;">
+                            <table id="table-rak-9">
+                                @for (int iRowRak9 = 4; iRowRak9 > 0; iRowRak9--)
+                                {
+                                    <tr>
+                                        @for (int iColRak9 = 0; iColRak9 < 18; iColRak9++)
+                                        {
+                                            if (iColRak9 < 4)
+                                            {
+                                                <td class="p-1" rowspan="1" colspan="1" style="border-left: 50px solid #fff;">
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn btn-xs btn-warning btn-block text-center small text-black btn-info-rak" style="background-color: #ffff00;" id="AR00209@(alpha1[29 - iColRak9])@(iRowRak9)" data-area="AR002" data-rak="09@(alpha1[29 - iColRak9])@(iRowRak9)">09<br />@(alpha1[29 - iColRak9])@(iRowRak9)</button>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+
+                        </td>
+                    }
+                }
+
+                // RAK 10
+                else if (iRow >= 18 && iRow <= 20 && iCol >= 14 && iCol <= 27)
+                {
+                    if (iRow == 18 && iCol == 14)
+                    {
+                        int irow_total_10 = 5;
+                        int icol_total_10 = 14;
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 20px solid #fff;">
+                        </td>
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-10" class="table-floor">
+                                @for (int i = 1; i < irow_total_10; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_10; ii++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #2e6b23;" id="AR00210@(alpha1[25 - ii])@i" data-area="AR002" data-rak="10@(alpha1[25 - ii])@i">10<br />@(alpha1[25 - ii])@i</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 11
+                else if (iRow >= 22 && iRow <= 24 && iCol >= 14 && iCol <= 27)
+                {
+                    if (iRow == 22 && iCol == 14)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 20px solid #fff;">
+                        </td>
+                        <td colspan="14" rowspan="4" style="position:sticky;">
+                            <table id="table-rak-11">
+                                @for (int iRowRak11 = 4; iRowRak11 > 0; iRowRak11--)
+                                {
+                                    <tr>
+                                        @for (int iColRak11 = 0; iColRak11 < 14; iColRak11++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #2e6b23;" id="AR00211@(alpha1[25 - iColRak11])@(iRowRak11)" data-area="AR002" data-rak="11@(alpha1[25 - iColRak11])@(iRowRak11)">11<br />@(alpha1[25 - iColRak11])@(iRowRak11)</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+
+                        </td>
+                    }
+                }
+
+                // RAK 12
+                else if (iRow >= 28 && iRow <= 30 && iCol >= 14 && iCol <= 27)
+                {
+                    if (iRow == 28 && iCol == 14)
+                    {
+                        int irow_total_12 = 5;
+                        int icol_total_12 = 14;
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 20px solid #fff;">
+                        </td>
+                        <td class="" rowspan="4" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-12" class="table-floor">
+                                @for (int i = 1; i < irow_total_12; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_12; ii++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #2e6b23;" id="AR00212@(alpha1[25 - ii])@i" data-area="AR002" data-rak="12@(alpha1[25 - ii])@i">12<br />@(alpha1[25 - ii])@i</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+
+                // RAK 13
+                else if (iRow >= 32 && iRow <= 34 && iCol >= 14 && iCol <= 27)
+                {
+                    if (iRow == 32 && iCol == 14)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 20px solid #fff;">
+                        </td>
+                        <td colspan="14" rowspan="4" style="position:sticky;">
+                            <table id="table-rak-13">
+                                @for (int iRowRak13 = 4; iRowRak13 > 0; iRowRak13--)
+                                {
+                                    <tr>
+                                        @for (int iColRak13 = 0; iColRak13 < 12; iColRak13++)
+                                        {
+                                            <td>
+                                                <button class="btn btn-xs btn-warning btn-block btn-info-rak" id="AR00213@(alpha1[25 - iColRak13])@(iRowRak13)" data-area="AR002" data-rak="13@(alpha1[25 - iColRak13])@(iRowRak13)">13<br />@(alpha1[25 - iColRak13])@(iRowRak13)</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+
+                        </td>
+                    }
+                }
+
+
+                // BLANK PURPLE DITAS RAK 4
+                else if (iRow >= 15 && iRow <= 16 && iCol >= 0 && iCol <= 9)
+                {
+                    if (iRow == 15 && iCol == 0)
+                    {
+                        <td class="p-1" colspan="1" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA2" data-area="AR030" data-rak="AREA2" style="">
+                                AREA 2
+                            </button>
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DITAS RAK 10
+                else if (iRow >= 15 && iRow <= 16 && iCol >= 15 && iCol <= 19)
+                {
+                    if (iRow == 15 && iCol == 15)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 1px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 15 && iCol == 16)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 15 && iCol == 17)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 15 && iCol == 18)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff; border-right: 35px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 15 && iCol == 19)
+                    {
+                        <td class="p-1" colspan="10" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA5" data-area="AR030" data-rak="AREA5" style="">
+                                AREA 5
+                            </button>
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DITAS RAK 2
+                else if (iRow >= 26 && iRow <= 28 && iCol >= 0 && iCol <= 9)
+                {
+                    if (iRow == 26 && iCol == 0)
+                    {
+                        <td class="p-1" colspan="1" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA1" data-area="AR030" data-rak="AREA1" style="">
+                                AREA 1
+                            </button>
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DITAS RAK 12
+                else if (iRow >= 26 && iRow <= 27 && iCol >= 15 && iCol <= 19)
+                {
+                    if (iRow == 26 && iCol == 15)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 1px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 26 && iCol == 16)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 26 && iCol == 17)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 26 && iCol == 18)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff; border-right: 35px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 26 && iCol == 19)
+                    {
+                        <td class="p-1" colspan="10" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA6" data-area="AR030" data-rak="AREA6" style="">
+                                AREA 6
+                            </button>
+                        </td>
+                    }
+                }
+
+                // BLANK WHITE SEJAJAR AREA 7
+                else if (iRow >= 37 && iRow <= 39 && iCol >= 0 && iCol <= 9)
+                {
+                    if (iRow == 37 && iCol == 0)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" id="BLANKWHITE1" style="border-left: 1px solid #fff;">
+                        </td>
+                    }
+                }
+
+                // BLANK PURPLE DITAS RAK 14
+                else if (iRow >= 37 && iRow <= 39 && iCol >= 15 && iCol <= 19)
+                {
+                    if (iRow == 37 && iCol == 15)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 1px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 37 && iCol == 16)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 37 && iCol == 17)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 37 && iCol == 18)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 55px solid #fff; border-right: 35px solid #fff;">
+                        </td>
+                    }
+                    if (iRow == 37 && iCol == 19)
+                    {
+                        <td class="p-1" colspan="10" style="border-left: 1px solid #fff;">
+                            <button class="border-warning btn-info-rak" id="AR030AREA7" data-area="AR030" data-rak="AREA7" style="">
+                                AREA 7
+                            </button>
+                        </td>
+                    }
+                }
+
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+
+<table id="table-rm-tent-new1" class="table-floor table table-bordered table-sm">
+    <tbody>
+        @for (int iRow = 1; iRow < total_row; iRow++)
+        {
+        <tr>
+            @for (int iCol = 0; iCol < total_col; iCol++)
+            {
+                // BLANK PURPLE RECEIVING AREA
+                if (iRow >= 1 && iRow <= 2 && iCol >= 0 && iCol <= 6)
+                {
+                    if (iRow == 1 && iCol == 1)
+                    {
+                        <td class="p-1" rowspan="1" colspan="1">
+                            <button class="border-warning btn-info-rak" id="AR030RECEIVINGAREA" data-area="AR030" data-rak="RECEIVINGAREA" style="">
+                                RECEIVING AREA
+                            </button>
+                        </td>
+                    }
+                    if (iRow == 1 && iCol == 2)
+                    {
+                        if (count1 == 0)
+                        {
+                            count1++;
+                            int set = 5;
+                            <td class="" rowspan="1" colspan="1" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                                <table>
+                                    @for (int iRowRak1 = 28; iRowRak1 > 0; iRowRak1--)
+                                    {
+                                    <tr>
+                                        @for (int iColRak1 = 1; iColRak1 < 5; iColRak1++)
+                                        {
+                                            if (iRowRak1 > 24)
+                                            {
+                                                <td class="p-1" rowspan="1" colspan="1" style="border-top: 22px solid #fff;">
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn-rem2 btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00FF00;" id="AR028@(alpha1[26 - iRowRak1])@(set - iColRak1)" data-area="AR028" data-rak="@(alpha1[26 - iRowRak1])@(set - iColRak1)"><br />@(alpha1[26 - iRowRak1])@(set - iColRak1)</button>
+                                                </td>
+                                            }
+                                        }
+                                        </tr>
+                                    }
+                                </table>
+                            </td>
+                        }
+                    }
+                }
+
+                // RAK REMAINING RACK 1
+                else if (iRow >= 1 && iRow <= 4 && iCol >= 7 && iCol <= 21)
+                {
+                    if (iRow == 1 && iCol == 7)
+                    {
+                        <td class="" rowspan="1" colspan="8" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table>
+                                @for (int iRowRak1 = 4; iRowRak1 > 0; iRowRak1--)
+                                {
+                                    <tr>
+                                        @for (int iColRak1 = 0; iColRak1 < 20; iColRak1++)
+                                        {                                           
+                                            <td>
+                                                <button class="btn-rem1 btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00FF00;" id="AR027@(alpha[19 - iColRak1])@(iRowRak1)" data-area="AR027" data-rak="@(alpha[19 - iColRak1])@(iRowRak1)"><br />@(alpha[19 - iColRak1])@(iRowRak1)</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                            <table>
+                                <tr>
+                                    <td rowspan="1" colspan="1">
+                                        <button class="border-warning btn-info-rak" id="AR030PREPAREAREA" data-area="AR030" data-rak="PREPAREAREA" style="">
+                                            PREPARE AREA
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td class="" rowspan="4" colspan="10" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                                        <table>
+                                            @for (int i = 1; i < irow_total_rem3; i++)
+                                            {
+                                            <tr>
+                                                @for (int ii = 0; ii < icol_total_rem3; ii++)
+                                                {
+
+                                                    if (ii < 4)
+                                                    {
+                                                        <td class="p-1" rowspan="1" colspan="1" style="border-left: 21px solid #fff;">
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            <button class="btn-rem3 btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #00FF00;" id="AR029@(alpha[19 - ii])@i" data-area="AR029" data-rak="@(alpha[19 - ii])@i"><br />@(alpha[19 - ii])@i</button>
+                                                        </td>
+                                                    }
+                                                }
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+
+                                </tr>
+                            </table>
+                        </td>
+
+                    }
+                }
+
+                // RAK 14
+                else if (iRow >= 1 && iRow <= 2 && iCol >= 23 && iCol <= 35)
+                {
+                    if (iRow == 1 && iCol == 24)
+                    {
+                        int irow_total_14 = 5;
+                        int icol_total_14 = 16;
+                        <td class="" rowspan="2" colspan="12" style="border-left: 2px solid #fff; border-bottom: 2px solid #fff;">
+                            <table id="table-rak-14">
+                                @for (int i = 1; i < irow_total_14; i++)
+                                {
+                                    <tr>
+                                        @for (int ii = 0; ii < icol_total_14; ii++)
+                                        {
+                                            if (ii < 4)
+                                            {
+                                                <td class="p-1" rowspan="1" colspan="1" style="border-left: 51px solid #fff;">
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <button class="btn-rak-14 btn btn-xs btn-warning btn-block btn-info-rak" id="AR00214@(alpha1[29 - ii])@i" data-area="AR002" data-rak="14@(alpha1[29 - ii])@i">14<br />@(alpha1[29 - ii])@i</button>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </table>
+                            <table>
+                                @for (int iRowRak15 = 4; iRowRak15 > 0; iRowRak15--)
+                                {
+                                <tr>
+                                    @for (int iColRak15 = 0; iColRak15 < 14; iColRak15++)
+                                    {
+                                        if (iColRak15 < 4)
+                                        {
+                                            <td class="p-1" rowspan="1" colspan="1" style="border-left: 51px solid #fff;">
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <button class="btn-rak-15 btn btn-xs btn-primary btn-block text-center small btn-info-rak" style="background-color: #ff89b8;" id="AR00215@(alpha1[29 - iColRak15])@(iRowRak15)" data-area="AR002" data-rak="15@(alpha1[29 - iColRak15])@(iRowRak15)">15<br />@(alpha1[29 - iColRak15])@(iRowRak15)</button>
+                                            </td>
+                                        }
+                                    }
+                                    </tr>
+                                }
+                            </table>
+                            <table>
+                                <tr>
+                                    <td class="p-1" rowspan="1" colspan="1" style="border-left: 225px solid #fff;">
+                                    </td>
+                                    <td class="p-1" colspan="20" style="border-left: 1px solid #fff;">
+                                        <button class="border-warning btn-info-rak" id="AR030AREA8" data-area="AR030" data-rak="AREA8" style="">
+                                            AREA 8
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table>
+                                @for (int i = 1; i < irow_total_16; i++)
+                                {
+                                <tr>
+                                    @for (int ii = 0; ii < icol_total_16; ii++)
+                                    {
+                                        if (ii < 6)
+                                        {
+                                            <td class="p-1" rowspan="1" colspan="1" style="border-left: 51px solid #fff;">
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <button class="btn-rak-16 btn btn-xs btn-primary btn-block text-center small text-white btn-info-rak" style="background-color: #ff89b8;" id="AR00216@(alpha1[31 - ii])@i" data-area="AR002" data-rak="16@(alpha1[31 - ii])@i">16<br />@(alpha1[31 - ii])@i</button>
+                                            </td>
+                                        }
+                                    }
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    }
+                }
+            }
+        </tr>
+        }
+    </tbody>
+</table>

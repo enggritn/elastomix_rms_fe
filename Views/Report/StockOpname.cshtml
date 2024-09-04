@@ -135,7 +135,7 @@
             ajax: {
                 dataType: "json",
                 type: "POST",
-                url: server + "Api/" + module + "/DatatableHeader?transactionStatus=CONFIRMED",
+                url: server + "Api/" + module + "/DatatableHeader?transactionStatus=OPEN/CONFIRMED",
             },
             columnDefs: [
                 { orderable: false, targets: -1 }
@@ -202,7 +202,7 @@
         var elementRow = $(row).closest('tr');
         var dataTableRow = $('#data_table').DataTable().row($(elementRow)).data();
         StockOpnameId = dataTableRow.ID;
-
+       
         window.open('@Url.Action("ExportStockOpnameToExcel", "StockOpname")' + '?id=' + StockOpnameId, "_blank");
     };
 </script>

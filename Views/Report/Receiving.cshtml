@@ -1,0 +1,846 @@
+﻿@{
+    ViewBag.Title = "Report Receiving";
+    ViewBag.Module = "Receiving";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Warehouse</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="WarehouseFilter">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Source Type</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="SourceType">
+                                </select>
+                                <span class="help-block text-danger"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
+                                <button type="button" id="btnExport" class="btn btn-primary float-right">Export Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
+                        <thead>
+                            <tr>
+                                <th>SUPPLIER</th>
+                                <th>PO NO.</th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>QTY/BAG</th>
+                                <th>QTY BAG</th>
+                                <th>TOTAL</th>
+                                <th>DO. NO.</th>
+                                <th>LOT NO.</th>
+                                <th>OK</th>
+                                <th>NG</th>
+                                <th>RECEIVED BY</th>
+                                <th>RECEIVED ON</th>
+                                <th>COA</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                @*<div class="card-footer">
+            <button type="button" class="btn btn-outline-info float-left" id="btnBack"><i class="ik ik-arrow-left"></i>Back</button>
+        </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Import Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-success" id="btnUploadSave"><i class="ik ik-check-circle"></i>Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Receive Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Request Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveQtyTotal" id="ReceiveQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveUOM" id="ReceiveUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveQtyPerBag" id="ReceiveQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveQtyBag" id="ReceiveQtyBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Available Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveAvailableQtyTotal" id="ReceiveAvailableQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveAvailableUOM" id="ReceiveAvailableUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveAvailableQtyPerBag" id="ReceiveAvailableQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveAvailableQtyBag" id="ReceiveAvailableQtyBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-8"><strong>Other Information</strong></label>
+                    <div class="col-sm-4">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">DO. No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveDoNo" id="ReceiveDoNo" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="ReceiveLotNoGroup">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="ReceiveLotNo" id="ReceiveLotNo" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row" id="ReceiveActualQtyGroup">
+                    <label class="col-form-label col-sm-4">Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="ReceiveActualQty" id="ReceiveActualQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <input type="hidden" id="receiveID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveReceive"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formCOAModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Update COA</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">COA</label>
+                    <div class="col-sm-8">
+                        <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                            <input type="checkbox" class="custom-control-input checkbox" name="ReceiveCOA" id="ReceiveCOA" />
+                            <label class="custom-control-label" for="ReceiveCOA">&nbsp;</label>
+                        </div>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveCoa"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formInspectionModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Inspection Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Received Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="InspectionReceivedQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Good / OK QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="InspectionQTY" id="InspectionQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Not Good / NG QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="NGBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Damage</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="DamageQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Wet</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="WetQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Foreign Contamination</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="ContaminationQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveInspection"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formJudgementModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Judgement Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Good / OK QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyTotal" id="JudgementActualQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyUOM" id="JudgementActualQtyUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyPerBag" id="JudgementActualQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="JudgementActualQtyBag" id="JudgementActualQtyBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Not Good / NG QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="JudgementNGQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="JudgementNGQtyUOM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="JudgementNGQtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="JudgementNGQtyBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Input Bag QTY Good / OK</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="JudgementQTY" id="JudgementQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSaveJudgement"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Putaway Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Good / OK QTY</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control OKQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control UoM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control OKBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Bin/Rack</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area</label>
+                    <div class="col-sm-8">
+                        <select id="AreaList" class="form-control">
+                            <option value="" selected>Select Area</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/Rack</label>
+                    <div class="col-sm-8">
+                        <select id="BinRackID" class="form-control">
+                            <option value="" selected>Select Bin/Rack</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_binrack"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Available Qty</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control PutawayAvailableQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">UoM</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control UoM" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control PutawayAvailableBagQty" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Putaway Bag Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PutawayQTY" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePutaway"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formPrintBarcode" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Barcode Printing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control Barcode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">DO. No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control DoNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No.</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control LotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control InDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Expired Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control ExpDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="table_barcode">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>TYPE</th>
+                                    <th>BAG QTY</th>
+                                    <th>QTY/BAG</th>
+                                    <th>TOTAL QTY</th>
+                                    <th>SERIES NO.</th>
+                                    <th>DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Print Qty</label>
+                    <div class="col-sm-4">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PrintQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Use Series</label>
+                    <div class="col-sm-8">
+                        <div class="custom-control custom-checkbox" style="padding-top: 3px;">
+                            <input type="checkbox" class="custom-control-input checkbox" id="PrintSeries" checked />
+                            <label class="custom-control-label" for="PrintSeries">&nbsp;</label>
+                        </div>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">List Printer</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="ListPrinter">
+                        </select>
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnPrint"><i class="ik ik-printer"></i>Print</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+        $('#btnBack').click(function () {
+            window.location.replace('@Url.Action("Receiving", "Report")')
+        });
+
+        let receivingID = "";
+        let receivingData = "";
+        let destinationCode = "";
+
+        initSourceType();
+        $('#WarehouseFilter').select2();
+
+        function initSourceType() {
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/MaterialRequest/GetSourceType',
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#SourceType').empty();
+                        $('#SourceType').append('<option value="">All</option>');
+                        var html = '';
+                        $.each(response.source_type, function (index, value) {
+                            html += '<option value="' + value + '">' + value + '</option>';
+                        });
+                        $('#SourceType').append(html);
+                    }
+                }
+            });
+        };
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '125%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[13, "asc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/DatatableDetailReceiving",
+                data: function (d) {
+                    d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.WarehouseCode = $('#WarehouseFilter').val();
+                    d.sourceType = $('#SourceType').val();
+                }
+            },
+            columnDefs: [
+                //{ orderable: false, targets: 0 },
+                //{ orderable: false, targets: -1 },
+                //{ orderable: false, targets: -2 },
+                //{ orderable: false, targets: -3 },
+                //{ orderable: false, targets: -4 },
+            ],
+            columns: [
+                { "data": "SourceName", "name": "SourceName", "autoWidth": false },
+                { "data": "DocumentNo", "name": "DocumentNo", "autoWidth": false },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": false },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": false },
+                { "data": "InDate", "name": "InDate", "autoWidth": false },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": false },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": false },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": false },
+                { "data": "Qty", "name": "Qty", "autoWidth": false },
+                { "data": "DoNo", "name": "DoNo", "autoWidth": false },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": false },
+                { "data": "OKQty", "name": "OKQty", "autoWidth": false },
+                { "data": "NGQty", "name": "NGQty", "autoWidth": false },
+                { "data": "ReceivedBy", "name": "ReceivedBy", "autoWidth": false },
+                { "data": "ReceivedOn", "name": "ReceivedOn", "autoWidth": false },
+                {
+                    "data": null, "name": "COA",
+                    "render": function (data, type, row) {
+                        let badge = '';
+                        if (data.COA == false) {
+                            badge = '<span class="badge badge-warning">On Check</span>';
+                        } else {
+                            badge = '<span class="badge badge-primary">Checked</span>';
+                        }
+                        return badge;
+                    }
+                },
+            ]
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            endDate: '+0d',
+            /*startDate: '+0d',*/
+        });
+
+        $('#btnAdd').click(function () {
+             ShowReceiveForm();
+        });
+
+    $.ajax({
+        type: 'GET',
+        async: false,
+        dataType: "json",
+        beforeSend: function (request) {
+            request.setRequestHeader('Token', token);
+        },
+        url: server + 'Api/Warehouse/GetData',
+        success: function (response) {
+            isValid = response.status;
+            if (isValid) {
+                $('#WarehouseFilter').empty();
+                $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
+                var html = '';
+                $.each(response.list, function (index, value) {
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
+                });
+                $('#WarehouseFilter').append(html);
+            }
+        }
+    });
+
+
+    $('#btnExport').click(function () {
+        let DateFilter = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        let WarehouseFilter = $('#WarehouseFilter').val();
+        let SourceType = $('#SourceType').val();
+
+        window.open('@Url.Action("ExportReceivingToExcel", "Receiving")' + '?date=' + DateFilter + '&warehouse=' + WarehouseFilter + '&sourcetype=' + SourceType, "_blank");
+    });
+
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+    $('#DateFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#WarehouseFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#SourceType').change(function () {
+        table.ajax.reload();
+    });
+</script>
+}

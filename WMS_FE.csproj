@@ -57,8 +57,14 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.18.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>packages\DocumentFormat.OpenXml.2.18.0\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=5.8.9.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.5.8.9\lib\net45\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.Interfaces.6.1.1\lib\net35\EPPlus.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus.System.Drawing, Version=6.0.0.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.System.Drawing.6.0.0\lib\net35\EPPlus.System.Drawing.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
       <HintPath>packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -96,10 +102,16 @@
     <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
     </Reference>
+    <Reference Include="LinqToExcel, Version=1.11.0.0, Culture=neutral, PublicKeyToken=9c8ea65a58f03f1f, processorArchitecture=MSIL">
+      <HintPath>packages\LinqToExcel.1.11.0\lib\LinqToExcel.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.IO.RecyclableMemoryStream.1.4.1\lib\net45\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -117,11 +129,22 @@
       <HintPath>packages\NPOI.2.5.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Remotion, Version=1.13.52.2, Culture=neutral, PublicKeyToken=0669cf0452175907, processorArchitecture=MSIL">
+      <HintPath>packages\LinqToExcel.1.11.0\lib\Remotion.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq, Version=1.13.52.2, Culture=neutral, PublicKeyToken=0669cf0452175907, processorArchitecture=MSIL">
+      <HintPath>packages\LinqToExcel.1.11.0\lib\Remotion.Data.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Interfaces, Version=1.13.52.2, Culture=neutral, PublicKeyToken=0669cf0452175907, processorArchitecture=MSIL">
+      <HintPath>packages\LinqToExcel.1.11.0\lib\Remotion.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -247,16 +270,23 @@
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="Models\BinRackModel.cs" />
+    <Compile Include="Models\DataInOutResponse.cs" />
+    <Compile Include="Models\IssueSlipResponse.cs" />
+    <Compile Include="Models\IssueSlipDetail.cs" />
     <Compile Include="Models\ManualStockViewModel.cs" />
     <Compile Include="Models\PRApprovalModelResponse.cs" />
     <Compile Include="Models\PurchaseRequestModel.cs" />
     <Compile Include="Models\PurchaseRequestResponse.cs" />
     <Compile Include="Models\RawMaterialManualResponse.cs" />
     <Compile Include="Models\Receiving.cs" />
+    <Compile Include="Models\InboundDetail.cs" />
+    <Compile Include="Models\InboundResponse.cs" />
+    <Compile Include="Models\StockDetail.cs" />
     <Compile Include="Models\StockOpnameDetail.cs" />
     <Compile Include="Models\ReceivingDetail.cs" />
     <Compile Include="Models\StockOpnameResponse.cs" />
     <Compile Include="Models\ReceivingResponse.cs" />
+    <Compile Include="Models\StockResponse.cs" />
     <Compile Include="Models\UserDTO.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -625,6 +655,13 @@
     <Content Include="Views\StockOpname\Detail.cshtml" />
     <Content Include="Views\Inspection\View_Foto.cshtml" />
     <Content Include="Views\Report\StockOpname.cshtml" />
+    <Content Include="Views\Report\Receiving.cshtml" />
+    <Content Include="Views\Report\Receiving2.cshtml" />
+    <Content Include="Views\Report\Inbound.cshtml" />
+    <Content Include="Views\Report\IssueSlip.cshtml" />
+    <Content Include="Views\Report\Receiving3.cshtml" />
+    <Content Include="Views\FloorPlan\RM_TENT_NEW.cshtml" />
+    <Content Include="Views\Report\Data_In_Out.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

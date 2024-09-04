@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "Report Issue Slip";
+    ViewBag.Module = "IssueSlip";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Production Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
+                                <button type="button" id="btnExport" class="btn btn-primary float-right">Export Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
+                        <thead>
+                            <tr>
+                                <th>PRODUCTION DATE</th>
+                                <th>R/M CODE</th>
+                                <th>R/M NAME</th>
+                                <th>R/M VENDOR NAME</th>
+                                <th>WT REQUESTED</th>
+                                <th>SUPPLY QTY</th>
+                                <th>FROM RACK NO.</th>
+                                <th>EXP DATE</th>
+                                <th>PICKED BY.</th>
+                                <th>ACTUAL RETURN QTY</th>
+                                <th>GO TO RACK NO.</th>
+                                <th>PUT BY.</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+    <script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '100%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "desc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/DatatableIssueSlip",
+                data: function (d) {
+                    d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 },
+                { orderable: false, targets: -1 },
+                { orderable: false, targets: -2 },
+                { orderable: false, targets: -3 },
+                { orderable: false, targets: -4 },
+            ],
+            columns: [
+                { "data": "Header_ProductionDate", "name": "Header_ProductionDate", "autoWidth": false },
+                { "data": "RM_Code", "name": "RM_Code", "autoWidth": false },
+                { "data": "RM_Name", "name": "RM_Name", "autoWidth": false },
+                { "data": "RM_VendorName", "name": "RM_VendorName", "autoWidth": false },
+                { "data": "Wt_Request", "name": "Wt_Request", "autoWidth": false },
+                { "data": "SupplyQty", "name": "SupplyQty", "autoWidth": false },
+                { "data": "FromBinRackCode", "name": "FromBinRackCode", "autoWidth": false },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": false },
+                { "data": "PickedBy", "name": "PickedBy", "autoWidth": false },
+                { "data": "ReturnQty", "name": "ReturnQty", "autoWidth": false },
+                { "data": "ToBinRackCode", "name": "ToBinRackCode", "autoWidth": false },
+                { "data": "PutBy", "name": "PutBy", "autoWidth": false },
+            ]
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            endDate: '+0d',
+            /*startDate: '+0d',*/
+        });
+               
+    $('#btnExport').click(function () {
+        let DateFilter = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+        window.open('@Url.Action("ExportIssueSlipToExcel", "IssueSlip")' + '?date=' + DateFilter, "_blank");
+    });
+
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+    $('#DateFilter').change(function () {
+        table.ajax.reload();
+    });
+    </script>
+}

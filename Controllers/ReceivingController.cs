@@ -25,6 +25,9 @@ using WMS_FE.Models;
 using ZXing;
 using ZXing.QrCode;
 using Rectangle = iText.Kernel.Geom.Rectangle;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WMS_FE.Controllers
 {
@@ -522,6 +525,330 @@ namespace WMS_FE.Controllers
                          window.close();
                        </script>
                      </body> ", e.Message));
+            }
+        }
+
+
+        public async Task<ActionResult> ExportReceivingToExcel(string date, string warehouse, string sourcetype)
+        {
+            if (string.IsNullOrEmpty(date) && string.IsNullOrEmpty(warehouse) && string.IsNullOrEmpty(sourcetype))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/Receiving/GetDataReportReceiving?date={0}&warehouse={1}&sourcetype={2}", date, warehouse, sourcetype));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                ReceivingResponse res = JsonConvert.DeserializeObject<ReceivingResponse>(result);
+                #endregion
+
+                IEnumerable<ReceivingDetailReportDTO> listdetail = res.list;
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                workSheet.Row(1).Height = 25;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "No.";
+                workSheet.Cells[1, 2].Value = "Supplier";
+                workSheet.Cells[1, 3].Value = "PO No.";
+                workSheet.Cells[1, 4].Value = "Material Code";
+                workSheet.Cells[1, 5].Value = "Material Name";
+                workSheet.Cells[1, 6].Value = "In Date";
+                workSheet.Cells[1, 7].Value = "Exp Date";
+                workSheet.Cells[1, 8].Value = "Qty Per Bag";
+                workSheet.Cells[1, 9].Value = "Qty Bag";
+                workSheet.Cells[1, 10].Value = "Total";
+                workSheet.Cells[1, 11].Value = "DO NO.";
+                workSheet.Cells[1, 12].Value = "LOT NO.";
+                workSheet.Cells[1, 13].Value = "OK";
+                workSheet.Cells[1, 14].Value = "NG";
+                workSheet.Cells[1, 15].Value = "Received By";
+                workSheet.Cells[1, 16].Value = "Received On";
+
+                int recordIndex = 2;
+                int recordNo = 1;
+                foreach (ReceivingDetailReportDTO header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 1].Value = recordNo++;
+                    workSheet.Cells[recordIndex, 2].Value = header.SourceName;
+                    workSheet.Cells[recordIndex, 3].Value = header.DocumentNo;
+                    workSheet.Cells[recordIndex, 4].Value = header.MaterialCode;
+                    workSheet.Cells[recordIndex, 5].Value = header.MaterialName;
+                    workSheet.Cells[recordIndex, 6].Value = header.InDate;
+                    workSheet.Cells[recordIndex, 6].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 7].Value = header.ExpDate;
+                    workSheet.Cells[recordIndex, 7].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 8].Value = header.QtyPerBag;
+                    workSheet.Cells[recordIndex, 9].Value = header.BagQty;
+                    workSheet.Cells[recordIndex, 10].Value = header.Qty;
+                    workSheet.Cells[recordIndex, 11].Value = header.DoNo;
+                    workSheet.Cells[recordIndex, 12].Value = header.LotNo;
+                    workSheet.Cells[recordIndex, 13].Value = header.OKQty;
+                    workSheet.Cells[recordIndex, 14].Value = header.NGQty;
+                    workSheet.Cells[recordIndex, 15].Value = header.ReceivedBy;
+                    workSheet.Cells[recordIndex, 16].Value = header.ReceivedOn;
+                    workSheet.Cells[recordIndex, 16].Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
+                    recordIndex++;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=Receiving_{0}.xlsx", date);
+
+                for (int i = 1; i <= 17; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("Receiving");
+            }
+        }
+
+        public async Task<ActionResult> ExportReceivingToExcel2(string date, string warehouse, string sourcetype)
+        {
+            if (string.IsNullOrEmpty(date) && string.IsNullOrEmpty(warehouse) && string.IsNullOrEmpty(sourcetype))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/Receiving/GetDataReportReceiving2?date={0}&warehouse={1}&sourcetype={2}", date, warehouse, sourcetype));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                ReceivingResponse res = JsonConvert.DeserializeObject<ReceivingResponse>(result);
+                #endregion
+
+                IEnumerable<ReceivingDetailReportDTO2> listdetail = res.list2;
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                workSheet.Row(1).Height = 25;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "No.";
+                workSheet.Cells[1, 2].Value = "Destination Name";
+                workSheet.Cells[1, 3].Value = "PO No. (Ref Number)";
+                workSheet.Cells[1, 4].Value = "Supplier (Source Name)";
+                workSheet.Cells[1, 5].Value = "Code Of Raw Material";
+                workSheet.Cells[1, 6].Value = "Name Of Raw Materials";
+                workSheet.Cells[1, 7].Value = "In Date";
+                workSheet.Cells[1, 8].Value = "Exp Date";
+                workSheet.Cells[1, 9].Value = "Lot No.";
+                workSheet.Cells[1, 10].Value = "/ Bag";
+                workSheet.Cells[1, 11].Value = "Full Bag";
+                workSheet.Cells[1, 12].Value = "Total";
+                workSheet.Cells[1, 13].Value = "Area";
+                workSheet.Cells[1, 14].Value = "Rack No.";
+                workSheet.Cells[1, 15].Value = "Delivery Note Number";
+                workSheet.Cells[1, 16].Value = "Status";
+
+                int recordIndex = 2;
+                int recordNo = 1;
+                foreach (ReceivingDetailReportDTO2 header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 1].Value = recordNo++;
+                    workSheet.Cells[recordIndex, 2].Value = header.DestinationName;
+                    workSheet.Cells[recordIndex, 3].Value = header.RefNumber;
+                    workSheet.Cells[recordIndex, 4].Value = header.SourceName;
+                    workSheet.Cells[recordIndex, 5].Value = header.MaterialName;
+                    workSheet.Cells[recordIndex, 6].Value = header.MaterialName;
+                    workSheet.Cells[recordIndex, 7].Value = header.InDate;
+                    workSheet.Cells[recordIndex, 7].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 8].Value = header.ExpDate;
+                    workSheet.Cells[recordIndex, 8].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 9].Value = header.LotNo;
+                    workSheet.Cells[recordIndex, 10].Value = header.PerBag;
+                    workSheet.Cells[recordIndex, 11].Value = header.FullBag;
+                    workSheet.Cells[recordIndex, 12].Value = header.Total;
+                    workSheet.Cells[recordIndex, 13].Value = header.Area;
+                    workSheet.Cells[recordIndex, 14].Value = header.RackNo;
+                    workSheet.Cells[recordIndex, 15].Value = header.DoNo;
+                    workSheet.Cells[recordIndex, 16].Value = header.TransactionStatus;
+                    recordIndex++;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=Receiving2_{0}.xlsx", date);
+
+                for (int i = 1; i <= 17; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("Receiving2");
+            }
+        }
+
+        public async Task<ActionResult> ExportReceivingToExcel3(string date, string warehouse, string sourcetype)
+        {
+            if (string.IsNullOrEmpty(date) && string.IsNullOrEmpty(warehouse) && string.IsNullOrEmpty(sourcetype))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/Receiving/GetDataReportReceiving3?date={0}&warehouse={1}&sourcetype={2}", date, warehouse, sourcetype));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                ReceivingResponse res = JsonConvert.DeserializeObject<ReceivingResponse>(result);
+                #endregion
+
+                IEnumerable<ReceivingDetailReportDTO3> listdetail = res.list3;
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                workSheet.Row(1).Height = 26;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "No.";
+                workSheet.Cells[1, 2].Value = "PO No. (Ref Number)";
+                workSheet.Cells[1, 3].Value = "Supplier (Source Name)";
+                workSheet.Cells[1, 4].Value = "Material Code";
+                workSheet.Cells[1, 5].Value = "Material Name";
+                workSheet.Cells[1, 6].Value = "Schedule";
+                workSheet.Cells[1, 7].Value = "Total Qty PO";
+                workSheet.Cells[1, 8].Value = "In Date";
+                workSheet.Cells[1, 9].Value = "Exp Date";
+                workSheet.Cells[1, 10].Value = "Lot No.";
+                workSheet.Cells[1, 11].Value = "Qty Per Bag";
+                workSheet.Cells[1, 12].Value = "Qty Bag";
+                workSheet.Cells[1, 13].Value = "Total";
+                workSheet.Cells[1, 14].Value = "Do No.";
+                workSheet.Cells[1, 15].Value = "OK";
+                workSheet.Cells[1, 16].Value = "NG Damage";
+                workSheet.Cells[1, 17].Value = "COA";
+                workSheet.Cells[1, 18].Value = "Status PO";
+                workSheet.Cells[1, 19].Value = "Received By";
+                workSheet.Cells[1, 20].Value = "Received On";
+                workSheet.Cells[1, 21].Value = "Qty Putaway";
+                workSheet.Cells[1, 22].Value = "Area";
+                workSheet.Cells[1, 23].Value = "Rack No.";
+                workSheet.Cells[1, 24].Value = "Status";
+                workSheet.Cells[1, 25].Value = "Remarks";
+
+                //workSheet.Cells[1, 17].Value = "NG Wet";
+                //workSheet.Cells[1, 18].Value = "NG Contamination";
+                //workSheet.Cells[1, 19].Value = "COA";
+                //workSheet.Cells[1, 20].Value = "Status PO";
+                //workSheet.Cells[1, 21].Value = "Received By";
+                //workSheet.Cells[1, 22].Value = "Received On";
+                //workSheet.Cells[1, 23].Value = "Qty Putaway";
+                //workSheet.Cells[1, 24].Value = "Area";
+                //workSheet.Cells[1, 25].Value = "Rack No.";
+                //workSheet.Cells[1, 26].Value = "Status";
+
+                int recordIndex = 2;
+                int recordNo = 1;
+                foreach (ReceivingDetailReportDTO3 header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 1].Value = recordNo++;
+                    workSheet.Cells[recordIndex, 2].Value = header.RefNumber;
+                    workSheet.Cells[recordIndex, 3].Value = header.SourceName;
+                    workSheet.Cells[recordIndex, 4].Value = header.MaterialCode;
+                    workSheet.Cells[recordIndex, 5].Value = header.MaterialName;
+                    workSheet.Cells[recordIndex, 6].Value = header.Schedule;
+                    workSheet.Cells[recordIndex, 6].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 7].Value = header.TotalQtyPo;
+                    workSheet.Cells[recordIndex, 8].Value = header.InDate;
+                    workSheet.Cells[recordIndex, 8].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 9].Value = header.ExpDate;
+                    workSheet.Cells[recordIndex, 9].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 10].Value = header.LotNo;
+                    workSheet.Cells[recordIndex, 11].Value = header.QtyPerBag;
+                    workSheet.Cells[recordIndex, 12].Value = header.QtyBag;
+                    workSheet.Cells[recordIndex, 13].Value = header.Total;
+                    workSheet.Cells[recordIndex, 14].Value = header.DoNo;
+                    workSheet.Cells[recordIndex, 15].Value = header.OK;
+                    workSheet.Cells[recordIndex, 16].Value = header.NgDamage;
+                    workSheet.Cells[recordIndex, 17].Value = header.COA;
+                    workSheet.Cells[recordIndex, 18].Value = header.StatusPo;
+                    workSheet.Cells[recordIndex, 19].Value = header.ReceivedBy;
+                    workSheet.Cells[recordIndex, 20].Value = header.ReceivedOn;
+                    workSheet.Cells[recordIndex, 20].Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
+                    workSheet.Cells[recordIndex, 21].Value = header.QtyPutaway;
+                    workSheet.Cells[recordIndex, 22].Value = header.Area;
+                    workSheet.Cells[recordIndex, 23].Value = header.RackNo;
+                    workSheet.Cells[recordIndex, 24].Value = header.Status;
+                    workSheet.Cells[recordIndex, 25].Value = header.Remarks;
+
+                    //workSheet.Cells[recordIndex, 17].Value = header.NgWet;
+                    //workSheet.Cells[recordIndex, 18].Value = header.NgContamination;
+                    //workSheet.Cells[recordIndex, 19].Value = header.COA;
+                    //workSheet.Cells[recordIndex, 20].Value = header.StatusPo;
+                    //workSheet.Cells[recordIndex, 21].Value = header.ReceivedBy;
+                    //workSheet.Cells[recordIndex, 22].Value = header.ReceivedOn;
+                    //workSheet.Cells[recordIndex, 22].Style.Numberformat.Format = "yyyy-MM-dd hh:mm:ss";
+                    //workSheet.Cells[recordIndex, 23].Value = header.QtyPutaway;
+                    //workSheet.Cells[recordIndex, 24].Value = header.Area;
+                    //workSheet.Cells[recordIndex, 25].Value = header.RackNo;
+                    //workSheet.Cells[recordIndex, 26].Value = header.Status;
+                    recordIndex++;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=Receiving3_{0}.xlsx", date);
+
+                for (int i = 1; i <= 25; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("Receiving3");
             }
         }
     }

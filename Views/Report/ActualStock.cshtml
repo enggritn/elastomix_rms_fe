@@ -64,6 +64,7 @@
                         <div class="col-sm-12">
                             <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
                             <button type="button" class="btn btn-warning" id="btnClearFilter">Clear Filter</button>
+                            <button type="button" id="btnExport" class="btn btn-primary">Export Excel</button>
                         </div>
                     </div>
 
@@ -276,11 +277,18 @@
         $('#RackFilter').change(function () {
             table.ajax.reload();
         });
+            
+        $('#btnRefreshDataTable').click(function () {
+            table.ajax.reload();
+        });
 
-        btnClearFilter
-    $('#btnRefreshDataTable').click(function () {
-        table.ajax.reload();
-    });
+        $('#btnExport').click(function () {
+            let WarehouseFilter = $('#WarehouseFilter').val();
+            let RackFilter = $('#RackFilter').val();
+            let AreaFilter = $('#AreaFilter').val();
+
+            window.open('@Url.Action("ExportActualStockToExcel", "Report")' + '?warehouse=' + WarehouseFilter + '&area=' + AreaFilter + '&rack=' + RackFilter, "_blank");
+        });
 
         $('#btnClearFilter').click(function () {
             loadWarehouse();

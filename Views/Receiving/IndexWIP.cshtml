@@ -32,43 +32,52 @@
 </div>
 
 @*<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="form-group row">
-                    <label class="col-form-label col-sm-1">Import Data</label>
-                    <div class="col-sm-3">
-                        <div class="custom-file">
-                            @Html.TextBox("file_upload", "", new { @type = "file", @class = "custom-file-input", @id = "file_upload", @accept = "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
-                            <label class="custom-file-label" for="customFile">Choose file</label>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-1">Import Data</label>
+                        <div class="col-sm-3">
+                            <div class="custom-file">
+                                @Html.TextBox("file_upload", "", new { @type = "file", @class = "custom-file-input", @id = "file_upload", @accept = "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                            <span class="text-muted text-sm"><i>Allowed file type : .xls/ .xlsx</i></span>
                         </div>
-                        <span class="text-muted text-sm"><i>Allowed file type : .xls/ .xlsx</i></span>
-                    </div>
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-warning" onclick="resetUpload()"><i class="ik ik-delete"></i>Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="uploadData()"><i class="ik ik-upload"></i>Import Data</button>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-warning" onclick="resetUpload()"><i class="ik ik-delete"></i>Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="uploadData()"><i class="ik ik-upload"></i>Import Data</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 
 
 <div class="row">
-    <div class="col-lg-12">
+    <!--<div class="col-lg-12">
 
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-tab1" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Receiving </a>
-                @*<a class="nav-item nav-link" id="nav-tab2" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Judgement</a>*@
-            </div>
+                <a class="nav-item nav-link active" id="nav-tab1" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Receiving </a>-->
+    @*<a class="nav-item nav-link" id="nav-tab2" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Judgement</a>*@
+    <!--</div>
         </nav>
-    </div>
+    </div>-->
 
     <div class="col-lg-12">
         <div class="card" style="padding : 20px;">
+            <div class="card-header">
+                <div class="col-md-10">
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh Table</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="">
@@ -122,8 +131,73 @@
     </div>
 </div>
 
-
-
+<!-- FORM EDIT ORER  START -->
+<div class="modal" id="formEditOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Order Data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="EditOrderMateCode" id="EditOrderMateCode" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Name</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" name="EditOrderMateName" id="EditOrderMateName" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="EditOrderInDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp Date</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="EditOrderExpDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control" id="EditOrderLotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Order</label>
+                    <div class="col-sm-7">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="EditOrderRequestQtyTotal" id="EditOrderRequestQtyTotal" />
+                        <span class="help-block text-danger" id="error_EditOrderQTY"></span>
+                    </div>
+                </div>
+                <input type="hidden" id="receiveLotNo" />
+                <input type="hidden" id="receiveID" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateOrder"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM EDIT ORDER  END -->
 
 <!-- FORM RECEIVE  START -->
 <div class="modal" id="formReceiveModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -802,19 +876,15 @@
 
 
 
-<script>
-
+    <script>
         let server = '@ViewBag.server';
         var isValid = true;
         let token = '@Session["token"].ToString()';
         let module = '@ViewBag.Module';
         let baseUrl = '@ViewBag.BaseUrl';
 
-
         $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
         $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
-
-
 
         $('#ReceiveOKQty').on('input', function () {
 
@@ -828,8 +898,18 @@
             ReceiveQtyRakAvail = ReceiveOKQty / ReceiveRequestQtyPerBag;
             RemainderQty = ReceiveOKQty - (parseInt(ReceiveQtyRakAvail) * ReceiveRequestQtyPerBag);
 
-            $('#ReceiveQtyRakAvail').val(ReceiveQtyRakAvail);
-            $('#RemainderQty').val(RemainderQty);
+            if (ReceiveRequestQtyTotal / ReceiveRequestQtyPerBag == 1) {
+                if (ReceiveOKQty == 0) {
+                    $('#ReceiveQtyRakAvail').val('0');
+                    $('#RemainderQty').val('0');
+                } else {
+                    $('#ReceiveQtyRakAvail').val('1');
+                    $('#RemainderQty').val('0');
+                }
+            } else {
+                $('#ReceiveQtyRakAvail').val(ReceiveQtyRakAvail);
+                $('#RemainderQty').val(RemainderQty);
+            }
         });
 
         $('#JudgementQTY').on('input', function () {
@@ -927,22 +1007,17 @@
                         let button = '';
 
                         if (data.EditReceiveAction) {
-                            button += '<button class="btn btn-info" onclick = "ShowEditReceiveForm(this)" > <i class="ik ik-check-circle"></i>Edit</button> ';
-                        } else {
-                            if (data.ReceiveAction) {
-                                button += '<button class="btn btn-success" onclick = "ShowReceiveForm(this)" > <i class="ik ik-check-circle"></i>Receive</button> ';
-                            }
-                            if (data.PrintBarcodeAction) {
-                                button += '<button type="button" class="btn btn-primary" value ="press" onclick="return ShowPrintBarcodeForm(this)"><i class="ik ik-inbox"></i>Print Barcode</button> ';
-                            }
-                            if (data.PutawayAction) {
-                                button += '<button class="btn btn-primary" onclick="ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
-
-                            }
+                            button += '<button class="btn btn-info" onclick = "ShowEditOrderForm(this)" > <i class="ik ik-edit"></i>Edit Order</button> ';
                         }
-
-                      
-
+                        if (data.ReceiveAction) {
+                            button += '<button class="btn btn-success" onclick = "ShowReceiveForm(this)" > <i class="ik ik-check-circle"></i>Receive</button> ';
+                        }
+                        if (data.PrintBarcodeAction) {
+                            button += '<button type="button" class="btn btn-primary" value ="press" onclick="return ShowPrintBarcodeForm(this)"><i class="ik ik-inbox"></i>Print Barcode</button> ';
+                        }
+                        if (data.PutawayAction) {
+                            button += '<button class="btn btn-primary" onclick="ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                        }
                         return button;
                     }
                 },
@@ -1032,8 +1107,8 @@
                 },
                 url: server + 'Api/ReceivingSFG/ListBarcodeSFGPutaway',
                 data: {
-                    ExpDate: xExpDate,
-                    InDate: xInDate,
+                    ExpDate: moment(xExpDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    InDate: moment(xInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                     LotNo: xLotNo,
                     ProductCode: xProductCode,
                 },
@@ -1107,8 +1182,8 @@
                 },
                 url: server + 'Api/ReceivingSFG/ListBarcodeSFGPrint',
                 data: {
-                    ExpDate: $('#PrintExpDate').val(),
-                    InDate: $('#PrintInDate').val(),
+                    ExpDate: moment($('#PrintExpDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    InDate: moment($('#PrintInDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
                     LotNo: $('#PrintLotNo').val(),
                     ProductCode: $('#PrintRawMateCode').val(),
                 },
@@ -1310,6 +1385,24 @@
             $('#formAreaModal').modal('hide');
         });
 
+        function ShowEditOrderForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = table.row($(elementRow)).data();
+
+            dataReceiving = dataTableRow;
+
+            $('#EditOrderExpDate').val(dataTableRow.ExpDate);
+            $('#EditOrderInDate').val(dataTableRow.InDate);
+            $('#EditOrderLotNo').val(dataTableRow.LotNo);
+            $('#EditOrderMateCode').val(dataTableRow.ProductCode);
+            $('#EditOrderMateName').val(dataTableRow.ProductName);
+            $('#EditOrderRequestQtyTotal').val(dataTableRow.TotalOrder);
+            $('#formEditOrderModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        };
+
         let dataReceiving = "";
         function ShowReceiveForm(row) {
             var elementRow = $(row).closest('tr');
@@ -1339,7 +1432,7 @@
                 backdrop: 'static',
                 keyboard: false
             });
-    };
+        };
 
 
     function ShowEditReceiveForm(row) {
@@ -1472,52 +1565,84 @@
         });
     });
 
-        $('#btnSaveReceive').on('click', function () {
-            $.ajax({
-                type: 'POST',
-                dataType: "json",
-                beforeSend: function (request) {
-                    request.setRequestHeader('Token', token);
-                },
-                url: server + 'Api/ReceivingSFG/Receive',
-                data: {
-                    //ExpDate: $('#ExpDate').val(),
-                    //InDate: $('#InDate').val(),
-                    //LotNo: $('#receiveLotNo').val(),
-                    //ProductCode: $('#ReceiveRawMateCode').val(),
-                    //xAvailableReceive: $('#ReceiveAvailableReceive').val().replace(/\,/g, ''),
-                    //OKQty: $('#ReceiveOKQty').val().replace(/\,/g, ''),
-                    ExpDate: dataReceiving.ExpDate,
-                    InDate: dataReceiving.InDate,
-                    LotNo: dataReceiving.LotNo,
-                    ProductCode: dataReceiving.ProductCode,
-                    OKQty: $('#ReceiveOKQty').val().replace(/\,/g, ''),
-                },
-                success: function (response) {
-                    isValid = response.status;
-                    if (isValid) {
-                        showTabs();
-                        table.ajax.reload();
-                        $('#formReceiveModal').modal('hide');
-                        notify("Success", "success", response.message);
-                    } else {
-
-                        $.each(response.error_validation, function (index, value) {
-                            if (value.FieldName == "ReceiveOKQty") {
-                                $('#error_ReceiveQTY').html(value.ErrorMessage);
-                                $('#error_ReceiveQTY').addClass('is-invalid');
-                            } else {
-                                $('#' + value.FieldName).next().html(value.ErrorMessage);
-                                $('#' + value.FieldName).addClass('is-invalid');
-                            }
-
-                        });
-                        notify("Warning", "warning", response.message);
-                    }
-                    table.columns.adjust();
+    $('#btnUpdateOrder').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/ReceivingSFG/UpdateOrder',
+            data: {
+                PurchaseRequestID: dataReceiving.PurchaseRequestDetailID,
+                ExpDate: moment($('#formEditOrderModal #EditOrderExpDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                InDate: moment($('#formEditOrderModal #EditOrderInDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                LotNo: $('#formEditOrderModal #EditOrderLotNo').val(),
+                ProductCode: $('#formEditOrderModal #EditOrderMateCode').val(),
+                QtyTotal: $('#formEditOrderModal #EditOrderRequestQtyTotal').val().replace(/\,/g, ''),
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    table.ajax.reload();
+                    $('#formEditOrderModal').modal('hide');
+                    notify("Success", "success", response.message);
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        if (value.FieldName == "EditOrderRequestQtyTotal") {
+                            $('#error_EditOrderQTY').html(value.ErrorMessage);
+                            $('#error_EditOrderQTY').addClass('is-invalid');
+                        } else {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        }
+                    });
+                    notify("Warning", "warning", response.message);
                 }
-            });
+                table.columns.adjust();
+            }
         });
+    });
+
+    $('#btnSaveReceive').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/ReceivingSFG/Receive',
+            data: {
+                ExpDate: moment($('#ExpDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                InDate: moment($('#InDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                LotNo: $('#receiveLotNo').val(),
+                ProductCode: $('#ReceiveRawMateCode').val(),
+                OKQty: $('#ReceiveOKQty').val().replace(/\,/g, ''),
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    showTabs();
+                    table.ajax.reload();
+                    $('#formReceiveModal').modal('hide');
+                    notify("Success", "success", response.message);
+                } else {
+
+                    $.each(response.error_validation, function (index, value) {
+                        if (value.FieldName == "ReceiveOKQty") {
+                            $('#error_ReceiveQTY').html(value.ErrorMessage);
+                            $('#error_ReceiveQTY').addClass('is-invalid');
+                        } else {
+                            $('#' + value.FieldName).next().html(value.ErrorMessage);
+                            $('#' + value.FieldName).addClass('is-invalid');
+                        }
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+                table.columns.adjust();
+            }
+        });
+    });
 
     $('#btnSavePutaway').on('click', function () {
         $("#error_PutawayQTY").html("");
@@ -1531,8 +1656,8 @@
                 },
                 url: server + 'Api/ReceivingSFG/Putaway',
                 data: {
-                    ExpDate: xExpDate,
-                    InDate: xInDate,
+                    ExpDate: moment(xExpDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
+                    InDate: moment(xInDate, 'DD/MM/YYYY').format('YYYY-MM-DD'),
                     LotNo: xLotNo,
                     ProductCode: xProductCode,
                     StockCode: xStockCode,
@@ -1620,7 +1745,6 @@
 
         $('#btnRefreshDataTable').click(function () {
             table.ajax.reload();
-            //table_judgement.ajax.reload();
         })
 
         @*function PrintBarcode(id) {
@@ -1755,7 +1879,6 @@
 
         function reloadTable() {
             table.ajax.reload();
-            //table_judgement.ajax.reload();
     }
 
         $('#nav-tab1').on('shown.bs.tab', function (e) {
@@ -1763,5 +1886,5 @@
             table.columns.adjust();
         });
 
-</script>
+    </script>
 }

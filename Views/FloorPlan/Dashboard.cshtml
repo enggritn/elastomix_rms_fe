@@ -90,6 +90,16 @@
             height: 40px;
         }
 
+        table#table-rm-tent-new tbody tr td button.btn {
+            width: 48px !important;
+            height: 40px;
+        }
+
+        table#table-rm-tent-new1 tbody tr td button.btn {
+            width: 48px !important;
+            height: 40px;
+        }
+
         table#table-rak-18 tbody tr td button.btn {
             width: 70px !important;
             height: 25px;
@@ -299,6 +309,22 @@
             color: #000;
         }
 
+        #table-rm-tent-new summary {
+            background: #ed7d31;
+            width: 50px;
+            height: 85px;
+            font-size: 9px;
+            color: #000;
+        }
+
+        #table-rm-tent-new1 summary {
+            background: #ed7d31;
+            width: 50px;
+            height: 85px;
+            font-size: 9px;
+            color: #000;
+        }
+
         #table-rak-temp-new {
             width: 350px !important;
             right: -190px;
@@ -343,6 +369,65 @@
             height: 25px;
         }
 
+        #AR030AREA1,
+        #AR030AREA2,
+        #AR030AREA3 {
+            display: block;
+            height: 80px;
+            width: 100%;
+            background: #cc66ff;
+            border: 3px solid #ffe000;
+        }
+
+        #AR030AREA4,
+        #AR030AREA5,
+        #AR030AREA6 {
+            display: block;
+            height: 80px;
+            width: 100%;
+            background: #cc66ff;
+            border: 3px solid #ffe000;
+        }
+
+        #AR030AREA7{
+            display: block;
+            height: 80px;
+            width: 86%;
+            background: #cc66ff;
+            border: 3px solid #ffe000;
+        }
+
+        #AR030AREA8 {
+            display: block;
+            height: 80px;
+            width: 915%;
+            background: #cc66ff;
+            border: 3px solid #ffe000;
+        }
+
+        #AR030RECEIVINGAREA {
+            display: block;
+            height: 798px;
+            width: 100%;
+            background: #ffcccc;
+            border: 3px solid #ffe000;
+        }
+
+        #AR030PREPAREAREA {
+            display: block;
+            height: 670px;
+            width: 480%;
+            background: #cc66ff;
+            border: 3px solid #ffe000;
+        }
+
+        #BLANKWHITE1 {
+            display: block;
+            height: 80px;
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+        }
 
         #AR009AREA1,
         #AR009AREA2,
@@ -480,6 +565,65 @@
                 letter-spacing: 3px;
             }
 
+            table#table-rm-tent-new tbody tr td button.btn {
+                width: 57px !important;
+                height: 50px;
+                font-size: 14px;
+                line-height: 14px;
+                letter-spacing: 3px;
+            }
+
+            table#table-rak-11 tbody tr td button.btn,
+            table#table-rak-2 tbody tr td button.btn {
+                height: 50px;
+                width: 57px !important;
+                font-size: 14px;
+                line-height: 14px;
+                letter-spacing: 3px;
+            }
+
+            table#table-rak-rem1 tbody tr td button.btn,
+            table#table-rak-rem2 tbody tr td button.btn,
+            table#table-rak-rem3 tbody tr td button.btn {
+                width: 35px !important;
+                height: 28px;
+                font-size: 11px;
+                line-height: 3px;
+                letter-spacing: 1px;
+            }
+
+            table#table-rm-tent-new1 tbody tr td button.btn {
+                width: 35px !important;
+                height: 28px;
+                font-size: 11px;
+                line-height: 3px;
+                letter-spacing: 1px;
+            }
+
+            table#table-rm-tent-new1 tbody tr td button.btn-rem1 {
+                height: 30px;
+                width: 27px !important;
+            }
+
+            table#table-rm-tent-new1 tbody tr td button.btn-rem2 {
+                height: 27px;
+                width: 25px !important;
+            }
+
+            table#table-rm-tent-new1 tbody tr td button.btn-rem3 {
+                height: 30px;
+                width: 27px !important;
+            }
+
+            table#table-rm-tent-new1 tbody tr td button.btn-rak-14,
+            table#table-rm-tent-new1 tbody tr td button.btn-rak-15,
+            table#table-rm-tent-new1 tbody tr td button.btn-rak-16 {
+                width: 57px !important;
+                height: 50px;
+                font-size: 14px;
+                line-height: 14px;
+                letter-spacing: 3px;
+            }
 
             #AR002AREA1,
             #AR002AREA2,
@@ -489,6 +633,20 @@
 
 
             #table-rm-tent summary {
+                background: #ed7d31;
+                width: 60px;
+                height: 102px;
+                font-size: 9px;
+            }
+
+            #table-rm-tent-new summary {
+                background: #ed7d31;
+                width: 60px;
+                height: 102px;
+                font-size: 9px;
+            }
+
+            #table-rm-tent-new1 summary {
                 background: #ed7d31;
                 width: 60px;
                 height: 102px;
@@ -627,8 +785,11 @@
                             <h4 style="color: #000;">FACTORY 1</h4>
                         </a>
 
-                        <a href="#RM_TENT" class="btn-layout-show btn btn-block btn-primary">
+                        @*<a href="#RM_TENT" class="btn-layout-show btn btn-block btn-primary">
                             <h4 style="color: #000;">RM TENT</h4>
+                        </a>*@
+                        <a href="#RM_TENT_NEW" class="btn-layout-show btn btn-block btn-primary">
+                            <h4 style="color: #000;">RM TENT NEW</h4>
                         </a>
                     </aside>
 
@@ -686,6 +847,10 @@
 
                     <div id="RM_TENT" class="layout-table">
                         @Html.Partial("RM_TENT")
+                    </div>
+
+                    <div id="RM_TENT_NEW" class="layout-table">
+                        @Html.Partial("RM_TENT_NEW")
                     </div>
 
                     <div id="FG_TENT" class="layout-table">
@@ -1032,6 +1197,24 @@
                 case "#RM_TENT":
                     title = 'LAYOUT RAW MATERIAL - RM TENT';
                     area = ["AR002", "AR005"];
+                    areaType = "LOGISTIC";
+                    refreshLayout();
+                    refreshUser();
+                    setInterval(function () {
+                        if (isDone) {
+                            refreshLayout();
+                        }
+
+                        if (isDone1) {
+                            refreshUser();
+                        }
+
+                    }, 3000);
+                    break;
+
+                case "#RM_TENT_NEW":
+                    title = 'LAYOUT RAW MATERIAL - RM TENT NEW';
+                    area = ["AR002", "AR027", "AR028", "AR029", "AR030"];
                     areaType = "LOGISTIC";
                     refreshLayout();
                     refreshUser();
