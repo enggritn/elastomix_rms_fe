@@ -271,6 +271,14 @@
     <Compile Include="Helper.cs" />
     <Compile Include="Models\BinRackModel.cs" />
     <Compile Include="Models\DataInOutResponse.cs" />
+    <Compile Include="Models\InspectionDetail.cs" />
+    <Compile Include="Models\InspectionResponse.cs" />
+    <Compile Include="Models\OutboundResponse.cs" />
+    <Compile Include="Models\OutboundDetail.cs" />
+    <Compile Include="Models\TransformDetail.cs" />
+    <Compile Include="Models\TransformResponse.cs" />
+    <Compile Include="Models\MovementResponse.cs" />
+    <Compile Include="Models\MovementDetail.cs" />
     <Compile Include="Models\IssueSlipResponse.cs" />
     <Compile Include="Models\IssueSlipDetail.cs" />
     <Compile Include="Models\ManualStockViewModel.cs" />
@@ -662,6 +670,14 @@
     <Content Include="Views\Report\Receiving3.cshtml" />
     <Content Include="Views\FloorPlan\RM_TENT_NEW.cshtml" />
     <Content Include="Views\Report\Data_In_Out.cshtml" />
+    <Content Include="Views\Report\Inbound2.cshtml" />
+    <Content Include="Views\Report\Outbound.cshtml" />
+    <Content Include="Views\Report\Movement.cshtml" />
+    <Content Include="Views\Report\Transform.cshtml" />
+    <Content Include="Views\Report\QcInspection.cshtml" />
+    <Content Include="Views\Report\ListTransaction.cshtml" />
+    <Content Include="Views\Report\Receiving4.cshtml" />
+    <Content Include="Views\Report\ShelfLifeExtension.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

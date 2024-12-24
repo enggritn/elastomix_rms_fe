@@ -609,6 +609,80 @@
     </div>
 </div>
 
+<div class="modal" id="formEditReturnModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Return</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Code</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialCode" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Material Name</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control MaterialName" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Lot No</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control LotNo" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">In Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="rInDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Exp Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="rExpDate" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Returned Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control ReturnedQty" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Qty/Bag</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control QtyPerBag" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bag Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control BagQtyTotal" readonly />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">New Return Qty</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="NewReturnQty" />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnEditReturn"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -933,6 +1007,9 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/IssueSlip/DatatableOrder?HeaderID=@ViewBag.Param"
             },
             columnDefs: [
@@ -980,6 +1057,9 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/IssueSlip/DatatablePickingSummary?HeaderID=@ViewBag.Param"
             },
              columns: [
@@ -1023,25 +1103,33 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/IssueSlip/DatatableReturnSummary?HeaderID=@ViewBag.Param"
             },
              columns: [
-                 { "data": "RowNum", "name": "RowNum", "autoWidth": true },
+                { "data": "RowNum", "name": "RowNum", "autoWidth": true },
                 { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
                 { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
                 { "data": "LotNo", "name": "LotNo", "autoWidth": true },
                 { "data": "InDate", "name": "InDate", "autoWidth": true },
-                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
                 { "data": "TotalQty", "name": "TotalQty", "autoWidth": true },
-                 { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
-                 { "data": "BagQty", "name": "BagQty", "autoWidth": true },
-                 { "data": "TotalPutawayQty", "name": "PutawayQty", "autoWidth": true },
+                { "data": "QtyPerBag", "name": "QtyPerBag", "autoWidth": true },
+                { "data": "BagQty", "name": "BagQty", "autoWidth": true },
+                { "data": "TotalPutawayQty", "name": "PutawayQty", "autoWidth": true },
                 {
                     "data": null,
                     "render": function (data, type, row) {
                         let button = '';
-                        button += '<button class="btn btn-info-outline" onclick = "return ShowBarcodeForm(this)" > <i class="fas fa-barcode"></i>Print</button> ';
-                        button += '<button type="button" class="btn btn-success" onclick="return ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                        if (data.TotalPutawayQty == "0.00") {
+                            button += '<button class="btn btn-info" onclick = "return ShowEditReturnForm(this)" > <i class="ik ik-edit"></i>Edit Return</button>';
+                        }
+                        button += '<button class="btn btn-info-outline" onclick = "return ShowBarcodeForm(this)" > <i class="fas fa-barcode"></i>Print</button>';
+                        if (data.TotalQty != data.TotalPutawayQty) {
+                            button += '<button type="button" class="btn btn-success" onclick="return ShowPutawayForm(this)"><i class="ik ik-inbox"></i>Putaway</button>';
+                        }
                         return button;
                     }
                 }
@@ -1399,31 +1487,60 @@
     let OrderID = "";
     function ShowReturnForm(row) {
 
+    var elementRow = $(row).closest('tr');
+    var dataTableRow = $('#pickingSumTable').DataTable().row($(elementRow)).data();
+
+    $('.MaterialCode').val(dataTableRow.MaterialCode);
+    $('.MaterialName').val(dataTableRow.MaterialName);
+
+    $('#PickedQtyTotal').val(dataTableRow.TotalQty);
+    $('#BagQtyTotal').val(dataTableRow.BagQty);
+
+    $('#ReturnedQtyTotal').val(dataTableRow.ReturnedTotalQty);
+    $('#ReturnAvailQty').val(dataTableRow.AvailableReturnQty);
+
+    $('#ReturnQty').val(0);
+
+    $('.QtyPerBag').val(dataTableRow.QtyPerBag);
+
+    $('#FullBagQty').val(0);
+    $('#RemainderQty').val(0);
+
+    dataSummary = dataTableRow;
+    StockCode = dataSummary.StockCode;
+    OrderID = dataSummary.OrderID;
+
+
+    $('#formReturnModal').modal({
+        backdrop: 'static',
+        keyboard: false
+    });
+    }
+
+    function ShowEditReturnForm(row) {
+
         var elementRow = $(row).closest('tr');
-        var dataTableRow = $('#pickingSumTable').DataTable().row($(elementRow)).data();
+        var dataTableRow = $('#returnSumTable').DataTable().row($(elementRow)).data();
 
+        $('#NewReturnQty').val(0);
         $('.MaterialCode').val(dataTableRow.MaterialCode);
-        $('.MaterialName').val(dataTableRow.MaterialName);
-
-        $('#PickedQtyTotal').val(dataTableRow.TotalQty);
-        $('#BagQtyTotal').val(dataTableRow.BagQty);
-
-        $('#ReturnedQtyTotal').val(dataTableRow.ReturnedTotalQty);
-        $('#ReturnAvailQty').val(dataTableRow.AvailableReturnQty);
-
-        $('#ReturnQty').val(0);
-
+        $('.MaterialName').val(dataTableRow.MaterialName);        
+        $('.LotNo').val(dataTableRow.LotNo);
+        $('#rInDate').val(dataTableRow.InDate);
+        $('#rExpDate').val(dataTableRow.ExpDate);
+        $('.ReturnedQty').val(dataTableRow.TotalQty);
         $('.QtyPerBag').val(dataTableRow.QtyPerBag);
+        $('.BagQtyTotal').val(dataTableRow.BagQty);
 
-        $('#FullBagQty').val(0);
-        $('#RemainderQty').val(0);
+        $('#NewReturnQty').next().html('');
+        $('#NewReturnQty').removeClass('is-invalid');
 
         dataSummary = dataTableRow;
         StockCode = dataSummary.StockCode;
         OrderID = dataSummary.OrderID;
 
 
-        $('#formReturnModal').modal({
+        $('#formEditReturnModal').modal({
             backdrop: 'static',
             keyboard: false
         });
@@ -1521,6 +1638,45 @@
 
                     $('#pickingSumTable').DataTable().ajax.reload();
                     $('#pickingSumTable').DataTable().columns.adjust();
+                } else {
+                    $.each(response.error_validation, function (index, value) {
+                        $('#' + value.FieldName).next().html(value.ErrorMessage);
+                        $('#' + value.FieldName).addClass('is-invalid');
+                    });
+                    notify("Warning", "warning", response.message);
+                }
+
+            }
+        });
+
+    });
+
+    $('#btnEditReturn').on('click', function () {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/EditReturn',
+            data: {
+                OrderID: OrderID,
+                LotNo: $('.LotNo').val(),
+                StockCode: StockCode,
+                Qty: $('#NewReturnQty').val() != "" ? $('#NewReturnQty').val().replace(/\,/g, '') : 0
+            },
+            success: function (response) {
+                isValid = response.status;
+                if (isValid) {
+                    $('#listTable').DataTable().ajax.reload();
+                    $('#listTable').DataTable().columns.adjust();
+                    $('#formEditReturnModal').modal('hide');
+                    notify("Success", "success", response.message);
+                    $('#returnTable').DataTable().ajax.reload();
+                    $('#returnTable').DataTable().columns.adjust();
+
+                    $('#returnSumTable').DataTable().ajax.reload();
+                    $('#returnSumTable').DataTable().columns.adjust();
                 } else {
                     $.each(response.error_validation, function (index, value) {
                         $('#' + value.FieldName).next().html(value.ErrorMessage);
@@ -1796,7 +1952,7 @@
             beforeSend: function (request) {
                 request.setRequestHeader('Token', token);
             },
-            url: server + 'Api/Control/ListPrinter',
+            url: server + 'Api/Control/ListPrinterWeb',
             success: function (response) {
                 isValid = response.status;
                 if (isValid) {

@@ -1349,7 +1349,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                url: server + 'Api/Control/ListPrinter',
+                url: server + 'Api/Control/ListPrinterWeb',
                 success: function (response) {
                     isValid = response.status;
                     if (isValid) {
@@ -1419,7 +1419,7 @@
         $('#btnSaveReceive').on('click', function () {
         let receiveQty;
         if (receivingData.WarehouseType == "OUTSOURCE") {
-            receiveQty = $('#ReceiveQtyBag').val()
+            receiveQty = $('#ReceiveQtyBag').val().replace(/\,/g, '');
         }
         else {
             receiveQty = $('#ReceiveActualQty').val() ? $('#ReceiveActualQty').val().replace(/\,/g, '') : 0;

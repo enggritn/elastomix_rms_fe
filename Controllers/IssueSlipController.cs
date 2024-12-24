@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WMS_FE.Models;
+
 namespace WMS_FE.Controllers
 {
     [SessionCheck]
@@ -202,6 +203,176 @@ namespace WMS_FE.Controllers
                 String fileName = String.Format("filename=DataInOut_{0}_{1}.xlsx", materialcode, datedownload);
 
                 for (int i = 1; i <= 8; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("IssueSlip");
+            }
+        }
+
+        public async Task<ActionResult> ExportIssueSlip2ToExcel(string date)
+        {
+            if (string.IsNullOrEmpty(date))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportIssueSlip2?date={0}", date));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                IssueSlipResponse res = JsonConvert.DeserializeObject<IssueSlipResponse>(result);
+                #endregion
+
+                IEnumerable<IssueSlipDTOReport> listdetail = res.list;
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                workSheet.Row(1).Height = 25;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "No.";
+                workSheet.Cells[1, 2].Value = "R/M CODE";
+                workSheet.Cells[1, 3].Value = "R/M NAME";
+                workSheet.Cells[1, 4].Value = "R/M VENDOR NAME";
+                workSheet.Cells[1, 5].Value = "WT REQUESTED";
+                workSheet.Cells[1, 6].Value = "SUPPLY QTY";
+                workSheet.Cells[1, 7].Value = "FROM RACK NO.";
+                workSheet.Cells[1, 8].Value = "EXP DATE";
+                workSheet.Cells[1, 9].Value = "PICKED BY.";
+                workSheet.Cells[1, 10].Value = "ACTUAL RETURN QTY";
+                workSheet.Cells[1, 11].Value = "GO TO RACK NO.";
+                workSheet.Cells[1, 12].Value = "PUT BY.";
+
+                int recordIndex = 2;
+                int recordNo = 1;
+                String ProductionDate = "";
+                foreach (IssueSlipDTOReport header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 1].Value = recordNo++;
+                    workSheet.Cells[recordIndex, 2].Value = header.RM_Code;
+                    workSheet.Cells[recordIndex, 3].Value = header.RM_Name;
+                    workSheet.Cells[recordIndex, 4].Value = header.RM_VendorName;
+                    workSheet.Cells[recordIndex, 5].Value = header.Wt_Request;
+                    workSheet.Cells[recordIndex, 6].Value = header.SupplyQty;
+                    workSheet.Cells[recordIndex, 7].Value = header.FromBinRackCode;
+                    workSheet.Cells[recordIndex, 8].Value = header.ExpDate;
+                    workSheet.Cells[recordIndex, 8].Style.Numberformat.Format = "dd/MM/yyyy";
+                    workSheet.Cells[recordIndex, 9].Value = header.PickedBy;
+                    workSheet.Cells[recordIndex, 10].Value = header.ReturnQty;
+                    workSheet.Cells[recordIndex, 11].Value = header.ToBinRackCode;
+                    workSheet.Cells[recordIndex, 12].Value = header.PutBy;
+                    recordIndex++;
+
+                    ProductionDate = header.Header_ProductionDate;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=IssueSlip2_{0}_{1}.xlsx", ProductionDate, datedownload);
+
+                for (int i = 1; i <= 13; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("IssueSlip");
+            }
+        }
+
+        public async Task<ActionResult> ExportListTransactionToExcel(string materialcode, string startdate, string enddate)
+        {
+            if (string.IsNullOrEmpty(materialcode) || string.IsNullOrEmpty(startdate) || string.IsNullOrEmpty(enddate))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportListTransaction?materialcode={0}&startdate={1}&enddate={2}", materialcode, startdate, enddate));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                IssueSlipResponse res = JsonConvert.DeserializeObject<IssueSlipResponse>(result);
+                #endregion
+
+                IEnumerable<ListTransactionDTOReport> listdetail = res.list2;
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                workSheet.Row(1).Height = 25;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "No.";
+                workSheet.Cells[1, 2].Value = "RMCode";
+                workSheet.Cells[1, 3].Value = "RMName";
+                workSheet.Cells[1, 4].Value = "WHName";
+                workSheet.Cells[1, 5].Value = "InOut";
+                workSheet.Cells[1, 6].Value = "TransactionDate";
+                workSheet.Cells[1, 7].Value = "InQty";
+                workSheet.Cells[1, 8].Value = "OutQty";
+                workSheet.Cells[1, 9].Value = "InventoryQty";
+                workSheet.Cells[1, 10].Value = "InOutType";
+                workSheet.Cells[1, 11].Value = "CreateBy";
+                workSheet.Cells[1, 12].Value = "CreateOn";
+
+                int recordIndex = 2;
+                int recordNo = 1;
+                foreach (ListTransactionDTOReport header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 1].Value = recordNo++;
+                    workSheet.Cells[recordIndex, 2].Value = header.RMCode;
+                    workSheet.Cells[recordIndex, 3].Value = header.RMName;
+                    workSheet.Cells[recordIndex, 4].Value = header.WHName;
+                    workSheet.Cells[recordIndex, 5].Value = header.InOut;
+                    workSheet.Cells[recordIndex, 6].Value = header.TransactionDate;
+                    workSheet.Cells[recordIndex, 7].Value = header.InQty;
+                    workSheet.Cells[recordIndex, 8].Value = header.OutQty;
+                    workSheet.Cells[recordIndex, 9].Value = header.InventoryQty;
+                    workSheet.Cells[recordIndex, 10].Value = header.InOutType;
+                    workSheet.Cells[recordIndex, 11].Value = header.CreateBy;
+                    workSheet.Cells[recordIndex, 12].Value = header.CreateOn;
+                    recordIndex++;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=ListTransaction_{0}_{1}.xlsx", materialcode, datedownload);
+
+                for (int i = 1; i <= 13; i++)
                 {
                     workSheet.Column(i).AutoFit();
                 }

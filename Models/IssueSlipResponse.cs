@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace WMS_FE.Models
 {
@@ -10,5 +7,6 @@ namespace WMS_FE.Models
         public bool status { get; set; }
         public string message { get; set; }
         public List<IssueSlipDTOReport> list { get; set; }
+        public List<ListTransactionDTOReport> list2 { get; set; }
     }
 }

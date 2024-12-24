@@ -147,6 +147,83 @@ namespace WMS_FE.Controllers
             return View();
         }
 
+        public ActionResult Receiving4()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult Inbound2()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult Outbound()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult Transform()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult ListTransaction()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult QcInspection()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
+        public ActionResult ShelfLifeExtension()
+        {
+            if (Session["token"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            ViewBag.BaseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+            ViewBag.Server = ConfigurationManager.AppSettings["server"].ToString();
+            return View();
+        }
+
         public async Task<ActionResult> ExportActualStockToExcel(string warehouse, string area, string rack)
         {            
             //get data api

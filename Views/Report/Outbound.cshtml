@@ -1,0 +1,264 @@
+﻿@{
+    ViewBag.Title = "Report Data Outbound";
+    ViewBag.Module = "Outbound";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Start Create Date </label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">End Create Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="EndDateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Warehouse</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="WarehouseFilter">
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
+                                <button type="button" id="btnExport" class="btn btn-primary float-right">Export Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
+                        <thead>
+                            <tr>
+                                <th>DOCUMENT NO.</th>
+                                <th>WH NAME</th>
+                                <th>RM CODE</th>
+                                <th>RM NAME</th>
+                                <th>IN DATE</th>
+                                <th>EXP DATE</th>
+                                <th>LOT NO.</th>
+                                <th>/BAG</th>
+                                <th>FULL BAG</th>
+                                <th>TOTAL</th>
+                                <th>CREATE BY</th>
+                                <th>CREATE ON</th>
+                                <th>PICKING /BAG</th>
+                                <th>PICKING FULL BAG</th>
+                                <th>PICKING TOTAL</th>
+                                <th>PICKING BIN RACK</th>
+                                <th>PICKING BY</th>
+                                <th>PICKING ON</th>
+                                <th>PUTAWAY /BAG</th>
+                                <th>PUTAWAY FULL BAG</th>
+                                <th>PUTAWAY TOTAL</th>
+                                <th>PUTAWAY BIN RACK</th>
+                                <th>PUTAWAY BY</th>
+                                <th>PUTAWAY ON</th>
+                                <th>STATUS</th>
+                                <th>MEMO</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+
+        $('#WarehouseFilter').select2();
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '100%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[5, "asc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/DatatableDetailOtherOutbound",
+                data: function (d) {
+                    d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.enddate = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.WarehouseCode = $('#WarehouseFilter').val();
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 },
+                { orderable: false, targets: -1 },
+                { orderable: false, targets: -2 },
+                { orderable: false, targets: -3 },
+                { orderable: false, targets: -4 },
+            ],
+            columns: [
+                { "data": "DocumentNo", "name": "DocumentNo", "autoWidth": false },
+                { "data": "WHName", "name": "WHName", "autoWidth": false },
+                { "data": "RMCode", "name": "RMCode", "autoWidth": false },
+                { "data": "RMName", "name": "RMName", "autoWidth": false },
+                { "data": "InDate", "name": "InDate", "autoWidth": false },
+                { "data": "ExpDate", "name": "ExpDate", "autoWidth": false },
+                { "data": "LotNo", "name": "LotNo", "autoWidth": false },
+                { "data": "Bag", "name": "Bag", "autoWidth": false },
+                { "data": "FullBag", "name": "FullBag", "autoWidth": false },
+                { "data": "Total", "name": "Total", "autoWidth": false },
+                { "data": "CreateBy", "name": "CreateBy", "autoWidth": false },
+                { "data": "CreateOn", "name": "CreateOn", "autoWidth": false },
+                { "data": "PickingBag", "name": "PickingBag", "autoWidth": false },
+                { "data": "PickingFullBag", "name": "PickingFullBag", "autoWidth": false },
+                { "data": "PickingTotal", "name": "PickingTotal", "autoWidth": false },
+                { "data": "PickingBinRack", "name": "PickingBinRack", "autoWidth": false },
+                { "data": "PickingBy", "name": "PickingBy", "autoWidth": false },
+                { "data": "PickingOn", "name": "PickingOn", "autoWidth": false },
+                { "data": "PutawayBag", "name": "PutawayBag", "autoWidth": false },
+                { "data": "PutawayFullBag", "name": "PutawayFullBag", "autoWidth": false },
+                { "data": "PutawayTotal", "name": "PutawayTotal", "autoWidth": false },
+                { "data": "PutawayBinRack", "name": "PutawayBinRack", "autoWidth": false },
+                { "data": "PutawayBy", "name": "PutawayBy", "autoWidth": false },
+                { "data": "PutawayOn", "name": "PutawayOn", "autoWidth": false },
+                { "data": "Status", "name": "Status", "autoWidth": false },
+                { "data": "Memo", "name": "Memo", "autoWidth": false }
+            ]
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            endDate: '+0d',
+            /*startDate: '+0d',*/
+        });
+
+    $.ajax({
+        type: 'GET',
+        async: false,
+        dataType: "json",
+        beforeSend: function (request) {
+            request.setRequestHeader('Token', token);
+        },
+        url: server + 'Api/Warehouse/GetData',
+        success: function (response) {
+            isValid = response.status;
+            if (isValid) {
+                $('#WarehouseFilter').empty();
+                $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
+                var html = '';
+                $.each(response.list, function (index, value) {
+                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                });
+                $('#WarehouseFilter').append(html);
+            }
+        }
+    });
+
+    $('#btnExport').click(function () {
+        let DateFilter = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        let EndDateFilter = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        let WarehouseFilter = $('#WarehouseFilter').val();
+
+        window.open('@Url.Action("ExportOutboundToExcel", "Outbound")' + '?date=' + DateFilter + '&enddate=' + EndDateFilter + '&warehouse=' + WarehouseFilter, "_blank");
+    });
+
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+    $('#DateFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#EndDateFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#WarehouseFilter').change(function () {
+        table.ajax.reload();
+    });
+</script>
+}

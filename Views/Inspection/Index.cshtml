@@ -533,6 +533,9 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/QCInspection/DatatableExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
             },
             columnDefs: [
@@ -575,7 +578,7 @@
                             button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>QC</button>';
                         }
 
-                        if (!data.PickingAction && data.TransactionStatus == 'PROGRESS') {
+                        if (data.PickingAction) {
                             button += '<button type="button" class="btn btn-primary" onclick="ShowPickingForm(this)"><i class="ik ik-check-circle"></i>Picking</button> ';
                         }
 
@@ -622,6 +625,9 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/QCInspection/DatatableNonExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
             },
             columnDefs: [
@@ -1176,7 +1182,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                url: server + 'Api/Control/ListPrinter',
+                url: server + 'Api/Control/ListPrinterWeb',
                 success: function (response) {
                     isValid = response.status;
                     if (isValid) {
@@ -1221,7 +1227,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                url: server + 'Api/Control/ListPrinter',
+                url: server + 'Api/Control/ListPrinterWeb',
                 success: function (response) {
                     isValid = response.status;
                     if (isValid) {

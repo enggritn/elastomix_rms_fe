@@ -5,11 +5,11 @@ using System.Web;
 
 namespace WMS_FE.Models
 {
-    public class InboundResponse
+    public class InspectionResponse
     {
         public bool status { get; set; }
         public string message { get; set; }
-        public List<OtherInboundDetailReportDTO> list { get; set; }
-        public List<OtherInbound2DetailReportDTO> list2 { get; set; }
+        public List<InspectionDetailReportDTO> list { get; set; }
+        public List<ShelfLifeExtensionReportDTO> list2 { get; set; }
     }
 }

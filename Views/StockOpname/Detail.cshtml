@@ -211,6 +211,9 @@
             ajax: {
                 "dataType": "json",
                 "type": "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 "url": server + "Api/StockOpname/DatatableDetail?HeaderID=@ViewBag.Param"
             },
             columnDefs: [

@@ -262,6 +262,9 @@
             ajax: {
                 dataType: "json",
                 type: "POST",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 url: server + "Api/Report/DatatableActualStockRePrintLabel",
                 data: function (d) {
                     d.MaterialName = $('#MaterialName').val();
@@ -361,7 +364,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                url: server + 'Api/Control/ListPrinter',
+                url: server + 'Api/Control/ListPrinterWeb',
                 success: function (response) {
                     isValid = response.status;
                     if (isValid) {
@@ -433,7 +436,7 @@
             beforeSend: function (request) {
                 request.setRequestHeader('Token', token);
             },
-            url: server + 'Api/Control/ListPrinter',
+            url: server + 'Api/Control/ListPrinterWeb',
             success: function (response) {
 
                 $('#PrinterList').empty();

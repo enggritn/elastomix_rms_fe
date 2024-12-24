@@ -1205,7 +1205,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                url: server + 'Api/Control/ListPrinter',
+                url: server + 'Api/Control/ListPrinterWeb',
                 success: function (response) {
 
                     $('#PrinterList').empty();

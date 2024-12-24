@@ -14,8 +14,6 @@
     @Styles.Render("~/bundles/css")
     @Styles.Render("~/Content/plugins/fontawesome-free/css/all.min.css")
     @Styles.Render("~/Content/plugins/icon-kit/dist/css/iconkit.min.css")
-    @*@Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")*@
-    @*@Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")*@
     @Styles.Render("~/Content/plugins/toastr/toastr.css")
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800" rel="stylesheet">
 
@@ -218,8 +216,6 @@
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Movement")', 'Movement')" class="menu-item">Movement</a>
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "StockOpname")', 'StockOpname')" class="menu-item">Stock Opname</a>
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Transform")', 'Transform')" class="menu-item">Transform</a>
-                                    @*<a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Transfer")', 'Transfer')" class="menu-item">Transform</a>*@
-                                    @*<a href="javascript:void(0);" onclick="openMenu('@Url.Action("Operation", "Inspection")', 'OperationInspection')" class="menu-item">Inspection</a>*@
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "Label")', 'Label')" class="menu-item">Re-print Label</a>
                                 </div>
                             </div>
@@ -230,12 +226,6 @@
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ReceivingRM", "Inspection")', 'ReceivingRMInspection')" class="menu-item">Receiving RM Inspection</a>
                                 </div>
                             </div>
-                            @*<div class="nav-item has-sub">
-                                    <a href="#"><i class="ik ik-database"></i><span>Layout</span></a>
-                                    <div class="submenu-content">
-                                        <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Index", "FloorPlan")', 'Layout')" class="menu-item">Layout</a>
-                                    </div>
-                                </div>*@
                             <div class="nav-item has-sub">
                                 <a href="#"><i class="ik ik-file"></i><span>Report</span></a>
                                 <div class="submenu-content">
@@ -247,6 +237,14 @@
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving2", "Report")', 'Receiving2')" class="menu-item">Receiving 2</a>
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving3", "Report")', 'Receiving2')" class="menu-item">Receiving 3</a>
                                     <a href="javascript:void(0);" onclick="openMenu('@Url.Action("StockOpname", "Report")', 'StockOpname')" class="menu-item">Stock Opname</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving4", "Report")', 'Receiving4')" class="menu-item">Receiving 4</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Inbound2", "Report")', 'Inbound2')" class="menu-item">Inbound</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Outbound", "Report")', 'Outbound')" class="menu-item">Outbound</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Movement", "Report")', 'Movement')" class="menu-item">Movement</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Transform", "Report")', 'Transform')" class="menu-item">Transform</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ListTransaction", "Report")', 'ListTransaction')" class="menu-item">List Transaction</a> 
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("QcInspection", "Report")', 'QcInspection')" class="menu-item">QC Inspection</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ShelfLifeExtension", "Report")', 'ShelfLifeExtension')" class="menu-item">Shelf Life Extension</a>
                                 </div>
                             </div>
                         </nav>
@@ -259,17 +257,14 @@
                 </div>
             </div>
 
-
             <footer class="footer">
                 <div class="w-100 clearfix">
                     <span class="text-center text-sm-left d-md-inline-block">Copyright © @DateTime.Now.Year <b>PT. Elastomix Indonesia</b> || Login Date : @Session["login_date"] || User : @Session["username"] - @Session["full_name"]</span>
                     <span class="float-none float-sm-right mt-1 mt-sm-0 text-center text-warning">Developed by PT. Duta Kalingga Pratama</span>
                 </div>
             </footer>
-
         </div>
     </div>
-
 
     <div class="modal" id="changePassModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -317,11 +312,7 @@
         </div>
     </div>
 
-
     @Scripts.Render("~/bundles/js")
-    @*@Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")*@
-    @*@Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")*@
-    @*@Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")*@
     @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
     @Scripts.Render("~/Content/custom/js/notification.js")
     @Scripts.Render("~/Content/plugins/sweetalert.min.js")
@@ -417,8 +408,5 @@
         });
     </script>
     @RenderSection("custom_js", required: false)
-
-
 </body>
-
 </html>

@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.Title = "Report Data List Transaction";
+    ViewBag.Module = "IssueSlip";
+}
+
+<div class="page-header">
+    <div class="row align-items-end">
+        <div class="col-lg-8">
+            <div class="page-header-title">
+                <i class="ik ik-inbox bg-blue"></i>
+                <div class="d-inline">
+                    <h5>@ViewBag.Title</h5>
+                    <span>List</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <nav class="breadcrumb-container" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href=""><i class="ik ik-database"></i></a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="#">Logistic</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit @ViewBag.Title</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="sourceField">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2" id="SourceLabel">Source Material</label>
+                                <div class="col-sm-4"><u><a href="#" id="btnSelectSource"><i class="ik ik-eye"></i>&nbsp; <ins id="SourceSelectLabel">Select Material</ins></a></u></div>
+                            </div>
+                        </div>
+                        <div id="sourceForm" style="display:none;">
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Material Code</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="MaterialCode" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-2">Material Name</label>
+                                <div class="col-sm-4">
+                                    <input type="text" autocomplete="off" class="form-control" id="MaterialName" readonly />
+                                    <span class="help-block text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">Start Create Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2">End Create Date</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control datepicker" id="EndDateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
+                            </div>
+                        </div>
+                        @*<div class="form-group row">
+                            <label class="col-form-label col-sm-2">Warehouse</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="WarehouseFilter">
+                                </select>
+                            </div>
+                        </div>*@
+                        <br />
+                        <br />
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
+                                <button type="button" id="btnExport" class="btn btn-primary float-right">Export Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
+                        <thead>
+                            <tr>
+                                <th>RM CODE</th>
+                                <th>RM NAME</th>
+                                <th>WH NAME</th>
+                                <th>IN/OUT</th>
+                                <th>TRANSACTION DATE</th>
+                                <th>IN QTY</th>
+                                <th>OUT QTY</th>
+                                <th>INVENTORY QTY</th>
+                                <th>IN/OUT TYPE</th>
+                                <th>CREATE BY</th>
+                                <th>CREATE ON</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="formMaterialSource" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Select Material Source</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="dt-responsive col-md-12">
+                    <table class="table table-bordered table-striped nowrap" id="materialTable" width="100%" cellspacing="0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th></th>
+                                <th>MATERIAL CODE</th>
+                                <th>MATERIAL NAME</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section custom_css
+{
+    @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/datatables/fixedColumns.bootstrap4.min.css")
+    @Styles.Render("~/Content/plugins/toastr/toastr.css")
+    @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
+    @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+    <style>
+        tr.row_selected td {
+            background-color: lightblue !important;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+    </style>
+
+}
+
+@section custom_js
+{
+    @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.js")
+    @Scripts.Render("~/Content/plugins/datatables/dataTables.fixedColumns.min.js")
+    @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
+    @Scripts.Render("~/Content/custom/js/notification.js")
+    @Scripts.Render("~/Content/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js")
+    @Scripts.Render("~/Content/plugins/inputmask/js/jquery.inputmask.bundle.js")
+    @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
+    @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
+
+<script>
+
+        let server = '@ViewBag.server';
+        var isValid = true;
+        let token = '@Session["token"].ToString()';
+        let module = '@ViewBag.Module';
+        let baseUrl = '@ViewBag.BaseUrl';
+        let SourceCode = "";
+        let TargetCode = "";
+
+        $('#WarehouseFilter').select2();
+
+        $('#SourceSelectLabel').click(function () {
+            $('#formMaterialSource').modal('show');
+            materialTable.columns.adjust();
+            materialTable.draw();
+        });
+
+        var materialTable = $('#materialTable').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[1, "asc"]],
+            ajax: {
+                "dataType": "json",
+                "type": "POST",
+                "url": server + "Api/Transform/DatatableVProductStock?type=source"
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            columns: [
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        return '<i class="ik ik-check"></i>';
+                    }
+                },
+                { "data": "MaterialCode", "name": "MaterialCode", "autoWidth": true },
+                { "data": "MaterialName", "name": "MaterialName", "autoWidth": true },
+            ]
+        });
+
+        $('#materialTable tbody').on('click', 'tr', function () {
+            var data = materialTable.row(this).data();
+            $('#MaterialCode').val(data.MaterialCode);
+            $('#MaterialName').val(data.MaterialName);
+
+            SourceCode = data.MaterialCode;
+
+            $('#sourceForm').show();
+            $('#formMaterialSource').modal('hide');
+
+            $("#materialTable tbody tr").removeClass('row_selected');
+            $(this).addClass('row_selected');
+
+        });
+
+        var table = $('#data_table').DataTable({
+            processing: true,
+            serverSide: true,
+            sScrollXInner: '100%',
+            scrollY: "500px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: true,
+            order: [[5, "asc"]],
+            ajax: {
+                dataType: "json",
+                type: "POST",
+                url: server + "Api/@ViewBag.Module/DatatableDetailListTransaction",
+                data: function (d) {
+                    d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.enddate = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+                    d.materialcode = $('#MaterialCode').val();
+                }
+            },
+            columnDefs: [
+                { orderable: false, targets: 0 },
+                { orderable: false, targets: -1 },
+                { orderable: false, targets: -2 },
+                { orderable: false, targets: -3 },
+                { orderable: false, targets: -4 },
+            ],
+            columns: [
+                { "data": "RMCode", "name": "RMCode", "autoWidth": false },
+                { "data": "RMName", "name": "RMName", "autoWidth": false },
+                { "data": "WHName", "name": "WHName", "autoWidth": false },
+                { "data": "InOut", "name": "InOut", "autoWidth": false },
+                { "data": "TransactionDate", "name": "TransactionDate", "autoWidth": false },
+                { "data": "InQty", "name": "InQty", "autoWidth": false },
+                { "data": "OutQty", "name": "OutQty", "autoWidth": false },
+                { "data": "InventoryQty", "name": "InventoryQty", "autoWidth": false },
+                { "data": "InOutType", "name": "InOutType", "autoWidth": false },
+                { "data": "CreateBy", "name": "CreateBy", "autoWidth": false },
+                { "data": "CreateOn", "name": "CreateOn", "autoWidth": false }
+            ]
+        });
+
+        $('.number').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': true});
+        $('.number-non-decimal').inputmask({ "placeholder": "", 'alias': 'decimal', 'groupSeparator': ',', 'autoGroup': true, 'digits': 0, 'digitsOptional': false });
+
+        $('.datepicker').datepicker({
+            format: "dd/mm/yyyy",
+            todayBtn: "linked",
+            todayHighlight: true,
+            orientation: "left",
+            autoclose: true,
+            endDate: '+0d',
+            /*startDate: '+0d',*/
+        });
+
+    $.ajax({
+        type: 'GET',
+        async: false,
+        dataType: "json",
+        beforeSend: function (request) {
+            request.setRequestHeader('Token', token);
+        },
+        url: server + 'Api/Warehouse/GetData',
+        success: function (response) {
+            isValid = response.status;
+            if (isValid) {
+                $('#WarehouseFilter').empty();
+                $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
+                var html = '';
+                $.each(response.list, function (index, value) {
+                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                });
+                $('#WarehouseFilter').append(html);
+            }
+        }
+    });
+
+    $('#btnExport').click(function () {
+        let DateFilter = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        let EndDateFilter = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        let MaterialCodeFilter = $('#MaterialCode').val();
+
+        window.open('@Url.Action("ExportListTransactionToExcel", "IssueSlip")' + '?date=' + DateFilter + '&enddate=' + EndDateFilter + '&materialcode=' + MaterialCodeFilter, "_blank");
+    });
+
+    $('#btnRefreshDataTable').click(function () {
+        table.ajax.reload();
+    });
+
+    $('#DateFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#EndDateFilter').change(function () {
+        table.ajax.reload();
+    });
+
+    $('#WarehouseFilter').change(function () {
+        table.ajax.reload();
+    });
+</script>
+}

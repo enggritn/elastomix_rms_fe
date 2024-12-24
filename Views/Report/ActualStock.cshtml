@@ -144,7 +144,9 @@
             order: [[10, "asc"]],
             ajax: {
                 dataType: "json",
-                type: "POST",
+                type: "POST", beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
                 url: server + "Api/Report/DatatableActualStock",
                 data: function (d) {
                     d.warehouseCode = $('#WarehouseFilter').val();

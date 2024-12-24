@@ -35,4 +35,19 @@ namespace WMS_FE.Models
         public string IssueSlipQty { get; set; }
         public string BalanceQty { get; set; }
     }
+
+    public class ListTransactionDTOReport
+    {
+        public string RMCode { get; set; }
+        public string RMName { get; set; }
+        public string WHName { get; set; }
+        public string InOut { get; set; }
+        public string TransactionDate { get; set; }
+        public string InQty { get; set; }
+        public string OutQty { get; set; }
+        public string InventoryQty { get; set; }
+        public string InOutType { get; set; }
+        public string CreateBy { get; set; }
+        public string CreateOn { get; set; }
+    }
 }
