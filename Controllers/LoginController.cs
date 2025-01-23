@@ -24,7 +24,7 @@ namespace WMS_FE.Controllers
         }
 
         [HttpPost]
-        public ActionResult SessionSetter(string token, string username, string full_name, string login_date, string rememberMe)
+        public ActionResult SessionSetter(string token, string username, string full_name, string login_date, string rememberMe, string area_type)
         {
             Dictionary<string, object> obj = new Dictionary<string, object>();
 
@@ -33,7 +33,7 @@ namespace WMS_FE.Controllers
 
             try
             {
-                if(!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(login_date) && !string.IsNullOrEmpty(rememberMe))
+                if(!string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(login_date) && !string.IsNullOrEmpty(rememberMe) && !string.IsNullOrEmpty(area_type))
                 {
                     bool isRemember = Convert.ToBoolean(rememberMe);
                     if (isRemember)
@@ -43,6 +43,7 @@ namespace WMS_FE.Controllers
                         cookie.Values.Add("login_date", login_date);
                         cookie.Values.Add("username", username);
                         cookie.Values.Add("full_name", full_name);
+                        cookie.Values.Add("area_type", area_type);
                         cookie.Expires = DateTime.Now.AddYears(10);
                         Response.Cookies.Add(cookie);
                     }
@@ -53,6 +54,7 @@ namespace WMS_FE.Controllers
                         cookie.Values.Add("login_date", login_date);
                         cookie.Values.Add("username", username);
                         cookie.Values.Add("full_name", full_name);
+                        cookie.Values.Add("area_type", area_type);
                         cookie.Expires = DateTime.Now.AddHours(24);
                         Response.Cookies.Add(cookie);
                     }
@@ -61,6 +63,7 @@ namespace WMS_FE.Controllers
                     Session["token"] = token;
                     Session["login_date"] = login_date;
                     Session["full_name"] = full_name;
+                    Session["area_type"] = area_type;
 
                     status = true;
                     message = "Authentication succeeded.";
@@ -92,6 +95,7 @@ namespace WMS_FE.Controllers
             cookie.Values.Add("login_date", null);
             cookie.Values.Add("username", null);
             cookie.Values.Add("full_name", null);
+            cookie.Values.Add("area_type", null);
             cookie.Expires = DateTime.Now.AddDays(-1);
             Response.Cookies.Add(cookie);
 

@@ -393,7 +393,7 @@
             beforeSend: function (request) {
                 request.setRequestHeader('Token', token);
             },
-            url: server + 'Api/MobilePrinter/Print',
+            url: server + 'Api/MobilePrinter/PrintWeb',
             data: {
                 StockId: TransformDetailId,
                 PrintQty: $('#PrintQty').val() != "" ? $('#PrintQty').val().replace(/\,/g, '') : 0,

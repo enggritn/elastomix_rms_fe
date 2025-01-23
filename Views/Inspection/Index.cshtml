@@ -50,19 +50,19 @@
                         <label class="col-form-label col-sm-2">Filter Status</label>
                         <div class="col-sm-4">
                             <select class="form-control" id="Filter">
-                                <option value="OPEN/PROGRESS">OPEN/PROGRESS</option>
+                                <option value="OPEN/PROGRESS/CONFIRMED">OPEN/PROGRESS/CONFIRMED</option>
                                 <option value="OPEN">OPEN</option>
                                 <option value="PROGRESS">PROGRESS</option>
                                 <option value="CONFIRMED">CONFIRMED</option>
-                                @*<option value="CLOSED">CLOSED</option>*@
-                                <option value="ALL">ALL</option>
+                                @*<option value="CLOSED">CLOSED</option>
+                                    <option value="ALL">ALL</option>*@
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-2">Filtered By</label>
                         <div class="col-sm-4 fa-pull-left">
-                            <span id="FilteredBy" class="badge badge-secondary">OPEN/PROGRESS</span>
+                            <span id="FilteredBy" class="badge badge-secondary">OPEN/PROGRESS/CONFIRMED</span>
                         </div>
                     </div>
                     <div class="form-group row mb-0">
@@ -102,6 +102,7 @@
                                         <th>IN DATE</th>
                                         <th>EXP DATE</th>
                                         <th>EXPIRATION DAY</th>
+                                        <th>NEW EXP DATE</th>
                                         <th>CREATED BY</th>
                                         <th>CREATED ON</th>
                                         <th>STATUS</th>
@@ -124,6 +125,7 @@
                                         <th>IN DATE</th>
                                         <th>EXP DATE</th>
                                         <th>EXPIRATION DAY</th>
+                                        <th>NEW EXP DATE</th>
                                         <th>CREATED BY</th>
                                         <th>CREATED ON</th>
                                         <th>STATUS</th>
@@ -137,9 +139,7 @@
             </div>
         </div>
     </div>
-
 </div>
-
 
 <div class="modal" id="formPickingModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -375,6 +375,13 @@
                         <span class="help-block text-danger"></span>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">New Exp. Date</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" name="NewExpDate" id="NewExpDate" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
                 @*<div class="form-group row">
                         <label class="col-form-label col-sm-4">Print Qty</label>
                         <div class="col-sm-4">
@@ -409,7 +416,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal" id="formPrintBarcodeReturn" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -490,6 +496,101 @@
         </div>
     </div>
 </div>
+
+<!-- FORM PUTAWAY  START -->
+<div class="modal" id="formPutawayModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">Put Away</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Material</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tablebarcode">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>LOT NO.</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>BIN RACK CODE</th>
+                                        <th>QTY</th>
+                                        <th>QTY/BAG</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Available Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" id="AvailablePutawayQTY" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Total Available QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control" name="PutAwayActualQtyTotal" id="PutAwayActualQtyTotal" readonly />
+                        <span class="help-block text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4"><strong>Put Away</strong></label>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Area</label>
+                    <div class="col-sm-8">
+                        <select id="AreaList" class="form-control">
+                            <option value="" selected>Select Area</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_area"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Bin/Rack</label>
+                    <div class="col-sm-8">
+                        <select id="BinRackID" class="form-control">
+                            <option value="" selected>Select Bin/Rack</option>
+                        </select>
+                        <span class="help-block text-danger" id="error_binrack"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-4">Putaway Bag QTY</label>
+                    <div class="col-sm-8">
+                        <input type="text" autocomplete="off" class="form-control number-non-decimal" id="PutawayQTY" readonly />
+                        <span class="help-block text-danger" id="error_PutawayQTY"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="ik ik-x-circle"></i>No</button>
+                <button type="button" class="btn btn-primary" id="btnSavePutawayExtend"><i class="ik ik-check-circle"></i>Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM PUTAWAY  END -->
+
 @section custom_css
 {
     @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
@@ -503,7 +604,6 @@
     </style>
 }
 
-
 @section custom_js
 {
     @Scripts.Render("~/Content/plugins/datatables/jquery.dataTables.min.js")
@@ -516,7 +616,6 @@
 
 
     <script>
-
         let server = '@ViewBag.server';
         let module = '@ViewBag.Module';
         let baseUrl = '@ViewBag.BaseUrl';
@@ -536,7 +635,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                "url": server + "Api/QCInspection/DatatableExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
+                "url": server + "Api/QCInspection/DatatableExpired?transactionStatus=OPEN/PROGRESS/CONFIRMED&filter1=ALL"
             },
             columnDefs: [
                 { orderable: false, targets: -1 }
@@ -550,6 +649,7 @@
                 { "data": "InDate", "name": "InDate", "autoWidth": true },
                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
                 { "data": "ExpirationDay", "name": "ExpirationDay", "autoWidth": true },
+                { "data": "NewExpDate", "name": "NewExpDate", "autoWidth": true },
                 { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
                 { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
                 {
@@ -575,30 +675,33 @@
                         let button = '';
 
                         if (!data.ID) {
-                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>QC</button>';
+                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>Create QC</button>';
                         }
 
                         if (data.PickingAction) {
-                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingForm(this)"><i class="ik ik-check-circle"></i>Picking</button> ';
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingForm(this)"><i class="ik ik-check-circle"></i>Picking Waiting</button> ';
                         }
 
-                        if (data.JudgementAction && data.TransactionStatus == 'PROGRESS') {
+                        if (!data.PutawayWaitingAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPutawayForm(this)"><i class="ik ik-check-circle"></i>Putaway Waiting</button> ';
+                        }
+                       
+                        if (data.PutawayWaitingAction && data.JudgementAction && data.TransactionStatus == 'PROGRESS') {
                             button += '<button type="button" class="btn btn-primary" onclick="qcExtend(this)"><i class="ik ik-check-circle"></i>Extend</button> ';
                         }
-                        if (data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
+
+                        if (data.PutawayWaitingAction && data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
                             button += '<button type="button" class="btn btn-danger" onclick="qcDispose(this)"><i class="ik ik-check-circle"></i>Dispose</button>';
                         }
 
                         if (data.InspectionStatus == 'EXTEND' && data.TransactionStatus == 'CONFIRMED') {
-                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeForm(this)"><i class="ik ik-check-circle"></i>Print</button> ';
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeForm(this)"><i class="ik ik-check-circle"></i>Print Extend</button> ';
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPutawayForm(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
                         }
 
-                        //if (data.PutawayExtendAction) {
-                        //    button += '<button type="button" class="btn btn-primary" onclick="qcPutawayExtend(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
-                        //}
-                        //if (data.PickingDisposeAction) {
-                        //    button += '<button type="button" class="btn btn-warning" onclick="qcPickingDispose(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
-                        //}
+                        if (data.InspectionStatus == 'DISPOSE' && data.TransactionStatus == 'CONFIRMED') {
+                            button += '<button type="button" class="btn btn-warning" onclick="ShowPickingForm(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
+                        }
 
                         return button;
                     }
@@ -628,7 +731,7 @@
                 beforeSend: function (request) {
                     request.setRequestHeader('Token', token);
                 },
-                "url": server + "Api/QCInspection/DatatableNonExpired?transactionStatus=OPEN/PROGRESS&filter1=ALL"
+                "url": server + "Api/QCInspection/DatatableNonExpired?transactionStatus=OPEN/PROGRESS/CONFIRMED&filter1=ALL"
             },
             columnDefs: [
                 { orderable: false, targets: -1 }
@@ -642,6 +745,7 @@
                 { "data": "InDate", "name": "InDate", "autoWidth": true },
                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": true },
                 { "data": "ExpirationDay", "name": "ExpirationDay", "autoWidth": true },
+                { "data": "NewExpDate", "name": "NewExpDate", "autoWidth": true },
                 { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true },
                 { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": true },
                 {
@@ -667,30 +771,36 @@
                         let button = '';
 
                         if (!data.ID) {
-                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>QC</button>';
+                            button += '<button class="btn btn-primary" onclick= "CreateQC(this)"><i class="ik ik-check-circle"></i>Create QC</button>';
                         }
 
-                        if (!data.PickingAction && data.TransactionStatus == 'PROGRESS') {
-                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingFormNonExpired(this)"><i class="ik ik-check-circle"></i>Picking</button> ';
+                        if (data.PickingAction) {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPickingFormNonExpired(this)"><i class="ik ik-check-circle"></i>Picking Waiting</button> ';
                         }
 
-                        if (data.ReturnAction && data.TransactionStatus == 'PROGRESS') {
+                        if (!data.PutawayWaitingAction && data.TransactionStatus == 'PROGRESS') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPutawayFormNonExpired(this)"><i class="ik ik-check-circle"></i>Putaway Waiting</button> ';
+                        }
+
+                        if (data.PutawayWaitingAction && data.ReturnAction && data.TransactionStatus == 'PROGRESS') {
                             button += '<button type="button" class="btn btn-primary" onclick="qcReturn(this)"><i class="ik ik-check-circle"></i>Return</button> ';
                         }
-                        if (data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
+                        if (data.PutawayWaitingAction && data.DisposeAction && data.TransactionStatus == 'PROGRESS') {
                             button += '<button type="button" class="btn btn-danger" onclick="qcDispose(this)"><i class="ik ik-check-circle"></i>Dispose</button>';
                         }
 
                         if (data.InspectionStatus == 'RETURN' && data.TransactionStatus == 'CONFIRMED') {
-                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeFormReturn(this)"><i class="ik ik-check-circle"></i>Print</button> ';
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeFormReturn(this)"><i class="ik ik-check-circle"></i>Print Return</button> ';
                         }
 
-                        //if (data.PutawayExtendAction) {
-                        //    button += '<button type="button" class="btn btn-primary" onclick="qcPutawayExtend(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
-                        //}
-                        //if (data.PickingDisposeAction) {
-                        //    button += '<button type="button" class="btn btn-warning" onclick="qcPickingDispose(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
-                        //}
+                        if (data.InspectionStatus == 'EXTEND' && data.TransactionStatus == 'CONFIRMED') {
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowBarcodeForm(this)"><i class="ik ik-check-circle"></i>Print Extend</button> ';
+                            button += '<button type="button" class="btn btn-primary" onclick="ShowPutawayFormNonExpired(this)"><i class="ik ik-check-circle"></i>Putaway Extend</button> ';
+                        }
+
+                        if (data.InspectionStatus == 'DISPOSE' && data.TransactionStatus == 'CONFIRMED') {
+                            button += '<button type="button" class="btn btn-warning" onclick="ShowPickingFormNonExpired(this)"><i class="ik ik-check-circle"></i>Picking Dispose</button> ';
+                        }
 
                         return button;
                     }
@@ -703,7 +813,6 @@
             }
         });
 
-
         $('#btnRefreshDataTable').click(function () {
             reloadTable();
         });
@@ -711,33 +820,33 @@
         function reloadTable() {
             table_expired.ajax.reload();
             table_non_expired.ajax.reload();
-    }
-
-    $('#Filter').change(function () {
-        var Filter = $('#Filter').val();
-        var Filter1 = $('#Filter1').val();
-        $('#FilteredBy').html(Filter);
-
-        var badge = 'badge ';
-        if (Filter == 'OPEN/PROGRESS') {
-            badge += 'badge-secondary';
-        } else if (Filter == 'OPEN') {
-            badge += 'badge-info';
-        } else if (Filter == 'PROGRESS') {
-            badge += 'badge-primary';
-        } else if (Filter == 'CONFIRMED') {
-            badge += 'badge-success';
-        } else if (Filter == 'ALL') {
-            badge += 'badge-warning';
-        } else {
-            badge += 'badge-dark';
-            Filter = "";
         }
-        $('#FilteredBy').removeClass();
-        $('#FilteredBy').addClass(badge);
-        table_expired.ajax.url(server + "Api/QCInspection/DatatableExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
-        table_non_expired.ajax.url(server + "Api/QCInspection/DatatableNonExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
-    });
+
+        $('#Filter').change(function () {
+            var Filter = $('#Filter').val();
+            var Filter1 = $('#Filter1').val();
+            $('#FilteredBy').html(Filter);
+
+            var badge = 'badge ';
+            if (Filter == 'OPEN/PROGRESS') {
+                badge += 'badge-secondary';
+            } else if (Filter == 'OPEN') {
+                badge += 'badge-info';
+            } else if (Filter == 'PROGRESS') {
+                badge += 'badge-primary';
+            } else if (Filter == 'CONFIRMED') {
+                badge += 'badge-success';
+            } else if (Filter == 'ALL') {
+                badge += 'badge-warning';
+            } else {
+                badge += 'badge-dark';
+                Filter = "";
+            }
+            $('#FilteredBy').removeClass();
+            $('#FilteredBy').addClass(badge);
+            table_expired.ajax.url(server + "Api/QCInspection/DatatableExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+            table_non_expired.ajax.url(server + "Api/QCInspection/DatatableNonExpired?transactionStatus=" + Filter + "&filter1=" + Filter1).load();
+        });
 
         $('#Filter1').change(function () {
             var Filter = $('#Filter').val();
@@ -780,73 +889,73 @@
                 endpoint = "CreateNonExpired";
             }
 
-        $.ajax({
-            type: 'POST',
-            dataType: "json",
-            beforeSend: function (request) {
-                request.setRequestHeader('Token', token);
-            },
-            url: server + 'Api/QCInspection/' + endpoint,
-            data: {
-                MaterialCode: dataRow.MaterialCode,
-                LotNumber: dataRow.LotNo,
-                InDate: dataRow.InDate,
-                ExpiredDate: dataRow.ExpDate,
-            },
-            success: function (response) {
-                isValid = response.status;
-                if (isValid) {
-                    reloadTable();
-                    notify("Success", "success", response.message);
-                } else {
-                    notify("Warning", "warning", response.message);
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/' + endpoint,
+                data: {
+                    MaterialCode: dataRow.MaterialCode,
+                    LotNumber: dataRow.LotNo,
+                    InDate: dataRow.InDate,
+                    ExpiredDate: dataRow.ExpDate,
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        reloadTable();
+                        notify("Success", "success", response.message);
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            switch (e.target.id) {
+                case "nav-tab1": {
+                    table_expired.ajax.reload();
+                    table_expired.columns.adjust();
+                    break;
+                }
+                case "nav-tab2": {
+                    table_non_expired.ajax.reload();
+                    table_non_expired.columns.adjust();
+                    break;
                 }
             }
-        });
-    }
+        })
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        switch (e.target.id) {
-            case "nav-tab1": {
-                table_expired.ajax.reload();
-                table_expired.columns.adjust();
-                break;
-            }
-            case "nav-tab2": {
-                table_non_expired.ajax.reload();
-                table_non_expired.columns.adjust();
-                break;
-            }
+        let dataSummary = {};
+        let InspectionID = "";
+        function qcPicking(el) {
+            var elementRow = $(el).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#formPickingModal #ExtendQty').val('0');
+            $('#formPickingModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
         }
-    })
 
-    let dataSummary = {};
-    let InspectionID = "";
-    function qcPicking(el) {
-        var elementRow = $(el).closest('tr');
-        var tableId = $(elementRow).closest('table').attr('id');
-        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
-        InspectionID = dataTableRow.ID;
-        $('#formPickingModal #ExtendQty').val('0');
-        $('#formPickingModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-    }
+        function qcExtend(el) {
+            var elementRow = $(el).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#formJudgementModal #ExtendQty').val('0');
+            $('#formJudgementModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
 
-    function qcExtend(el) {
-        var elementRow = $(el).closest('tr');
-        var tableId = $(elementRow).closest('table').attr('id');
-        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
-        InspectionID = dataTableRow.ID;
-        $('#formJudgementModal #ExtendQty').val('0');
-        $('#formJudgementModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-    }
-
-    function qcDispose(el) {
+        function qcDispose(el) {
         var elementRow = $(el).closest('tr');
         var tableId = $(elementRow).closest('table').attr('id');
         var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
@@ -855,27 +964,27 @@
             backdrop: 'static',
             keyboard: false
         });
-    }
-    function qcReturn(el) {
-        var elementRow = $(el).closest('tr');
-        var tableId = $(elementRow).closest('table').attr('id');
-        var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
-        InspectionID = dataTableRow.ID;
-        $('#formReturnModal #ReturnQty').val('0');
+        }
 
-        dataSummary = dataTableRow;
-        xMaterialCode = dataSummary.MaterialCode;
-        xLotNo = dataSummary.LotNo;
-        xInDate = dataSummary.InDate;
-        xExpDate = dataSummary.ExpDate;
+        function qcReturn(el) {
+            var elementRow = $(el).closest('tr');
+            var tableId = $(elementRow).closest('table').attr('id');
+            var dataTableRow = $('#' + tableId).DataTable().row($(elementRow)).data();
+            InspectionID = dataTableRow.ID;
+            $('#formReturnModal #ReturnQty').val('0');
 
-        GetListDataReturn();
-        $('#formReturnModal').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-    }
+            dataSummary = dataTableRow;
+            xMaterialCode = dataSummary.MaterialCode;
+            xLotNo = dataSummary.LotNo;
+            xInDate = dataSummary.InDate;
+            xExpDate = dataSummary.ExpDate;
 
+            GetListDataReturn();
+            $('#formReturnModal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
 
         let btnSaveJudgement = "";
         $('#btnSaveJudgement').click(function () {
@@ -938,6 +1047,7 @@
         let btnSaveReturn = "";
         let btnSavePutaway = "";
         let btnSavePicking = "";
+        let btnSavePutawayExtend = "";
 
         $('#btnSavePicking').click(function () {
             if (btnSavePicking == "") {
@@ -953,6 +1063,7 @@
 
                 var param = {
                     "InspectionID": InspectionID,
+                    "PickingType": $('#inspectionStatus').val(),
                 }
 
                 $.ajax({
@@ -1076,6 +1187,7 @@
                 });
             }
         });
+
         $('#btnSavePutaway').click(function () {
             if (btnSavePutaway == "") {
                 btnSavePutaway = "confirmation";
@@ -1164,6 +1276,7 @@
             $('#formPrintBarcode #LotNo').val(dataTableRow.LotNo);
             $('#formPrintBarcode #InDate').val(dataTableRow.InDate);
             $('#formPrintBarcode #ExpDate').val(dataTableRow.ExpDate);
+            $('#formPrintBarcode #NewExpDate').val(dataTableRow.NewExpDate);
             //$('#formPrintBarcode #PrintQty').val(0);
             //$('#formPrintBarcode #PrintSeries').prop('checked', true);
             //$('#formPrintBarcode #PrintQty').next().html('');
@@ -1197,7 +1310,6 @@
                 }
             });
         }
-
 
         function ShowBarcodeFormReturn(el) {
             var elementRow = $(el).closest('tr');
@@ -1380,7 +1492,6 @@
             var elementRow = $(row).closest('tr');
             var dataTableRow = $('#data_table_expired').DataTable().row($(elementRow)).data();
             InspectionID = dataTableRow.ID;
-            $('#inspectionStatus').val('Waiting');
             $('#materialType').val(dataTableRow.MaterialType);
             $('#materialCode').val(dataTableRow.MaterialCode);
             $('#materialName').val(dataTableRow.MaterialName);
@@ -1388,19 +1499,19 @@
             $('#inDate').val(dataTableRow.InDate);
             $('#expDate').val(dataTableRow.ExpDate);
 
-            loadDetail();
+            if (dataTableRow.TransactionStatus == 'PROGRESS') {
+                $('#inspectionStatus').val('Waiting');
+            } else {
+                $('#inspectionStatus').val('Dispose');
+            }
 
-            //$('#formPickingModal').modal({
-            //    backdrop: 'static',
-            //    keyboard: false
-            //});
+            loadDetail();
         }
 
         function ShowPickingFormNonExpired(row) {
             var elementRow = $(row).closest('tr');
             var dataTableRow = $('#data_table_non_expired').DataTable().row($(elementRow)).data();
             InspectionID = dataTableRow.ID;
-            $('#inspectionStatus').val('Waiting');
             $('#materialType').val(dataTableRow.MaterialType);
             $('#materialCode').val(dataTableRow.MaterialCode);
             $('#materialName').val(dataTableRow.MaterialName);
@@ -1408,12 +1519,13 @@
             $('#inDate').val(dataTableRow.InDate);
             $('#expDate').val(dataTableRow.ExpDate);
 
-            loadDetail();
+            if (dataTableRow.TransactionStatus == 'PROGRESS') {
+                $('#inspectionStatus').val('Waiting');
+            } else {
+                $('#inspectionStatus').val('Dispose');
+            }
 
-            //$('#formPickingModal').modal({
-            //    backdrop: 'static',
-            //    keyboard: false
-            //});
+            loadDetail();
         }
 
         let list_detail = [];
@@ -1434,6 +1546,7 @@
 
                         if (list_detail.length > 0) {
                             $.each(list_detail, function (index, value) {
+                                html += '<tr>';
                                 html += '<td></td>';
                                 html += '<td>' + value.BinRackCode + '</td>';
                                 html += '<td>' + value.BinRackName + '</td>';
@@ -1459,5 +1572,241 @@
                 }
             });
         }
+
+        let data = {};
+        let xInspectionID = "";
+        let xMaterialCode = "";
+        let xMaterialName = "";
+        let xLotNo = "";
+        let xInDate = "";
+        let xNewExpDate = "";
+        let xQtyPerBag = "";
+        let xPrevBinRackCode = "";
+        let xQuantity = "";
+        function ShowPutawayForm(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = $('#data_table_expired').DataTable().row($(elementRow)).data();
+
+            data = dataTableRow;
+            xInspectionID = data.ID;
+            xMaterialCode = data.MaterialCode;
+            xMaterialName = data.MaterialName;
+            xLotNo = data.LotNo;
+            xInDate = data.InDate;
+            xNewExpDate = data.NewExpDate;
+
+            $('#AvailablePutawayQTY').val('0');
+            $('#PutAwayActualQtyTotal').val('0');
+            $('#PutawayQTY').val('0');
+            setAreaList();
+
+            GetBarcodeListPutAway();
+        };
+
+        function ShowPutawayFormNonExpired(row) {
+            var elementRow = $(row).closest('tr');
+            var dataTableRow = $('#data_table_non_expired').DataTable().row($(elementRow)).data();
+
+            data = dataTableRow;
+            xInspectionID = data.ID;
+            xMaterialCode = data.MaterialCode;
+            xMaterialName = data.MaterialName;
+            xLotNo = data.LotNo;
+            xInDate = data.InDate;
+            xNewExpDate = data.NewExpDate;
+
+            $('#AvailablePutawayQTY').val('0');
+            $('#PutAwayActualQtyTotal').val('0');
+            $('#PutawayQTY').val('0');
+            setAreaList();
+
+            GetBarcodeListPutAway();
+        };
+
+        $('#btnSavePutawayExtend').on('click', function () {
+            $("#error_PutawayQTY").html("");
+            $("#error_binrack").html("");
+            $("#error_area").html("");
+            $.ajax({
+                type: 'POST',
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/Putaway',
+                data: {
+                    InspectionID: xInspectionID,
+                    ProductCode: xMaterialCode,
+                    StockCode: xStockCode,
+                    PrevBinRackCode: xPrevBinRackCode,
+                    Quantity: xQuantity,
+                    PutAwayQty: $('#PutawayQTY').val() != "" ? $('#PutawayQTY').val().replace(/\,/g, '') : 0,
+                    BinRackID: $('#BinRackID').val()
+                },
+                success: function (response) {
+                    isValid = response.status;
+                    if (isValid) {
+                        $('#AvailablePutawayQTY').val(response.availableBagQty);
+                        $('#PutawayQTY').val(0);
+
+                        $('#PutawayQTY').next().html('');
+                        $('#PutawayQTY').removeClass('is-invalid');
+
+                        notify("Success", "success", response.message);
+                        $('#formPutawayModal').modal('hide');
+                        reloadTable();
+                    } else {
+                        $.each(response.error_validation, function (index, value) {
+                            if (value.FieldName == "BinRackID") {
+                                $('#error_binrack').html(value.ErrorMessage);
+                                $('#errir_binrack').addClass('is-invalid');
+                            } else if (value.FieldName == "AreaList") {
+                                $('#error_area').html(value.ErrorMessage);
+                                $('#error_area').addClass('is-invalid');
+                            } else if (value.FieldName == "PutawayQTY") {
+                                $('#error_PutawayQTY').html(value.ErrorMessage);
+                                $('#error_PutawayQTY').addClass('is-invalid');
+                            } else {
+                                $('#' + value.FieldName).next().html(value.ErrorMessage);
+                                $('#' + value.FieldName).addClass('is-invalid');
+                            }
+                        });
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        });
+
+        function setAreaList() {
+            $('#AreaList').select2();
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/AreaList',
+                success: function (response) {
+
+                    $('#AreaList').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Area</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#AreaList').append(html);
+                    $('#AreaList').select2();
+                }
+            });
+        }
+
+        let list_fifo = [];
+        function GetBarcodeListPutAway() {
+            $.ajax({
+                type: 'POST',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url : server + 'Api/QCInspection/DatatableExtend',
+                data: {
+                    QCInspectionID: xInspectionID,
+                    MaterialCode : xMaterialCode,
+                    MaterialName : xMaterialName,
+                },
+                success: function (response) {
+                    $('#tablebarcode tbody').empty();
+                    if (response.status) {
+                        list_fifo = response.data;
+                        var html = "";
+
+                        if (list_fifo.length > 0) {
+                            $.each(list_fifo, function (index, value) {
+                                html += '<tr>';
+                                html += '<td><input type="radio" name="id"></td>';
+
+                                html += '<td>' + value.MaterialCode + '</td>';
+                                html += '<td>' + value.MaterialName + '</td>';
+                                html += '<td>' + value.LotNo + '</td>';
+                                html += '<td>' + value.InDate + '</td>';
+                                html += '<td>' + value.ExpDate + '</td>';
+                                html += '<td>' + value.BinRackCode + '</td>';
+                                html += '<td>' + value.Qty + '</td>';
+                                html += '<td>' + value.QtyPerBag + '</td>';
+                                html += '</tr>';
+                            });
+                        } else {
+                            html += '<tr><td colspan="13">No Data</td></tr>';
+                        }
+
+
+                        $('#tablebarcode tbody').append(html);
+
+                        $('#formPutawayModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                    } else {
+                        notify("Warning", "warning", response.message);
+                    }
+                }
+            });
+        }
+
+        let xStockCode = "";
+        function chooseStock(index) {
+            data_fifo = list_fifo[index];
+            xStockCode = data_fifo.StockCode;
+            xPrevBinRackCode = data_fifo.BinRackCode;
+            xQuantity = data_fifo.Qty;
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/QCInspection/GetDataPutaway?StockCode=' + data_fifo.StockCode + '&BinRackCode=' + data_fifo.BinRackCode + '&QCInspectionID=' + xInspectionID + '&Qty=' + data_fifo.Qty,
+                success: function (response) {
+                    $('#AvailablePutawayQTY').val(response.QtyBagAvailable);
+                    $('#PutAwayActualQtyTotal').val(response.QtyActualAvailable); 
+                    $('#PutawayQTY').val(response.QtyBagAvailable);
+                }
+            });
+        }
+
+        $(document).on('click', 'input[type="radio"][name="id"]', function () {
+            var index = $(this).closest('tr').index();  // Mendapatkan indeks baris
+            chooseStock(index);  // Memanggil fungsi dengan indeks yang benar
+        });
+
+        setAreaList();
+
+        $('#AreaList').change(function () {
+
+            $.ajax({
+                type: 'GET',
+                async: false,
+                dataType: "json",
+                beforeSend: function (request) {
+                    request.setRequestHeader('Token', token);
+                },
+                url: server + 'Api/BinRack/AreaRack?id=' + this.value,
+                success: function (response) {
+
+                    $('#BinRackID').empty();
+                    var html = '';
+                    html += '<option value="" selected>Select Bin/Rack</option>';
+                    $.each(response, function (index, value) {
+                        html += '<option value="' + value.ID + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    });
+                    $('#BinRackID').append(html);
+                    $('#BinRackID').select2();
+                }
+            });
+        });
     </script>
 }

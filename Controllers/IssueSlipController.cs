@@ -36,9 +36,9 @@ namespace WMS_FE.Controllers
             return View();
         }
 
-        public async Task<ActionResult> ExportIssueSlipToExcel(string date)
+        public async Task<ActionResult> ExportIssueSlipToExcel(string date, string enddate)
         {
-            if (string.IsNullOrEmpty(date))
+            if (string.IsNullOrEmpty(date) && string.IsNullOrEmpty(enddate))
             {
                 throw new Exception();
             }
@@ -50,7 +50,7 @@ namespace WMS_FE.Controllers
 
                 HttpClient client = new HttpClient();
                 #region Material Req Req
-                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportIssueSlip?date={0}", date));
+                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportIssueSlip?date={0}&enddate={1}", date, enddate));
                 var response = await client.GetAsync(uri);
                 string result = response.Content.ReadAsStringAsync().Result;
                 IssueSlipResponse res = JsonConvert.DeserializeObject<IssueSlipResponse>(result);
@@ -307,9 +307,9 @@ namespace WMS_FE.Controllers
             }
         }
 
-        public async Task<ActionResult> ExportListTransactionToExcel(string materialcode, string startdate, string enddate)
+        public async Task<ActionResult> ExportListTransactionToExcel(string materialcode, string startdate, string enddate, string inouttype, string warehousecode)
         {
-            if (string.IsNullOrEmpty(materialcode) || string.IsNullOrEmpty(startdate) || string.IsNullOrEmpty(enddate))
+            if (string.IsNullOrEmpty(materialcode) || string.IsNullOrEmpty(startdate) || string.IsNullOrEmpty(enddate) || string.IsNullOrEmpty(inouttype))
             {
                 throw new Exception();
             }
@@ -321,7 +321,7 @@ namespace WMS_FE.Controllers
 
                 HttpClient client = new HttpClient();
                 #region Material Req Req
-                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportListTransaction?materialcode={0}&startdate={1}&enddate={2}", materialcode, startdate, enddate));
+                Uri uri = new Uri(ApiAddress + string.Format("Api/IssueSlip/GetDataReportListTransaction?materialcode={0}&startdate={1}&enddate={2}&inouttype={3}&warehousecode={4}", materialcode, startdate, enddate, inouttype, warehousecode));
                 var response = await client.GetAsync(uri);
                 string result = response.Content.ReadAsStringAsync().Result;
                 IssueSlipResponse res = JsonConvert.DeserializeObject<IssueSlipResponse>(result);

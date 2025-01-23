@@ -55,8 +55,6 @@
                                 </select>
                             </div>
                         </div>
-                        <br />
-                        <br />
                         <div class="form-group row mb-0">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
@@ -244,7 +242,7 @@
                 $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
                 var html = '';
                 $.each(response.list, function (index, value) {
-                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
                 });
                 $('#WarehouseFilter').append(html);
             }

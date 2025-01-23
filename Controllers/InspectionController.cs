@@ -280,6 +280,481 @@ namespace WMS_FE.Controllers
 
                 IEnumerable<ShelfLifeExtensionReportDTO> listdetail = res.list2;
 
+                string InspectedOn = "";
+                int count = 0;
+                foreach (ShelfLifeExtensionReportDTO getdata in listdetail)
+                {
+                    if (count == 0)
+                    {
+                        InspectedOn = getdata.InspectedOn;
+                    }
+                }
+
+                ExcelPackage excel = new ExcelPackage();
+                var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
+                workSheet.TabColor = System.Drawing.Color.Black;
+
+                // Menambahkan "Documented Instructions" di B2
+                workSheet.Cells[2, 2].Value = "Documented Instructions";
+                workSheet.Cells[2, 2].Style.Font.Bold = true;
+                workSheet.Cells[2, 2].Style.Font.UnderLine = true;
+                workSheet.Cells[2, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[2, 2, 2, 15].Merge = true;
+                workSheet.Row(2).Height = 20;
+
+                // Menambahkan jarak
+                workSheet.Row(3).Height = 10;
+
+                workSheet.Cells[4, 11].Value = "Date of issue";
+                workSheet.Cells[4, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[4, 11].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[4, 11].Style.Font.Size = 7;
+                workSheet.Cells[4, 11, 4, 11].Merge = true;
+                workSheet.Row(4).Height = 10;
+
+                workSheet.Cells[5, 2].Value = "Purchasing & Logistics";
+                workSheet.Cells[5, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[5, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[5, 2].Style.Font.Size = 8;
+                workSheet.Cells[5, 2, 5, 6].Merge = true;
+                workSheet.Row(5).Height = 10;
+
+                workSheet.Cells[5, 7].Value = "Warehouse persons";
+                workSheet.Cells[5, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[5, 7].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[5, 7].Style.Font.Size = 8;
+                workSheet.Cells[5, 7, 5, 9].Merge = true;
+                workSheet.Row(5).Height = 10;
+
+                workSheet.Cells[5, 11].Value = "Charge";
+                workSheet.Cells[5, 11].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[5, 11].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[5, 11].Style.Font.Size = 7;
+                workSheet.Cells[5, 11, 5, 11].Merge = true;
+                workSheet.Row(5).Height = 10;
+
+                workSheet.Cells[5, 12].Value = "Approved";
+                workSheet.Cells[5, 12].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[5, 12].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[5, 12].Style.Font.Size = 7;
+                workSheet.Cells[5, 12, 5, 13].Merge = true;
+                workSheet.Row(5).Height = 10;
+
+                // Menambahkan jarak
+                workSheet.Row(10).Height = 10;
+
+                workSheet.Cells[11, 2].Value = "Purchasing Manager";
+                workSheet.Cells[11, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[11, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[11, 2].Style.Font.Size = 7;
+                workSheet.Cells[11, 2, 11, 2].Merge = true;
+                workSheet.Row(11).Height = 10;
+
+                workSheet.Cells[11, 3].Value = "Asst. Manager";
+                workSheet.Cells[11, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[11, 3].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[11, 3].Style.Font.Size = 7;
+                workSheet.Cells[11, 3, 11, 3].Merge = true;
+                workSheet.Row(11).Height = 10;
+
+                workSheet.Cells[11, 4].Value = "Staff";
+                workSheet.Cells[11, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[11, 4].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[11, 4].Style.Font.Size = 7;
+                workSheet.Cells[11, 4, 11, 4].Merge = true;
+                workSheet.Row(11).Height = 10;
+
+                workSheet.Cells[11, 5].Value = "Staff";
+                workSheet.Cells[11, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[11, 5].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[11, 5].Style.Font.Size = 7;
+                workSheet.Cells[11, 5, 11, 5].Merge = true;
+                workSheet.Row(11).Height = 10;
+
+                workSheet.Cells[11, 6].Value = "Staff";
+                workSheet.Cells[11, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[11, 6].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[11, 6].Style.Font.Size = 7;
+                workSheet.Cells[11, 6, 11, 6].Merge = true;
+                workSheet.Row(11).Height = 10;
+
+                // Menambahkan jarak
+                workSheet.Row(12).Height = 10;
+
+                workSheet.Cells[13, 2].Value = "Subject Title";
+                workSheet.Cells[13, 2].Style.Font.Bold = true;
+                workSheet.Cells[13, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[13, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[13, 2].Style.Font.Size = 10;
+                workSheet.Cells[13, 2].Style.WrapText = true;
+                workSheet.Cells[13, 2, 16, 2].Merge = true;
+                workSheet.Row(13).Height = 10;
+
+                workSheet.Cells[13, 3].Value = "Shelf-life extension\n" +
+                                               "of raw materials";
+                workSheet.Cells[13, 3].Style.Font.Bold = true;
+                workSheet.Cells[13, 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[13, 3].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[13, 3].Style.Font.Size = 10;
+                workSheet.Cells[13, 3].Style.WrapText = true;
+                workSheet.Cells[13, 3, 16, 8].Merge = true;
+                workSheet.Row(13).Height = 10;
+
+                workSheet.Cells[13, 9].Value = "Enforcing\n" +
+                                               "Date";
+                workSheet.Cells[13, 9].Style.Font.Bold = true;
+                workSheet.Cells[13, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[13, 9].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[13, 9].Style.Font.Size = 8;
+                workSheet.Cells[13, 9].Style.WrapText = true;
+                workSheet.Cells[13, 9, 14, 9].Merge = true;
+                workSheet.Row(13).Height = 10;
+
+                workSheet.Cells[13, 10].Value = InspectedOn;
+                workSheet.Cells[13, 10].Style.Font.Bold = true;
+                workSheet.Cells[13, 10].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[13, 10].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[13, 10].Style.Font.Size = 8;
+                workSheet.Cells[13, 10].Style.WrapText = true;
+                workSheet.Cells[13, 10, 14, 13].Merge = true;
+                workSheet.Row(13).Height = 10;
+
+                workSheet.Cells[15, 9].Value = "Term of\n" +
+                                               "Validity";
+                workSheet.Cells[15, 9].Style.Font.Bold = true;
+                workSheet.Cells[15, 9].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[15, 9].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[15, 9].Style.Font.Size = 8;
+                workSheet.Cells[15, 9].Style.WrapText = true;
+                workSheet.Cells[15, 9, 16, 9].Merge = true;
+                workSheet.Row(15).Height = 10;
+
+                workSheet.Cells[17, 2].Value = "The reason for enforcement (what why) ";
+                workSheet.Cells[17, 2].Style.Font.Bold = true;
+                workSheet.Cells[17, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[17, 2].Style.Indent = 2;
+                workSheet.Cells[17, 2].Style.Font.Size = 8;
+                workSheet.Cells[17, 2, 17, 15].Merge = true;
+                workSheet.Row(17).Height = 10;
+
+                workSheet.Cells[18, 2].Value = "what :";
+                workSheet.Cells[18, 2].Style.Font.Bold = true;
+                workSheet.Cells[18, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[18, 2].Style.Font.Size = 8;
+                workSheet.Cells[18, 2, 18, 15].Merge = true;
+                workSheet.Row(18).Height = 10;
+
+                workSheet.Cells[19, 2].Value = "Extend the expiration date of the raw materials according from Purchasing & Logistic information.\n" +
+                                              "[Perpanjangan expire date raw material berdasarkan informasi Purchasing & Logistic]";
+                // Menyusun teks agar tampil dengan wrap text
+                workSheet.Cells[19, 2].Style.Font.Bold = true;
+                workSheet.Cells[19, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[19, 2].Style.WrapText = true; // Mengaktifkan wrap text agar teks dibungkus dengan benar
+                workSheet.Cells[19, 2, 19, 15].Merge = true;
+                workSheet.Row(19).Height = 40;
+
+                workSheet.Cells[20, 2].Value = "why :";
+                workSheet.Cells[20, 2].Style.Font.Bold = true;
+                workSheet.Cells[20, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[20, 2].Style.Font.Size = 8;
+                workSheet.Cells[20, 2, 20, 15].Merge = true;
+                workSheet.Row(20).Height = 10;
+
+                workSheet.Cells[21, 2].Value = "Current stock is expired lot.";
+                workSheet.Cells[21, 2].Style.Font.Bold = true;
+                workSheet.Cells[21, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[21, 2, 22, 15].Merge = true;
+                workSheet.Row(21).Height = 25;
+
+                workSheet.Row(22).Height = 10; 
+
+                workSheet.Cells[23, 2].Value = "Equipment used and charge (who where)";
+                workSheet.Cells[23, 2].Style.Font.Bold = true;
+                workSheet.Cells[23, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[23, 2].Style.Font.Size = 9;
+                // Menambahkan indentasi
+                workSheet.Cells[23, 2].Style.Indent = 2; // Menambahkan indentasi 10 spasi/huruf
+                workSheet.Cells[23, 2, 23, 15].Merge = true;
+                workSheet.Row(23).Height = 10;
+
+
+                workSheet.Cells[24, 2].Value = "Purchasing & Logistics persons";
+                workSheet.Cells[24, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[24, 2].Style.Font.Size = 9;
+                workSheet.Cells[24, 2, 24, 15].Merge = true;
+                workSheet.Row(24).Height = 10;
+
+                workSheet.Cells[25, 2].Value = "Warehouse process persons";
+                workSheet.Cells[25, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[25, 2].Style.Font.Size = 9;
+                workSheet.Cells[25, 2, 25, 15].Merge = true;
+                workSheet.Row(25).Height = 10;
+
+                workSheet.Row(26).Height = 10; 
+
+                workSheet.Cells[27, 2].Value = "Methods of operation (how) ";
+                workSheet.Cells[27, 2].Style.Font.Bold = true;
+                workSheet.Cells[27, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[27, 2].Style.Indent = 2;
+                workSheet.Cells[27, 2].Style.Font.Size = 9;
+                workSheet.Cells[27, 2, 27, 15].Merge = true;
+                workSheet.Row(27).Height = 10;
+
+                workSheet.Row(28).Height = 10;
+
+                workSheet.Cells[29, 2].Value = "1. Berdasarkan informasi yang diterima,\n" +
+                                               "   hasil judgment untuk R/M adalah sebagai berikut :";
+                workSheet.Cells[29, 2].Style.Font.Bold = true;
+                workSheet.Cells[29, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[29, 2].Style.WrapText = true;
+                workSheet.Cells[29, 2].Style.Indent = 2;
+                workSheet.Cells[29, 2, 31, 15].Merge = true;
+                workSheet.Row(29).Height = 10;
+
+                // Menambahkan "Documented Instructions" di C32
+                workSheet.Cells[32, 3].Value = "OK shelf-life extension after QC check/inspect actual VS applicable SDS or COA items.";
+                workSheet.Cells[32, 3].Style.Font.Bold = true;
+                workSheet.Cells[32, 3].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[32, 3, 32, 15].Merge = true;
+                workSheet.Row(32).Height = 10;
+
+                workSheet.Row(33).Height = 25;
+                workSheet.Row(33).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(33).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Row(33).Style.Font.Size = 9;
+                workSheet.Row(33).Style.Font.Bold = true;
+                workSheet.Cells[33, 3].Value = "R/M Name";
+                workSheet.Cells[33, 4].Value = "Actual Incoming Date";
+                workSheet.Cells[33, 5].Value = "R/M LOT";
+                workSheet.Cells[33, 6].Value = "Total (Kg)";
+                workSheet.Cells[33, 7].Value = "Expired Date";
+                workSheet.Cells[33, 8].Value = "Extension";
+                workSheet.Cells[33, 9].Value = "Remark";
+                workSheet.Cells[33, 10].Value = "Shelf Life Base On COA";
+                workSheet.Cells[33, 11].Value = "Note";
+
+                // Set background color (light blue)
+                var lightBlue = System.Drawing.ColorTranslator.FromHtml("#ADD8E6");
+                for (int i = 3; i <= 11; i++)
+                {
+                    workSheet.Cells[33, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    workSheet.Cells[33, i].Style.Fill.BackgroundColor.SetColor(lightBlue);
+
+                    // Set border styles for the header cells
+                    workSheet.Cells[33, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[33, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[33, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    workSheet.Cells[33, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                    // Enable wrap text for the header cells
+                    workSheet.Cells[33, i].Style.WrapText = true;
+                }
+
+                int recordIndex = 34;
+                foreach (ShelfLifeExtensionReportDTO header in listdetail)
+                {
+                    workSheet.Cells[recordIndex, 3].Value = header.RMName;
+                    workSheet.Cells[recordIndex, 4].Value = header.InDate;
+                    workSheet.Cells[recordIndex, 5].Value = header.LotNo;
+                    workSheet.Cells[recordIndex, 6].Value = header.Qty;
+                    workSheet.Cells[recordIndex, 7].Value = header.ExpiredDate;
+                    workSheet.Cells[recordIndex, 8].Value = header.Extension;
+                    workSheet.Cells[recordIndex, 9].Value = header.Remark;
+                    workSheet.Cells[recordIndex, 10].Value = header.ShelfLifeBaseOnCOA;
+                    workSheet.Cells[recordIndex, 11].Value = header.Note;
+
+                    // Menambahkan warna huruf (font color) pada cell InDate dan Extension
+                    workSheet.Cells[recordIndex, 4].Style.Font.Color.SetColor(System.Drawing.Color.Red); 
+                    workSheet.Cells[recordIndex, 8].Style.Font.Color.SetColor(System.Drawing.Color.Red);
+
+                    // Cek apakah Extension adalah "Dispose"
+                    if (header.Extension == "Dispose")
+                    {
+                        // Set background color kuning untuk kolom 3 hingga 11
+                        var yellow = System.Drawing.ColorTranslator.FromHtml("#FFFF00");
+                        for (int i = 3; i <= 11; i++)
+                        {
+                            workSheet.Cells[recordIndex, i].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            workSheet.Cells[recordIndex, i].Style.Fill.BackgroundColor.SetColor(yellow);
+                        }
+                    }
+
+                    // Menambahkan border untuk setiap data row
+                    for (int i = 3; i <= 11; i++)
+                    {
+                        workSheet.Cells[recordIndex, i].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[recordIndex, i].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[recordIndex, i].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[recordIndex, i].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+
+                        workSheet.Cells[recordIndex, i].Style.WrapText = true;
+                        workSheet.Cells[recordIndex, i].Style.Font.Size = 9;
+                        workSheet.Cells[recordIndex, i].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        workSheet.Cells[recordIndex, i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    }
+
+                    recordIndex++;
+                }               
+
+                for (int i = 1; i <= 11; i++)
+                {
+                    workSheet.Column(i).AutoFit();
+                }
+
+                recordIndex += 2; // Menambah 5 baris dari baris terakhir yang digunakan (recordIndex terakhir)
+
+                // Menambahkan teks di recordIndex + 5 (misalnya di kolom C)
+                workSheet.Cells[recordIndex, 2].Value = "2. Mohon untuk memperpanjang masa expired/shelf-life di label QR sesuai list diatas.";
+                workSheet.Cells[recordIndex, 2].Style.Font.Bold = true;
+                workSheet.Cells[recordIndex, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[recordIndex, 2].Style.Indent = 2;
+                workSheet.Cells[recordIndex, 2, recordIndex + 1, 15].Merge = true; 
+                workSheet.Row(recordIndex).Height = 10;
+
+                recordIndex += 3; 
+
+                workSheet.Cells[recordIndex, 2].Value = "3. Khusus DISPOSE, mohon ditindaklanjuti dengan membuat Disposal Approval Document.";
+                workSheet.Cells[recordIndex, 2].Style.Font.Bold = true;
+                workSheet.Cells[recordIndex, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[recordIndex, 2].Style.Indent = 2;
+                workSheet.Cells[recordIndex, 2, recordIndex + 1, 15].Merge = true;
+                workSheet.Row(recordIndex).Height = 10;
+
+                recordIndex += 1;
+
+                // Setelah semua data dan AutoFit selesai, menambahkan border tebal pada rentang yang diinginkan
+                int lastRow = recordIndex; // Baris terakhir yang terisi
+
+                // Menambahkan border tebal hanya di sisi luar (di sekitar area yang diminta)
+                for (int row = 13; row <= lastRow; row++)
+                {
+                    // Menambahkan border kiri (kolom B) dan kanan (kolom P) untuk setiap baris
+                    workSheet.Cells[row, 2].Style.Border.Left.Style = ExcelBorderStyle.Thick;  // Kolom B
+                    workSheet.Cells[row, 15].Style.Border.Right.Style = ExcelBorderStyle.Thick; // Kolom P
+                }
+
+                for (int col = 2; col <= 15; col++)
+                {
+                    // Menambahkan border atas (baris 13) dan bawah (baris terakhir)
+                    workSheet.Cells[13, col].Style.Border.Top.Style = ExcelBorderStyle.Thick;   // Baris 13
+                    workSheet.Cells[lastRow, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thick;  // Baris terakhir
+                }
+
+                // Menambahkan garis tipis dari kolom B (2) hingga P (16) pada baris 16, 22, dan 26
+                foreach (int row in new int[] { 16, 22, 26 })
+                {
+                    for (int col = 2; col <= 15; col++)
+                    {
+                        workSheet.Cells[row, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin; // Garis tipis horizontal
+                    }
+                }
+
+                foreach (int row in new int[] { 4, 5, 11 })
+                {
+                    for (int col = 2; col <= 9; col++)
+                    {
+                        workSheet.Cells[row, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin; 
+                    }
+                }
+
+                foreach (int row in new int[] { 3, 4, 5, 11 })
+                {
+                    for (int col = 11; col <= 13; col++)
+                    {
+                        workSheet.Cells[row, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin; 
+                    }
+                }
+
+                foreach (int row in new int[] { 14})
+                {
+                    for (int col = 9; col <= 15; col++)
+                    {
+                        workSheet.Cells[row, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    }
+                }
+
+                // Menambahkan garis vertikal tipis 
+                foreach (int col in new int[] { 2, 3, 4, 5, 7, 8 , 12}) // Kolom B (2) sampai H (8)
+                {
+                    for (int row = 6; row <= 11; row++) // Baris 6 sampai 11
+                    {
+                        workSheet.Cells[row, col].Style.Border.Right.Style = ExcelBorderStyle.Thin; // Garis tipis vertikal di sebelah kanan setiap sel
+                    }
+                }
+
+                foreach (int col in new int[] { 1, 6, 9 }) 
+                {
+                    for (int row = 5; row <= 11; row++) 
+                    {
+                        workSheet.Cells[row, col].Style.Border.Right.Style = ExcelBorderStyle.Thin; 
+                    }
+                }
+
+                foreach (int col in new int[] { 10, 11, 13 }) 
+                {
+                    for (int row = 4; row <= 11; row++) 
+                    {
+                        workSheet.Cells[row, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    }
+                }
+
+                foreach (int col in new int[] { 2, 8, 9 })
+                {
+                    for (int row = 13; row <= 16; row++)
+                    {
+                        workSheet.Cells[row, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    }
+                }
+
+                // Set lebar kolom dari B (kolom 2) sampai O (kolom 15) menjadi 15
+                for (int col = 2; col <= 15; col++)
+                {
+                    workSheet.Column(col).Width = 13;
+                }
+
+                for (int col = 14; col <= 15; col++)
+                {
+                    workSheet.Column(col).Width = 3;
+                }
+
+                String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
+                String fileName = String.Format("filename=ShelfLifeExtension_{0}.xlsx", datedownload);
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;" + fileName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+                return RedirectToAction("Inspection");
+            }
+        }
+
+        public async Task<ActionResult> ExportShelfLifeExtensionToExcel2(string date, string enddate)
+        {
+            if (string.IsNullOrEmpty(date) && string.IsNullOrEmpty(enddate))
+            {
+                throw new Exception();
+            }
+            else
+            {
+                //get data api
+                string Domain = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/');
+                string ApiAddress = ConfigurationManager.AppSettings["server"].ToString();
+
+                HttpClient client = new HttpClient();
+                #region Material Req Req
+                Uri uri = new Uri(ApiAddress + string.Format("Api/QCInspection/GetDataReportShelfLifeExtension?date={0}&enddate={1}", date, enddate));
+                var response = await client.GetAsync(uri);
+                string result = response.Content.ReadAsStringAsync().Result;
+                InspectionResponse res = JsonConvert.DeserializeObject<InspectionResponse>(result);
+                #endregion
+
+                IEnumerable<ShelfLifeExtensionReportDTO> listdetail = res.list2;
+
                 ExcelPackage excel = new ExcelPackage();
                 var workSheet = excel.Workbook.Worksheets.Add("Sheet1");
                 workSheet.TabColor = System.Drawing.Color.Black;

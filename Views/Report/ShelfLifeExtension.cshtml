@@ -37,13 +37,13 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group row">
-                            <label class="col-form-label col-sm-2">Start Expired Date</label>
+                            <label class="col-form-label col-sm-2">Start Create Date</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-form-label col-sm-2">End Expired Date</label>
+                            <label class="col-form-label col-sm-2">End Create Date</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control datepicker" id="EndDateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
                             </div>
@@ -55,8 +55,6 @@
                 </select>
             </div>
         </div>*@
-                        <br />
-                        <br />
                         <div class="form-group row mb-0">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
@@ -70,16 +68,16 @@
                     <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
                         <thead>
                             <tr>
-                                <th>RM CODE</th>
-                                <th>RM NAME</th>
-                                <th>IN DATE</th>
-                                <th>LOT</th>
-                                <th>QTY</th>
+                                <th>R/M NAME</th>
+                                <th>INCOMING DATE</th>
+                                <th>R/M LOT</th>
+                                <th>TOTAL (KG)</th>
                                 <th>EXPIRED DATE</th>
                                 <th>EXTENSION</th>
                                 <th>REMARK</th>
                                 <th>SHELF LIFE BASE ON COA</th>
                                 <th>NOTE</th>
+                                <th>CREATED ON</th>
                             </tr>
                         </thead>
                     </table>
@@ -138,7 +136,7 @@
             scrollX: true,
             scrollCollapse: true,
             paging: true,
-            order: [[5, "asc"]],
+            order: [[9, "asc"]],
             ajax: {
                 dataType: "json",
                 type: "POST",
@@ -156,7 +154,6 @@
                 { orderable: false, targets: -4 },
             ],
             columns: [
-                { "data": "RMCode", "name": "RMCode", "autoWidth": false },
                 { "data": "RMName", "name": "RMName", "autoWidth": false },
                 { "data": "InDate", "name": "InDate", "autoWidth": false },
                 { "data": "LotNo", "name": "LotNo", "autoWidth": false },
@@ -165,7 +162,8 @@
                 { "data": "Extension", "name": "Extension", "autoWidth": false },
                 { "data": "Remark", "name": "Remark", "autoWidth": false },
                 { "data": "ShelfLifeBaseOnCOA", "name": "ShelfLifeBaseOnCOA", "autoWidth": false },
-                { "data": "Note", "name": "Note", "autoWidth": false }
+                { "data": "Note", "name": "Note", "autoWidth": false },
+                { "data": "CreatedOn", "name": "CreatedOn", "autoWidth": false }
             ]
         });
 
@@ -197,7 +195,7 @@
                 $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
                 var html = '';
                 $.each(response.list, function (index, value) {
-                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
                 });
                 $('#WarehouseFilter').append(html);
             }

@@ -55,8 +55,6 @@
                                 </select>
                             </div>
                         </div>
-                        <br />
-                        <br />
                         <div class="form-group row mb-0">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
@@ -86,8 +84,6 @@
                                 <th>DESTINATION FULL BAG</th>
                                 <th>DESTINATION TOTAL</th>
                                 <th>DESTINATION BIN RACK</th>
-                                <th>STATUS</th>
-                                <th>MEMO</th>
                             </tr>
                         </thead>
                     </table>
@@ -180,9 +176,7 @@
                 { "data": "DestinationBag", "name": "DestinationBag", "autoWidth": false },
                 { "data": "DestinationFullBag", "name": "DestinationFullBag", "autoWidth": false },
                 { "data": "DestinationTotal", "name": "DestinationTotal", "autoWidth": false },
-                { "data": "DestinationBinRack", "name": "DestinationBinRack", "autoWidth": false },
-                { "data": "Status", "name": "Status", "autoWidth": false },
-                { "data": "Memo", "name": "Memo", "autoWidth": false }
+                { "data": "DestinationBinRack", "name": "DestinationBinRack", "autoWidth": false }
             ]
         });
 
@@ -214,7 +208,7 @@
                 $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
                 var html = '';
                 $.each(response.list, function (index, value) {
-                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
                 });
                 $('#WarehouseFilter').append(html);
             }

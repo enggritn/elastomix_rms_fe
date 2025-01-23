@@ -88,8 +88,6 @@ namespace WMS_FE.Controllers
                 workSheet.Cells[1, 15].Value = "DestinationFullBag";
                 workSheet.Cells[1, 16].Value = "DestinationTotal";
                 workSheet.Cells[1, 17].Value = "DestinationBinRack";
-                workSheet.Cells[1, 18].Value = "Status";
-                workSheet.Cells[1, 19].Value = "Memo";
 
                 int recordIndex = 2;
                 int recordNo = 1;
@@ -112,15 +110,13 @@ namespace WMS_FE.Controllers
                     workSheet.Cells[recordIndex, 15].Value = header.DestinationFullBag;
                     workSheet.Cells[recordIndex, 16].Value = header.DestinationTotal;
                     workSheet.Cells[recordIndex, 17].Value = header.DestinationBinRack;
-                    workSheet.Cells[recordIndex, 18].Value = header.Status;
-                    workSheet.Cells[recordIndex, 19].Value = header.Memo;
                     recordIndex++;
                 }
 
                 String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
                 String fileName = String.Format("filename=Movement_{0}.xlsx", datedownload);
 
-                for (int i = 1; i <= 20; i++)
+                for (int i = 1; i <= 18; i++)
                 {
                     workSheet.Column(i).AutoFit();
                 }

@@ -203,7 +203,7 @@
         });
 
     function CreateSession(response, isRemember) {
-        let token = response.token, username = response.username, login_date = response.login_date, full_name = response.full_name
+        let token = response.token, username = response.username, login_date = response.login_date, full_name = response.full_name, area_type = response.area_type
             $('#btnSignIn').prop('disabled', true);
             $('#btnSignIn').text("Please Wait ...");
             //loading animation here
@@ -215,6 +215,7 @@
                     login_date: login_date,
                     username: username,
                     full_name: full_name,
+                    area_type: area_type,
                     rememberMe: isRemember
                 },
                 dataType: 'json',

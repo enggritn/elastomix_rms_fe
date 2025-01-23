@@ -54,5 +54,6 @@ namespace WMS_FE.Models
         public string Remark { get; set; }
         public string ShelfLifeBaseOnCOA { get; set; }
         public string Note { get; set; }
+        public string InspectedOn { get; set; }
     }
 }

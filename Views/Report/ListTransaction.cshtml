@@ -58,27 +58,39 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Start Create Date and IN/OUT Type grouped in one row -->
                         <div class="form-group row">
                             <label class="col-form-label col-sm-2">Start Create Date</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control datepicker" id="DateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
                             </div>
+
+                            <label class="col-form-label col-sm-2">IN/OUT Type</label>
+                            <div class="col-sm-4">
+                                <select class="form-control" id="FilterINOUTType">
+                                    <option value="ALL">ALL</option>
+                                    <option value="RECEIVING">RECEIVING</option>
+                                    <option value="ISSUESLIP">ISSUE SLIP</option>
+                                    <option value="INBOUND">OTHER INBOUND</option>
+                                    <option value="OUTBOUND">OTHER OUTBOUND</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <!-- End Create Date and Warehouse grouped in one row -->
                         <div class="form-group row">
                             <label class="col-form-label col-sm-2">End Create Date</label>
                             <div class="col-sm-4">
                                 <input type="text" class="form-control datepicker" id="EndDateFilter" value="@DateTime.Now.ToString("dd/MM/yyyy")" />
                             </div>
-                        </div>
-                        @*<div class="form-group row">
+
                             <label class="col-form-label col-sm-2">Warehouse</label>
                             <div class="col-sm-4">
                                 <select class="form-control" id="WarehouseFilter">
                                 </select>
                             </div>
-                        </div>*@
-                        <br />
-                        <br />
+                        </div>
                         <div class="form-group row mb-0">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
@@ -92,9 +104,9 @@
                     <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="data_table">
                         <thead>
                             <tr>
-                                <th>RM CODE</th>
-                                <th>RM NAME</th>
-                                <th>WH NAME</th>
+                                <th>R/M CODE</th>
+                                <th>R/M NAME</th>
+                                <th>W/H NAME</th>
                                 <th>IN/OUT</th>
                                 <th>TRANSACTION DATE</th>
                                 <th>IN QTY</th>
@@ -103,6 +115,7 @@
                                 <th>IN/OUT TYPE</th>
                                 <th>CREATE BY</th>
                                 <th>CREATE ON</th>
+                                <th>ACTION</th>
                             </tr>
                         </thead>
                     </table>
@@ -138,6 +151,208 @@
     </div>
 </div>
 
+<!-- FORM RECEIVING  START -->
+<div class="modal" id="formReceivingModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">History Receiving</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tablereceiving">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>PO NO.</th>
+                                        <th>SUPPLIER</th>
+                                        <th>MATERIAL CODE</th>
+                                        <th>MATERIAL NAME</th>
+                                        <th>SCHEDULE</th>
+                                        <th>TOTAL QTY PO</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>LOT NO.</th>
+                                        <th>QTY PER BAG</th>
+                                        <th>QTY BAG</th>
+                                        <th>TOTAL</th>
+                                        <th>DO NO.</th>
+                                        <th>OK</th>
+                                        <th>NG DAMAGE</th>
+                                        <th>NG WET</th>
+                                        <th>NG CONTAMINTAION</th>
+                                        <th>COA</th>
+                                        <th>STATUS PO</th>
+                                        <th>RECEIVED BY</th>
+                                        <th>RECEIVED ON</th>
+                                        <th>QTY PUTAWAY</th>
+                                        <th>PUTAWAY BY</th>
+                                        <th>PUTAWAY ON</th>
+                                        <th>AREA</th>
+                                        <th>RACK NO.</th>
+                                        <th>STATUS</th>
+                                        <th>REMARKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM RECEIVING END -->
+
+<!-- FORM ISSUE SLIP START -->
+<div class="modal" id="formIssueSlipModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">History Issue Slip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableissueslip">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>PRODUCTION DATE</th>
+                                        <th>R/M CODE</th>
+                                        <th>R/M NAME</th>
+                                        <th>R/M VENDOR NAME</th>
+                                        <th>WT REQUESTED</th>
+                                        <th>SUPPLY QTY</th>
+                                        <th>FROM RACK NO.</th>
+                                        <th>EXP DATE</th>
+                                        <th>PICKED BY.</th>
+                                        <th>ACTUAL RETURN QTY</th>
+                                        <th>GO TO RACK NO.</th>
+                                        <th>PUT BY.</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM ISSUE SLIP END -->
+
+<!-- FORM OTHER INBOUND START -->
+<div class="modal" id="formOtherInboundModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">History Other Inbound</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableotherinbound">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>DOCUMENT NO.</th>
+                                        <th>WH NAME</th>
+                                        <th>RM CODE</th>
+                                        <th>RM NAME</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>LOT NO.</th>
+                                        <th>/BAG</th>
+                                        <th>FULL BAG</th>
+                                        <th>TOTAL</th>
+                                        <th>CREATE BY</th>
+                                        <th>CREATE ON</th>
+                                        <th>QTY PUTAWAY</th>
+                                        <th>PUTAWAY BY</th>
+                                        <th>PUTAWAY ON</th>
+                                        <th>BIN RACK</th>
+                                        <th>STATUS</th>
+                                        <th>MEMO</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM OTHER INBOUND END -->
+
+<!-- FORM OTHER OUTBOUND START -->
+<div class="modal" id="formOtherOutboundModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog custom-modal-width" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalTitle">History Other Outbound</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered nowrap" width="100%" cellspacing="0" id="tableotheroutbound">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>DOCUMENT NO.</th>
+                                        <th>WH NAME</th>
+                                        <th>RM CODE</th>
+                                        <th>RM NAME</th>
+                                        <th>IN DATE</th>
+                                        <th>EXP DATE</th>
+                                        <th>LOT NO.</th>
+                                        <th>TOTAL</th>
+                                        <th>CREATE BY</th>
+                                        <th>CREATE ON</th>
+                                        <th>PICKING /BAG</th>
+                                        <th>PICKING FULL BAG</th>
+                                        <th>PICKING TOTAL</th>
+                                        <th>PICKING BIN RACK</th>
+                                        <th>PICKING BY</th>
+                                        <th>PICKING ON</th>
+                                        <th>PUTAWAY /BAG</th>
+                                        <th>PUTAWAY FULL BAG</th>
+                                        <th>PUTAWAY TOTAL</th>
+                                        <th>PUTAWAY BIN RACK</th>
+                                        <th>PUTAWAY BY</th>
+                                        <th>PUTAWAY ON</th>
+                                        <th>STATUS</th>
+                                        <th>MEMO</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FORM OTHER OUTBOUND END -->
+
 @section custom_css
 {
     @Styles.Render("~/Content/plugins/datatables/dataTables.bootstrap4.min.css")
@@ -152,6 +367,14 @@
 
         .modal {
             overflow: auto !important;
+        }
+
+        .custom-modal-width {
+            max-width: 2000px; /* Menentukan lebar maksimum modal */
+            height: 80%; /* Menentukan tinggi modal */
+            max-height: 800px; /* Menentukan tinggi maksimum modal */
+            margin: auto; /* Agar modal tetap terpusat jika tinggi melebihi viewport */
+            overflow-y: auto; /* Agar jika konten modal melebihi tinggi, muncul scrollbar vertikal */
         }
     </style>
 
@@ -169,7 +392,7 @@
     @Scripts.Render("~/Content/plugins/daterangepicker/moment.min.js")
     @Scripts.Render("~/Content/plugins/select2/dist/js/select2.min.js")
 
-<script>
+    <script>
 
         let server = '@ViewBag.server';
         var isValid = true;
@@ -238,7 +461,7 @@
             scrollX: true,
             scrollCollapse: true,
             paging: true,
-            order: [[5, "asc"]],
+            order: [[10, "asc"]],
             ajax: {
                 dataType: "json",
                 type: "POST",
@@ -247,6 +470,8 @@
                     d.date = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
                     d.enddate = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
                     d.materialcode = $('#MaterialCode').val();
+                    d.inouttype = $('#FilterINOUTType').val();
+                    d.warehousecode = $('#WarehouseFilter').val();
                 }
             },
             columnDefs: [
@@ -267,7 +492,19 @@
                 { "data": "InventoryQty", "name": "InventoryQty", "autoWidth": false },
                 { "data": "InOutType", "name": "InOutType", "autoWidth": false },
                 { "data": "CreateBy", "name": "CreateBy", "autoWidth": false },
-                { "data": "CreateOn", "name": "CreateOn", "autoWidth": false }
+                { "data": "CreateOn", "name": "CreateOn", "autoWidth": false },
+                {
+                    "data": null,
+                    "render": function (data, type, row) {
+                        let button = '';
+
+                        if (data.InOut !== "SUM" && data.InOut !== "TRANSFER") {
+                            button += '<button class="btn btn-primary" onclick="ViewData(this)"><i class="ik ik-check-circle"></i>View History</button>';
+                        }
+
+                        return button;
+                    }
+                },
             ]
         });
 
@@ -299,7 +536,7 @@
                 $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
                 var html = '';
                 $.each(response.list, function (index, value) {
-                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
                 });
                 $('#WarehouseFilter').append(html);
             }
@@ -310,8 +547,10 @@
         let DateFilter = moment($('#DateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
         let EndDateFilter = moment($('#EndDateFilter').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
         let MaterialCodeFilter = $('#MaterialCode').val();
+        let INOUTType = $('#FilterINOUTType').val();
+        let WarehouseFilter = $('#WarehouseFilter').val();
 
-        window.open('@Url.Action("ExportListTransactionToExcel", "IssueSlip")' + '?date=' + DateFilter + '&enddate=' + EndDateFilter + '&materialcode=' + MaterialCodeFilter, "_blank");
+        window.open('@Url.Action("ExportListTransactionToExcel", "IssueSlip")' + '?startdate=' + DateFilter + '&enddate=' + EndDateFilter + '&materialcode=' + MaterialCodeFilter + '&inouttype=' + INOUTType + '&warehousecode=' + WarehouseFilter, "_blank");
     });
 
     $('#btnRefreshDataTable').click(function () {
@@ -326,8 +565,282 @@
         table.ajax.reload();
     });
 
+    $('#FilterINOUTType').change(function () {
+        table.ajax.reload();
+    });
+
     $('#WarehouseFilter').change(function () {
         table.ajax.reload();
     });
-</script>
+
+    let list_data = [];
+    let xID = "";
+    function ViewData(row) {
+        var elementRow = $(row).closest('tr');
+        var dataTableRow = $('#data_table').DataTable().row($(elementRow)).data();
+
+        data = dataTableRow;
+        xID = data.Id;
+
+        if (data.InOutType == 'Receiving') {
+            GetHistoryReceiving();
+        } else if (data.InOutType == 'IssueSlip') {
+            GetHistoryIssueSlip();
+        } else if (data.InOutType == 'Inbound') {
+            GetHistoryOtherInbound();
+        } else if (data.InOutType == 'Outbound') {
+            GetHistoryOtherOutbound();
+        }
+    }
+
+    function GetHistoryReceiving() {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Receiving/DatatableHistoryReceiving',
+            data: {
+                id: xID,
+            },
+            success: function (response) {
+                $('#tablereceiving tbody').empty();
+                if (response.status) {
+                    list_data = response.data;
+                    var html = "";
+
+                    if (list_data.length > 0) {
+                        $.each(list_data, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.PONo + '</td>';
+                            html += '<td>' + value.Supplier + '</td>';
+                            html += '<td>' + value.MaterialCode + '</td>';
+                            html += '<td>' + value.MaterialName + '</td>';
+                            html += '<td>' + value.Schedule + '</td>';
+                            html += '<td>' + value.TotalQtyPo + '</td>';
+                            html += '<td>' + value.InDate + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.LotNo + '</td>';
+                            html += '<td>' + value.QtyPerBag + '</td>';
+                            html += '<td>' + value.QtyBag + '</td>';
+                            html += '<td>' + value.Total + '</td>';
+                            html += '<td>' + value.DoNo + '</td>';
+                            html += '<td>' + value.Ok + '</td>';
+                            html += '<td>' + value.NgDamage + '</td>';
+                            html += '<td>' + value.NgWet + '</td>';
+                            html += '<td>' + value.NgContamination + '</td>';
+                            html += '<td>' + value.COA + '</td>';
+                            html += '<td>' + value.StatusPo + '</td>';
+                            html += '<td>' + value.ReceivedBy + '</td>';
+                            html += '<td>' + value.ReceivedOn + '</td>';
+                            html += '<td>' + value.QtyPutaway + '</td>';
+                            html += '<td>' + value.PutawayBy + '</td>';
+                            html += '<td>' + value.PutawayOn + '</td>';
+                            html += '<td>' + value.Area + '</td>';
+                            html += '<td>' + value.RackNo + '</td>';
+                            html += '<td>' + value.Status + '</td>';
+                            html += '<td>' + value.Remarks + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+
+
+                    $('#tablereceiving tbody').append(html);
+
+                    $('#formReceivingModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+            }
+        });
+    }
+
+    function GetHistoryIssueSlip() {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/IssueSlip/DatatableHistoryIssueSlip',
+            data: {
+                id: xID,
+            },
+            success: function (response) {
+                $('#tableissueslip tbody').empty();
+                if (response.status) {
+                    list_data = response.data;
+                    var html = "";
+
+                    if (list_data.length > 0) {
+                        $.each(list_data, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.Header_ProductionDate + '</td>';
+                            html += '<td>' + value.RM_Code + '</td>';
+                            html += '<td>' + value.RM_Name + '</td>';
+                            html += '<td>' + value.RM_VendorName + '</td>';
+                            html += '<td>' + value.Wt_Request + '</td>';
+                            html += '<td>' + value.SupplyQty + '</td>';
+                            html += '<td>' + value.FromBinRackCode + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.PickedBy + '</td>';
+                            html += '<td>' + value.ReturnQty + '</td>';
+                            html += '<td>' + value.ToBinRackCode + '</td>';
+                            html += '<td>' + value.PutBy + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+
+
+                    $('#tableissueslip tbody').append(html);
+
+                    $('#formIssueSlipModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+            }
+        });
+    }
+
+    function GetHistoryOtherInbound() {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Inbound/DatatableHistoryOtherInbound',
+            data: {
+                id: xID,
+            },
+            success: function (response) {
+                $('#tableotherinbound tbody').empty();
+                if (response.status) {
+                    list_data = response.data;
+                    var html = "";
+
+                    if (list_data.length > 0) {
+                        $.each(list_data, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.DocumentNo + '</td>';
+                            html += '<td>' + value.WHName + '</td>';
+                            html += '<td>' + value.RMCode + '</td>';
+                            html += '<td>' + value.RMName + '</td>';
+                            html += '<td>' + value.InDate + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.LotNo + '</td>';
+                            html += '<td>' + value.Bag + '</td>';
+                            html += '<td>' + value.FullBag + '</td>';
+                            html += '<td>' + value.Total + '</td>';
+                            html += '<td>' + value.CreateBy + '</td>';
+                            html += '<td>' + value.CreateOn + '</td>';
+                            html += '<td>' + value.QtyPutaway + '</td>';
+                            html += '<td>' + value.PutawayBy + '</td>';
+                            html += '<td>' + value.PutawayOn + '</td>';
+                            html += '<td>' + value.BinRack + '</td>';
+                            html += '<td>' + value.Status + '</td>';
+                            html += '<td>' + value.Memo + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+
+
+                    $('#tableotherinbound tbody').append(html);
+
+                    $('#formOtherInboundModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+            }
+        });
+    }
+
+    function GetHistoryOtherOutbound() {
+        $.ajax({
+            type: 'POST',
+            async: false,
+            dataType: "json",
+            beforeSend: function (request) {
+                request.setRequestHeader('Token', token);
+            },
+            url: server + 'Api/Outbound/DatatableHistoryOtherOutbound',
+            data: {
+                id: xID,
+            },
+            success: function (response) {
+                $('#tableotheroutbound tbody').empty();
+                if (response.status) {
+                    list_data = response.data;
+                    var html = "";
+
+                    if (list_data.length > 0) {
+                        $.each(list_data, function (index, value) {
+                            html += '<tr>';
+                            html += '<td>' + value.DocumentNo + '</td>';
+                            html += '<td>' + value.WHName + '</td>';
+                            html += '<td>' + value.RMCode + '</td>';
+                            html += '<td>' + value.RMName + '</td>';
+                            html += '<td>' + value.InDate + '</td>';
+                            html += '<td>' + value.ExpDate + '</td>';
+                            html += '<td>' + value.LotNo + '</td>';
+                            html += '<td>' + value.Total + '</td>';
+                            html += '<td>' + value.CreateBy + '</td>';
+                            html += '<td>' + value.CreateOn + '</td>';
+                            html += '<td>' + value.PickingBag + '</td>';
+                            html += '<td>' + value.PickingFullBag + '</td>';
+                            html += '<td>' + value.PickingTotal + '</td>';
+                            html += '<td>' + value.PickingBinRack + '</td>';
+                            html += '<td>' + value.PickingBy + '</td>';
+                            html += '<td>' + value.PickingOn + '</td>';
+                            html += '<td>' + value.PutawayBag + '</td>';
+                            html += '<td>' + value.PutawayFullBag + '</td>';
+                            html += '<td>' + value.PutawayTotal + '</td>';
+                            html += '<td>' + value.PutawayBinRack + '</td>';
+                            html += '<td>' + value.PutawayBy + '</td>';
+                            html += '<td>' + value.PutawayOn + '</td>';
+                            html += '<td>' + value.Status + '</td>';
+                            html += '<td>' + value.Memo + '</td>';
+                            html += '</tr>';
+                        });
+                    } else {
+                        html += '<tr><td colspan="13">No Data</td></tr>';
+                    }
+
+
+                    $('#tableotheroutbound tbody').append(html);
+
+                    $('#formOtherOutboundModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                } else {
+                    notify("Warning", "warning", response.message);
+                }
+            }
+        });
+    }
+    </script>
 }

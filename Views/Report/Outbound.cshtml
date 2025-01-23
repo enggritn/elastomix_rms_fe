@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Report Data Outbound";
+    ViewBag.Title = "Report Data Other Outbound";
     ViewBag.Module = "Outbound";
 }
 
@@ -55,8 +55,6 @@
                                 </select>
                             </div>
                         </div>
-                        <br />
-                        <br />
                         <div class="form-group row mb-0">
                             <div class="col-md-12">
                                 <button type="button" class="btn btn-success" id="btnRefreshDataTable">Refresh</button>
@@ -77,8 +75,6 @@
                                 <th>IN DATE</th>
                                 <th>EXP DATE</th>
                                 <th>LOT NO.</th>
-                                <th>/BAG</th>
-                                <th>FULL BAG</th>
                                 <th>TOTAL</th>
                                 <th>CREATE BY</th>
                                 <th>CREATE ON</th>
@@ -112,6 +108,7 @@
     @Styles.Render("~/Content/plugins/toastr/toastr.css")
     @Styles.Render("~/Content/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css")
     @Styles.Render("~/Content/plugins/select2/dist/css/select2.min.css")
+
     <style>
         tr.row_selected td {
             background-color: lightblue !important;
@@ -180,8 +177,6 @@
                 { "data": "InDate", "name": "InDate", "autoWidth": false },
                 { "data": "ExpDate", "name": "ExpDate", "autoWidth": false },
                 { "data": "LotNo", "name": "LotNo", "autoWidth": false },
-                { "data": "Bag", "name": "Bag", "autoWidth": false },
-                { "data": "FullBag", "name": "FullBag", "autoWidth": false },
                 { "data": "Total", "name": "Total", "autoWidth": false },
                 { "data": "CreateBy", "name": "CreateBy", "autoWidth": false },
                 { "data": "CreateOn", "name": "CreateOn", "autoWidth": false },
@@ -230,7 +225,7 @@
                 $('#WarehouseFilter').append('<option value="">Select Warehouse</option>');
                 var html = '';
                 $.each(response.list, function (index, value) {
-                    html += '<option value="' + value.Name + '">' + value.Code + ' - ' + value.Name + '</option>';
+                    html += '<option value="' + value.Code + '">' + value.Code + ' - ' + value.Name + '</option>';
                 });
                 $('#WarehouseFilter').append(html);
             }

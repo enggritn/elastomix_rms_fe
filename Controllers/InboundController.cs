@@ -218,7 +218,7 @@ namespace WMS_FE.Controllers
                 }
 
                 String datedownload = DateTime.Now.ToString("yyyyMMddhhmmss");
-                String fileName = String.Format("filename=OtherInbound2_{0}.xlsx", datedownload);
+                String fileName = String.Format("filename=Inbound_{0}.xlsx", datedownload);
 
                 for (int i = 1; i <= 20; i++)
                 {

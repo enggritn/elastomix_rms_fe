@@ -100,9 +100,10 @@
     @RenderSection("custom_css", required: false)
 
 <script>
-        var URL_API = '@System.Configuration.ConfigurationManager.AppSettings["server"].ToString()';
+    var URL_API = '@System.Configuration.ConfigurationManager.AppSettings["server"].ToString()';
     var TOKEN_USER = '@(Session != null && @Session["token"] != null ? @Session["token"].ToString() : "")';
     var USER_NAME = '@(Session != null && @Session["username"] != null ? @Session["username"].ToString() : "")';
+    var AREA_TYPE = '@(Session != null && @Session["area_type"] != null ? @Session["area_type"].ToString() : "")';
 </script>
 </head>
 
@@ -229,22 +230,23 @@
                             <div class="nav-item has-sub">
                                 <a href="#"><i class="ik ik-file"></i><span>Report</span></a>
                                 <div class="submenu-content">
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ActualStock", "Report")', 'ActualStock')" class="menu-item">Actual Stock</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Data_In_Out", "Report")', 'Data_In_Out')" class="menu-item">Data In Out Summary</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Inbound", "Report")', 'Inbound')" class="menu-item">Other Inbound</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("IssueSlip", "Report")', 'IssueSlip')" class="menu-item">Issue Slip</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving", "Report")', 'Receiving')" class="menu-item">Receiving</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving2", "Report")', 'Receiving2')" class="menu-item">Receiving 2</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving3", "Report")', 'Receiving2')" class="menu-item">Receiving 3</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("StockOpname", "Report")', 'StockOpname')" class="menu-item">Stock Opname</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving4", "Report")', 'Receiving4')" class="menu-item">Receiving 4</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Inbound2", "Report")', 'Inbound2')" class="menu-item">Inbound</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Outbound", "Report")', 'Outbound')" class="menu-item">Outbound</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Movement", "Report")', 'Movement')" class="menu-item">Movement</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Transform", "Report")', 'Transform')" class="menu-item">Transform</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ListTransaction", "Report")', 'ListTransaction')" class="menu-item">List Transaction</a> 
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("QcInspection", "Report")', 'QcInspection')" class="menu-item">QC Inspection</a>
-                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ShelfLifeExtension", "Report")', 'ShelfLifeExtension')" class="menu-item">Shelf Life Extension</a>
+                                    <!-- Menu COMMON untuk LOGISTIC atau PRODUCTION -->
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ActualStock", "Report")', 'ActualStock')" class="menu-item common-menu" style="display:none;">Actual Stock</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("IssueSlip", "Report")', 'IssueSlip')" class="menu-item common-menu" style="display:none;">Issue Slip</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("StockOpname", "Report")', 'StockOpname')" class="menu-item common-menu" style="display:none;">Stock Opname</a>
+
+                                    <!-- Menu LOGISTIC -->
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Receiving4", "Report")', 'Receiving4')" class="menu-item logistic-menu" style="display:none;">Receiving</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Inbound2", "Report")', 'Inbound2')" class="menu-item logistic-menu" style="display:none;">Other Inbound</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Outbound", "Report")', 'Outbound')" class="menu-item logistic-menu" style="display:none;">Other Outbound</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Movement", "Report")', 'Movement')" class="menu-item logistic-menu" style="display:none;">Movement</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Transform", "Report")', 'Transform')" class="menu-item logistic-menu" style="display:none;">Transform</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("QcInspection", "Report")', 'QcInspection')" class="menu-item logistic-menu" style="display:none;">QC Inspection</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ShelfLifeExtension", "Report")', 'ShelfLifeExtension')" class="menu-item logistic-menu" style="display:none;">Shelf Life Extension</a>
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("ListTransaction", "Report")', 'ListTransaction')" class="menu-item logistic-menu" style="display:none;">List Transaction</a>
+
+                                    <!-- Menu PRODUCTION -->
+                                    <a href="javascript:void(0);" onclick="openMenu('@Url.Action("Data_In_Out", "Report")', 'Data_In_Out')" class="menu-item production-menu" style="display:none;">Data In Out Summary</a>
                                 </div>
                             </div>
                         </nav>
@@ -316,7 +318,7 @@
     @Scripts.Render("~/Content/plugins/toastr/toastr.min.js")
     @Scripts.Render("~/Content/custom/js/notification.js")
     @Scripts.Render("~/Content/plugins/sweetalert.min.js")
-    <script>
+<script>
         getPermission('@ViewBag.Module', '@ViewBag.Method');
         function getPermission(module, method) {
             @*$.ajax({
@@ -335,7 +337,46 @@
                 }
             });*@
         };
-    </script>
+
+        // Menentukan nilai AREA_TYPE dari session
+    var areaType = '@(Session != null && @Session["area_type"] != null ? @Session["area_type"].ToString() : "")';
+
+    // Fungsi untuk menampilkan dan menyembunyikan elemen berdasarkan AREA_TYPE
+    document.addEventListener("DOMContentLoaded", function() {
+        if (areaType === "LOGISTIC") {
+            // Tampilkan menu khusus untuk LOGISTIC
+            document.querySelectorAll('.logistic-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'block'; // Menampilkan item menu
+            });
+            document.querySelectorAll('.production-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'none'; // Menyembunyikan item menu
+            });
+        } else if (areaType === "PRODUCTION") {
+            // Tampilkan menu khusus untuk PRODUCTION
+            document.querySelectorAll('.production-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'block'; // Menampilkan item menu
+            });
+            document.querySelectorAll('.logistic-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'none'; // Menyembunyikan item menu
+            });
+        } else {
+            // Jika areaType tidak sesuai, sembunyikan semua menu
+            document.querySelectorAll('.logistic-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'none'; // Menyembunyikan item menu
+            });
+            document.querySelectorAll('.production-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'none'; // Menyembunyikan item menu
+            });
+        }
+
+        // Menampilkan menu yang dapat muncul baik untuk LOGISTIC atau PRODUCTION
+        if (areaType === "LOGISTIC" || areaType === "PRODUCTION") {
+            document.querySelectorAll('.common-menu').forEach(function(menuItem) {
+                menuItem.style.display = 'block'; // Menampilkan item menu yang umum
+            });
+        }
+    });
+</script>
     <script>
         var preloader = $('#preloader');
         $(document).ajaxStart(function () {
