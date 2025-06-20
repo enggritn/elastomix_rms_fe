@@ -190,3 +190,12 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 assets/*
+
+# 🔐 Prevent sensitive config files from being committed
+Web.config
+App.config
+appsettings.json
+appsettings.*.json
+.env
+.env.*
+secrets.json
